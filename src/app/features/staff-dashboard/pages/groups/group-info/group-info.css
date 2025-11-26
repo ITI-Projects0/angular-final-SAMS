@@ -1,0 +1,291 @@
+/* ============================
+   MAIN LAYOUT
+================================ */
+.group-info-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  color: #1f2937;
+  /* نص واضح */
+  font-family: sans-serif;
+}
+
+.back-btn {
+  background: #e5e7eb;
+  padding: 8px 14px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+/* ============================
+   GROUP CARD
+================================ */
+.group-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.group-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: auto;
+  border: 3px solid #eee;
+}
+
+.group-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+/* META */
+.group-meta {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.tag {
+  background: #eef2ff;
+  padding: 6px 14px;
+  color: #4f46e5;
+  border-radius: 6px;
+}
+
+.members,
+.online {
+  background: #f3f4f6;
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.group-desc {
+  margin-top: 15px;
+  color: #444;
+}
+
+/* ============================
+   SESSIONS TABLE
+================================ */
+.section-title {
+  font-size: 1.4rem;
+  margin: 20px 0 10px;
+  font-weight: bold;
+}
+
+.schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.schedule-table th {
+  background: #f3f4f6;
+  padding: 14px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.schedule-table td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.status {
+  padding: 6px 14px;
+  border-radius: 6px;
+  color: white;
+  font-size: 0.9rem;
+}
+
+.red {
+  background: #ef4444;
+}
+
+.green {
+  background: #10b981;
+}
+
+.details-btn {
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+}
+
+/* ============================
+   SIDE PANEL
+================================ */
+.attendance-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.3s;
+}
+
+.attendance-overlay.open {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+}
+
+.attendance-panel {
+  position: fixed;
+  top: 0;
+  right: -450px;
+  width: 420px;
+  height: 100%;
+  background: white;
+  padding: 25px;
+  transition: 0.35s ease;
+  box-shadow: -3px 0 10px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+  color: #1f2937;
+}
+
+.attendance-panel.open {
+  right: 0;
+}
+
+/* HEADER */
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* SEARCH BOX */
+.search-panel {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  margin: 15px 0;
+  font-size: 1rem;
+}
+
+/* ============================
+   Lists
+================================ */
+.list-title {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.list-title.green {
+  color: #059669;
+}
+
+.list-title.red {
+  color: #dc2626;
+}
+
+.name-list {
+  background: #f9fafb;
+  padding: 15px;
+  border-radius: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.name-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* buttons */
+.mark-btn {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  border-radius: 6px;
+  color: white;
+  border: none;
+}
+
+.mark-btn.red {
+  background: #ef4444;
+}
+
+.mark-btn.green {
+  background: #10b981;
+}
+
+/* ============================
+   Add Session Panel
+================================ */
+.session-overlay {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0);
+  transition: 0.3s;
+}
+
+.session-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.session-panel {
+  position: fixed;
+  right: -380px;
+  top: 0;
+  width: 350px;
+  height: 100%;
+  background: white;
+  padding: 20px;
+  transition: .35s ease;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, .2);
+}
+
+.session-panel.open {
+  right: 0;
+}
+
+.btn-save {
+  background: #2563eb;
+  color: white;
+  padding: 10px;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+}
+
+.add-session-btn {
+  background: #10b981;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}

@@ -1,0 +1,11 @@
+<div class="dashboard-layout">
+  <app-sidebar [collapsed]="isSidebarCollapsed"></app-sidebar>
+
+  <div class="main-area">
+    <app-navbar (toggleSidebar)="isSidebarCollapsed = !isSidebarCollapsed"></app-navbar>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

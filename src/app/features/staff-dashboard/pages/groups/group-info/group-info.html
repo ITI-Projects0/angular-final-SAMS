@@ -1,0 +1,130 @@
+<div class="group-info-container">
+
+  <button routerLink="/dashboard/staff/groups" class="back-btn">← Back</button>
+
+  <div class="group-card">
+    <img [src]="group.img" class="group-img" />
+    <h1 class="group-title">{{ group.name }}</h1>
+
+    <div class="group-meta">
+      <span class="tag">{{ group.category }}</span>
+      <span class="members">{{ group.members }} Members</span>
+      <span class="online">{{ group.online }} Online</span>
+    </div>
+
+    <p class="group-desc">{{ group.description }}</p>
+  </div>
+
+  <!-- Sessions -->
+  <h2 class="section-title">📅 Sessions</h2>
+  <button class="add-session-btn" (click)="openNewSessionPanel()">
+    + Add New Session
+  </button>
+
+  <table class="schedule-table">
+    <thead>
+      <tr>
+        <th>Session</th>
+        <th>Day</th>
+        <th>Time</th>
+        <th>Status</th>
+        <th>Present</th>
+        <th>Absent</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let s of schedule">
+        <td>{{ s.title }}</td>
+        <td>{{ s.day }}</td>
+        <td>{{ s.time }}</td>
+
+        <td>
+          <span [ngClass]="s.passed ? 'status red' : 'status green'">
+            {{ s.passed ? 'Completed' : 'Upcoming' }}
+          </span>
+        </td>
+
+        <td>{{ s.present }}</td>
+        <td>{{ s.absent }}</td>
+
+        <td><button class="details-btn" (click)="openAttendancePanel(s)">View</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- SIDE PANEL -->
+<div class="attendance-overlay" [class.open]="attendancePanelOpen" (click)="closeAttendancePanel()"></div>
+
+<div class="attendance-panel" [class.open]="attendancePanelOpen" (click)="$event.stopPropagation()">
+
+  <div class="panel-header">
+    <h3>{{ selectedSession?.title }} - Attendance</h3>
+    <button class="close-btn" (click)="closeAttendancePanel()">✕</button>
+  </div>
+
+  <!-- Search -->
+  <input type="text" class="search-panel" [(ngModel)]="searchText" placeholder="Search students...">
+
+  <div class="attendance-body">
+
+    <p><strong>Day:</strong> {{ selectedSession?.day }}</p>
+    <p><strong>Time:</strong> {{ selectedSession?.time }}</p>
+
+    <h4 class="list-title green">Present Students</h4>
+
+    <ul class="name-list">
+      <li *ngFor="let name of filterNames(selectedSession?.presentNames)">
+        {{ name }}
+        <button class="mark-btn red" (click)="markAbsent(name)">Mark Absent</button>
+      </li>
+      <li *ngIf="selectedSession?.presentNames.length === 0">No attendees.</li>
+    </ul>
+
+    <h4 class="list-title red">Absent Students</h4>
+
+    <ul class="name-list">
+      <li *ngFor="let name of filterNames(selectedSession?.absentNames)">
+        {{ name }}
+        <button class="mark-btn green" (click)="markPresent(name)">Mark Present</button>
+      </li>
+      <li *ngIf="selectedSession?.absentNames.length === 0">No absent students.</li>
+    </ul>
+
+  </div>
+</div>
+<!-- ADD SESSION PANEL -->
+<div class="session-overlay" [class.open]="sessionPanelOpen" (click)="closeNewSessionPanel()"></div>
+
+<div class="session-panel" [class.open]="sessionPanelOpen" (click)="$event.stopPropagation()">
+
+  <div class="panel-header">
+    <h3>Add New Session</h3>
+    <button class="close-btn" (click)="closeNewSessionPanel()">✕</button>
+  </div>
+
+  <form class="space-y-4" (ngSubmit)="saveNewSession()">
+
+    <div>
+      <label class="label">Session Title</label>
+      <input class="input" type="text" [(ngModel)]="newSession.title" name="title" required>
+    </div>
+
+    <div>
+      <label class="label">Day</label>
+      <input class="input" type="text" [(ngModel)]="newSession.day" name="day" required>
+    </div>
+
+    <div>
+      <label class="label">Time</label>
+      <input class="input" type="text" [(ngModel)]="newSession.time" name="time" required>
+    </div>
+
+    <button class="btn-save" type="submit">Add Session</button>
+
+  </form>
+
+</div>
