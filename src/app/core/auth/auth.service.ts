@@ -40,17 +40,20 @@ export class AuthService {
         return this.apiService.post('/auth/send-reset-code', { email });
     }
 
+    validateResetCode(code: string): Observable<any> {
+        return this.apiService.post('/auth/validate-reset-code', { code });
+    }
+
     resetPassword(data: { email: string; token: string; password: string; password_confirmation: string }): Observable<any> {
         return this.apiService.post('/auth/reset-password', data);
     }
 
-    loginWithGoogle(token: string, remember = false): Observable<any> {
-        this.tokenStorage.seedToken(token, remember);
-        // Manually attach header to ensure it's sent immediately after seeding
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        return this.apiService.get<any>('/me', undefined, headers).pipe(
-            tap(user => {
-                this.tokenStorage.persistAuthResponse(token, user, remember);
+    exchangeToken(code: string): Observable<any> {
+        return this.apiService.post<any>('/auth/exchange-token', { code }).pipe(
+            tap(response => {
+                if (response.token && response.user) {
+                    this.tokenStorage.persistAuthResponse(response.token, response.user, false);
+                }
             })
         );
     }
