@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { DashboardLayout } from '../../layouts/dashboard-layout/dashboard-layout';
-import { StaffOverview } from './pages/staff-overview/staff-overview';
+import { StaffDashboard } from './pages/staff-dashboard/staff-dashboard';
 import { Staff } from './pages/staff/staff';
 import { GroupInfo } from './pages/groups/group-info/group-info';
 // import { Attendance} from './pages/attendance/attendance.component';
@@ -12,7 +12,7 @@ export const StaffRoutes: Routes = [
     component: DashboardLayout,
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: StaffOverview },
+      { path: 'overview', component: StaffDashboard },
       { path: 'groups', component: Groups },
       { path: 'groups/:id', component: GroupInfo },
       { path: 'staff', component: Staff },

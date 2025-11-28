@@ -1,0 +1,339 @@
+<section class="settings-wrapper" [class.rtl]="preferences.language === 'ar'">
+  <!-- Header -->
+  <header class="settings-header">
+    <div>
+      <h2 class="settings-title">
+        {{ preferences.language === 'ar' ? 'الإعدادات' : 'Settings' }}
+      </h2>
+      <p class="settings-subtitle">
+        {{
+          preferences.language === 'ar'
+            ? 'إدارة الحساب، المظهر، الإشعارات والأمان.'
+            : 'Manage your account, appearance, notifications and security.'
+        }}
+      </p>
+    </div>
+
+    <div class="pill-badge">
+      <span class="dot"></span>
+      {{ preferences.language === 'ar' ? 'نشط' : 'Active' }}
+    </div>
+  </header>
+
+  <!-- Layout: عمودين على الشاشات الكبيرة -->
+  <div class="settings-layout">
+    <!-- Left column -->
+    <div class="settings-column">
+      <!-- Account -->
+      <section class="settings-card">
+        <div class="card-header">
+          <h3>
+            {{ preferences.language === 'ar' ? 'الحساب' : 'Account' }}
+          </h3>
+          <p>
+            {{
+              preferences.language === 'ar'
+                ? 'معلومات أساسية عن حسابك.'
+                : 'Basic information about your profile.'
+            }}
+          </p>
+        </div>
+
+        <div class="account-row">
+          <div class="avatar-block">
+            <div class="avatar">
+              <img [src]="user.avatar" [alt]="user.name" />
+            </div>
+            <button type="button" class="btn-secondary small">
+              {{ preferences.language === 'ar' ? 'تغيير الصورة' : 'Change photo' }}
+            </button>
+          </div>
+
+          <div class="account-fields">
+            <div class="field">
+              <label>{{ preferences.language === 'ar' ? 'الاسم' : 'Name' }}</label>
+              <input type="text" [(ngModel)]="user.name" />
+            </div>
+
+            <div class="field">
+              <label>{{ preferences.language === 'ar' ? 'البريد الإلكتروني' : 'Email' }}</label>
+              <input type="email" [(ngModel)]="user.email" />
+            </div>
+
+            <div class="field">
+              <label>{{ preferences.language === 'ar' ? 'الدور' : 'Role' }}</label>
+              <input type="text" [(ngModel)]="user.role" />
+            </div>
+
+            <div class="actions-right">
+              <button type="button" class="btn-primary" (click)="saveAccount()">
+                {{ preferences.language === 'ar' ? 'حفظ الحساب' : 'Save account' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Security -->
+      <section class="settings-card">
+        <div class="card-header">
+          <h3>
+            {{ preferences.language === 'ar' ? 'الأمان' : 'Security' }}
+          </h3>
+          <p>
+            {{
+              preferences.language === 'ar'
+                ? 'تحكم في كلمة المرور وخيارات الأمان الإضافية.'
+                : 'Control password and extra protection.'
+            }}
+          </p>
+        </div>
+
+        <div class="field-inline">
+          <div>
+            <p class="toggle-title">
+              {{ preferences.language === 'ar' ? 'كلمة المرور' : 'Password' }}
+            </p>
+            <p class="toggle-sub">
+              {{
+                preferences.language === 'ar'
+                  ? 'قم بتغيير كلمة المرور الخاصة بحسابك.'
+                  : 'Change your account password.'
+              }}
+            </p>
+          </div>
+          <button type="button" class="btn-secondary" (click)="changePassword()">
+            {{ preferences.language === 'ar' ? 'تغيير كلمة المرور' : 'Change password' }}
+          </button>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-title">
+              {{
+                preferences.language === 'ar'
+                  ? 'التحقق بخطوتين'
+                  : 'Two-factor authentication'
+              }}
+            </p>
+            <p class="toggle-sub">
+              {{
+                preferences.language === 'ar'
+                  ? 'أضف طبقة أمان إضافية لحسابك.'
+                  : 'Add extra security to your account.'
+              }}
+            </p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="security.twoFactor" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="security-footer">
+          <p class="danger-title">
+            {{ preferences.language === 'ar' ? 'منطقة حسّاسة' : 'Danger zone' }}
+          </p>
+          <p class="danger-text">
+            {{
+              preferences.language === 'ar'
+                ? 'تعطيل حسابك أو طلب حذف البيانات.'
+                : 'Deactivate your account or request data removal.'
+            }}
+          </p>
+          <button type="button" class="btn-danger small">
+            {{ preferences.language === 'ar' ? 'تعطيل الحساب' : 'Deactivate account' }}
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right column -->
+    <div class="settings-column">
+      <!-- Preferences -->
+      <section class="settings-card">
+        <div class="card-header">
+          <h3>
+            {{ preferences.language === 'ar' ? 'التفضيلات' : 'Preferences' }}
+          </h3>
+          <p>
+            {{
+              preferences.language === 'ar'
+                ? 'تحكم في المظهر واللغة وطريقة العرض.'
+                : 'Control appearance, language and layout.'
+            }}
+          </p>
+        </div>
+
+        <div class="field">
+          <label>{{ preferences.language === 'ar' ? 'المظهر' : 'Theme' }}</label>
+          <select [(ngModel)]="preferences.theme" (ngModelChange)="onThemeChange($event)">
+            <option value="light">
+              {{ preferences.language === 'ar' ? 'فاتح' : 'Light' }}
+            </option>
+            <option value="dark">
+              {{ preferences.language === 'ar' ? 'داكن' : 'Dark' }}
+            </option>
+            <option value="system">
+              {{ preferences.language === 'ar' ? 'حسب النظام' : 'System default' }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>{{ preferences.language === 'ar' ? 'اللغة' : 'Language' }}</label>
+          <select [(ngModel)]="preferences.language" (ngModelChange)="onLanguageChange($event)">
+            <option value="en">English</option>
+            <option value="ar">العربية</option>
+          </select>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-title">
+              {{ preferences.language === 'ar' ? 'تنسيق 24 ساعة' : '24-hour time' }}
+            </p>
+            <p class="toggle-sub">
+              {{
+                preferences.language === 'ar'
+                  ? 'عرض الوقت بصيغة 13:00 بدلاً من 1:00 PM.'
+                  : 'Show time in 24h format (13:00).'
+              }}
+            </p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="preferences.use24hTime" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-title">
+              {{
+                preferences.language === 'ar'
+                  ? 'شريط جانبي مضغوط'
+                  : 'Compact sidebar'
+              }}
+            </p>
+            <p class="toggle-sub">
+              {{
+                preferences.language === 'ar'
+                  ? 'تقليل المسافات في القائمة الجانبية.'
+                  : 'Reduce spacing in the left navigation.'
+              }}
+            </p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="preferences.compactSidebar" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="actions-right">
+          <button type="button" class="btn-primary" (click)="savePreferences()">
+            {{ preferences.language === 'ar' ? 'حفظ التفضيلات' : 'Save preferences' }}
+          </button>
+        </div>
+      </section>
+
+      <!-- Notifications -->
+      <section class="settings-card">
+        <div class="card-header">
+          <h3>
+            {{ preferences.language === 'ar' ? 'الإشعارات' : 'Notifications' }}
+          </h3>
+          <p>
+            {{
+              preferences.language === 'ar'
+                ? 'كيف تستقبل التنبيهات والإنذارات.'
+                : 'How you get notified about updates.'
+            }}
+          </p>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-title">
+              {{ preferences.language === 'ar' ? 'إشعارات البريد الإلكتروني' : 'Email notifications' }}
+            </p>
+            <p class="toggle-sub">
+              {{
+                preferences.language === 'ar'
+                  ? 'استقبل التحديثات على بريدك.'
+                  : 'Receive updates on your email.'
+              }}
+            </p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="notifications.email" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-title">
+              {{ preferences.language === 'ar' ? 'رسائل SMS' : 'SMS notifications' }}
+            </p>
+            <p class="toggle-sub">
+              {{
+                preferences.language === 'ar'
+                  ? 'استخدم الرسائل القصيرة للتنبيهات المهمة.'
+                  : 'Use SMS for critical alerts.'
+              }}
+            </p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="notifications.sms" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-title">
+              {{ preferences.language === 'ar' ? 'إشعارات داخل النظام' : 'In-app notifications' }}
+            </p>
+            <p class="toggle-sub">
+              {{
+                preferences.language === 'ar'
+                  ? 'عرض التنبيهات داخل لوحة التحكم.'
+                  : 'Show notifications inside the dashboard.'
+              }}
+            </p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="notifications.inApp" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <div>
+            <p class="toggle-title">
+              {{ preferences.language === 'ar' ? 'تنبيهات الغياب' : 'Attendance alerts' }}
+            </p>
+            <p class="toggle-sub">
+              {{
+                preferences.language === 'ar'
+                  ? 'تنبيه عند زيادة نسبة غياب طالب.'
+                  : 'Alert when student absence increases.'
+              }}
+            </p>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" [(ngModel)]="notifications.attendanceAlerts" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="actions-right">
+          <button type="button" class="btn-primary" (click)="saveNotifications()">
+            {{ preferences.language === 'ar' ? 'حفظ الإشعارات' : 'Save notifications' }}
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

@@ -3,10 +3,10 @@ import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-staff-overview',
-  templateUrl: './staff-overview.html',
-  styleUrls: ['./staff-overview.css']
+  templateUrl: './staff-dashboard.html',
+  styleUrls: ['./staff-dashboard.css']
 })
-export class StaffOverview implements OnInit {
+export class StaffDashboard implements OnInit {
 
   incoming = 32;
   outgoing = 50;
