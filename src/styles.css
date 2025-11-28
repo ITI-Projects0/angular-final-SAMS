@@ -1,3 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+@source "../node_modules/flowbite-angular";
+@custom-variant dark (&:where(.dark, .dark *));
+@import "../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
