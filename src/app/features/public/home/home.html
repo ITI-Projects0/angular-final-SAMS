@@ -48,17 +48,36 @@
                 </svg>
             }
           </button>
-          <a routerLink="/login"
-            class="hidden sm:inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-md transition"
-            [ngClass]="isDark ? 'border-slate-700 bg-white/5 hover:bg-white/15' : 'border-slate-200 bg-white hover:bg-slate-100'">
-            Login
-          </a>
-          <a href="#contact"
-            class="hidden sm:inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-lg transition"
-            [ngClass]="isDark ? 'bg-cyan-400 text-slate-950 hover:bg-cyan-300' : 'bg-amber-400 text-slate-900 hover:bg-amber-300'">
-            Register
-            <span aria-hidden="true" class="text-slate-900">↗</span>
-          </a>
+
+          @if(!isLoggedIn) {
+            <ng-container>
+              <a routerLink="/login"
+                class="hidden sm:inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-md transition"
+                [ngClass]="isDark ? 'border-slate-700 bg-white/5 hover:bg-white/15' : 'border-slate-200 bg-white hover:bg-slate-100'">
+                Login
+              </a>
+              <a routerLink="/register"
+                class="hidden sm:inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-lg transition"
+                [ngClass]="isDark ? 'bg-cyan-400 text-slate-950 hover:bg-cyan-300' : 'bg-amber-400 text-slate-900 hover:bg-amber-300'">
+                Register
+                <span aria-hidden="true" class="text-slate-900">↗</span>
+              </a>
+            </ng-container>
+          } @else {
+            <button type="button"
+              class="hidden sm:inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-md transition"
+              [ngClass]="isDark ? 'border-slate-700 bg-white/5 hover:bg-white/15' : 'border-slate-200 bg-white hover:bg-slate-100'"
+              (click)="goToDashboard()">
+              Go to dashboard
+            </button>
+            <button type="button"
+              class="hidden sm:inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold shadow-lg transition"
+              [ngClass]="isDark ? 'bg-red-500 text-white hover:bg-red-400' : 'bg-red-500 text-white hover:bg-red-400'"
+              (click)="logout()">
+              Logout
+            </button>
+          }
+
           <button type="button" class="inline-flex items-center justify-center rounded-xl border p-2 lg:hidden"
             (click)="toggleMenu()"
             [ngClass]="isDark ? 'border-white/10 bg-white/5 text-white' : 'border-slate-200 bg-white text-slate-900'">
@@ -84,16 +103,33 @@
             {{ link.label }}
           </a>
           <div class="flex flex-wrap gap-3 pt-3">
-            <a routerLink="/login"
-              class="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border px-4 py-2 text-sm font-semibold transition"
-              [ngClass]="isDark ? 'border-white/20 bg-white/5 hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-100'">
-              Login
-            </a>
-            <a routerLink="/register"
-              class="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold shadow-lg transition"
-              [ngClass]="isDark ? 'bg-cyan-400 text-slate-950 hover:bg-cyan-300' : 'bg-amber-400 text-slate-900 hover:bg-amber-300'">
-              Register
-            </a>
+            @if(!isLoggedIn) {
+              <ng-container>
+                <a routerLink="/login"
+                  class="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border px-4 py-2 text-sm font-semibold transition"
+                  [ngClass]="isDark ? 'border-white/20 bg-white/5 hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-100'">
+                  Login
+                </a>
+                <a routerLink="/register"
+                  class="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold shadow-lg transition"
+                  [ngClass]="isDark ? 'bg-cyan-400 text-slate-950 hover:bg-cyan-300' : 'bg-amber-400 text-slate-900 hover:bg-amber-300'">
+                  Register
+                </a>
+              </ng-container>
+            } @else {
+              <button type="button"
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border px-4 py-2 text-sm font-semibold transition"
+                [ngClass]="isDark ? 'border-white/20 bg-white/5 hover:bg-white/10' : 'border-slate-200 bg-white hover:bg-slate-100'"
+                (click)="goToDashboard()">
+                Go to dashboard
+              </button>
+              <button type="button"
+                class="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold shadow-lg transition"
+                [ngClass]="isDark ? 'bg-red-500 text-white hover:bg-red-400' : 'bg-red-500 text-white hover:bg-red-400'"
+                (click)="logout()">
+                Logout
+              </button>
+            }
           </div>
         </div>
       </div>

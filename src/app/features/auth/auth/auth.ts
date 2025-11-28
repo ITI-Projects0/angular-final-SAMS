@@ -7,6 +7,7 @@ import { LoadingService } from '../../../core/services/loading.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { FeedbackService } from '../../../core/services/feedback.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { User } from '../../../core/models/user.model';
 
 type AuthMode = 'login' | 'register' | 'forgot-password' | 'verify-email' | 'verify-success' | 'reset-password' | 'complete-profile';
 
@@ -210,11 +211,12 @@ export class Auth {
           message: 'You are signed in successfully.'
         });
 
-        if (response.user && !response.user.is_data_complete) {
+        const needsProfile = this.requiresProfileCompletion(response.user);
+        if (needsProfile) {
           this.router.navigate(['/complete-profile']);
-        } else {
-          this.router.navigate(['/dashboard']);
+          return;
         }
+        this.router.navigate(['/dashboard/staff']);
       },
       error: (err) => {
         this.loadingService.hide();
@@ -422,20 +424,21 @@ export class Auth {
         next: (response) => {
           this.loadingService.hide();
           this.scrubQueryParams(['code']);
-          if (response.user?.is_data_complete) {
-            this.feedback.showToast({
-              tone: 'success',
-              title: 'Signed in with Google',
-              message: 'Welcome back!'
-            });
-            this.router.navigate(['/dashboard']);
-          } else {
+          const needsProfile = this.requiresProfileCompletion(response.user);
+          if (needsProfile) {
             this.feedback.showToast({
               tone: 'info',
               title: 'Almost done',
               message: 'Complete your profile to unlock your dashboard.'
             });
             this.router.navigate(['/complete-profile']);
+          } else {
+            this.feedback.showToast({
+              tone: 'success',
+              title: 'Signed in with Google',
+              message: 'Welcome back!'
+            });
+            this.router.navigate(['/dashboard/staff']);
           }
         },
         error: (err) => {
@@ -506,6 +509,14 @@ export class Auth {
         this.position.set('right');
         this.setupFormForMode('login');
     }
+  }
+
+  private requiresProfileCompletion(user?: User | null): boolean {
+    if (!user) {
+      return false;
+    }
+    // Only require profile completion when backend explicitly marks user as incomplete
+    return user.role !== 'admin' && user.is_data_complete === false;
   }
 
   private updateUrl(mode: AuthMode, params?: Record<string, string | null>) {

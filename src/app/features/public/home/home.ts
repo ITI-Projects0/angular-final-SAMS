@@ -1,6 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { ThemeService } from '../../../core/services/theme.service';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-home-page',
@@ -10,7 +12,10 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.css',
 })
 export class Home implements OnInit, OnDestroy {
-  isDark = true;
+  private readonly themeService = inject(ThemeService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   isMenuOpen = false;
   readonly currentYear = new Date().getFullYear();
   activeSlideIndex = 0;
@@ -89,12 +94,32 @@ export class Home implements OnInit, OnDestroy {
   ];
   private slideIntervalId?: ReturnType<typeof setInterval>;
 
-  toggleTheme(): void {
-    this.isDark = !this.isDark;
+  get isDark(): boolean {
+    return this.themeService.darkMode();
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.isLoggedIn();
   }
 
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggle();
+  }
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login'])
+    });
+  }
+
+  goToDashboard(): void {
+    // Basic redirect; adjust per-role routing if needed
+    this.router.navigate(['/dashboard/staff']);
   }
 
   setActiveSlide(index: number): void {
