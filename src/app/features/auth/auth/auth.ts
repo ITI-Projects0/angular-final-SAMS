@@ -327,8 +327,8 @@ export class Auth {
     const { password, confirmPassword } = this.authForm.value;
 
     this.authService.resetPassword({
-      email: context.email,
-      token: context.token,
+      email: context.email!,
+      token: context.token!,
       password,
       password_confirmation: confirmPassword
     }).subscribe({
@@ -414,15 +414,15 @@ export class Auth {
     const params = new URLSearchParams(window.location.search);
     const current = window.location.pathname.replace('/', '');
 
-    const googleToken = params.get('token');
-    if (googleToken && current === 'login') {
-      console.log('Auth: Received Google token:', googleToken);
+    const googleCode = params.get('code');
+    if (googleCode && current === 'login') {
+      console.log('Auth: Received Google code:', googleCode);
       this.loadingService.show();
-      this.authService.loginWithGoogle(googleToken).subscribe({
-        next: (user) => {
+      this.authService.exchangeToken(googleCode).subscribe({
+        next: (response) => {
           this.loadingService.hide();
-          this.scrubQueryParams(['token']);
-          if (user?.is_data_complete) {
+          this.scrubQueryParams(['code']);
+          if (response.user?.is_data_complete) {
             this.feedback.showToast({
               tone: 'success',
               title: 'Signed in with Google',
@@ -440,7 +440,7 @@ export class Auth {
         },
         error: (err) => {
           this.loadingService.hide();
-          this.scrubQueryParams(['token']);
+          this.scrubQueryParams(['code']);
           this.feedback.showToast({
             tone: 'error',
             title: 'Google login failed',
@@ -476,15 +476,28 @@ export class Auth {
         this.mode.set('reset-password');
         this.position.set('right');
         this.setupFormForMode('reset-password');
-        this.resetContext.set({
-          token: params.get('token'),
-          email: params.get('email')
-        });
-        if (!params.get('token') || !params.get('email')) {
-          this.feedback.showToast({
-            tone: 'error',
-            title: 'Reset link incomplete',
-            message: 'Please request a new password reset email.'
+        
+        const resetCode = params.get('code');
+        if (resetCode) {
+          this.loadingService.show();
+          this.authService.validateResetCode(resetCode).subscribe({
+            next: (data) => {
+              this.loadingService.hide();
+              this.scrubQueryParams(['code']); // Hide code immediately
+              this.resetContext.set({
+                token: data.token,
+                email: data.email
+              });
+            },
+            error: (err) => {
+              this.loadingService.hide();
+              this.scrubQueryParams(['code']);
+              this.feedback.showToast({
+                tone: 'error',
+                title: 'Invalid Link',
+                message: 'This password reset link is invalid or expired.'
+              });
+            }
           });
         }
         break;
