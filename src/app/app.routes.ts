@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { guestGuard } from './core/auth/guest.guard';
 import { authGuard } from './core/auth/auth.guard';
 import { StaffRoutes } from './features/staff-dashboard/staff.routes';
+import { Home } from './features/public/home/home';
 
 export const routes: Routes = [
   // Redirect root to home
@@ -34,5 +35,5 @@ export const routes: Routes = [
   { path: '**', loadComponent: () => import('./features/not-found/not-found').then(m => m.NotFound) },
 
     // Home page
-  { path: '', component: HomePage },
+  { path: '', component: Home },
 ];
