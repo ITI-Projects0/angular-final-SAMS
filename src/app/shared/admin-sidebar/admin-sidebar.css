@@ -1,0 +1,50 @@
+.sidebar {
+  width: 250px;
+  background: #fff;
+  border-right: 1px solid #e6e9ef;
+  padding: 18px;
+  box-sizing: border-box;
+}
+
+.sidebar.collapsed {
+  width: 72px;
+}
+
+.sidebar .profile {
+  text-align: center;
+}
+
+.menu a {
+  display: block;
+  padding: 10px 8px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.menu a.active {
+  background: #eef6ff;
+}
+
+.badge {
+  float: right;
+  background: #dbeafe;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.sidebar-footer {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  right: 18px;
+}
+
+.sidebar svg {
+  min-width: 24px;
+  min-height: 24px;
+  width: 24px;
+  height: 24px;
+}

@@ -1,0 +1,10 @@
+<div class="dashboard-layout">
+  <app-admin-sidebar [collapsed]="isSidebarCollapsed"></app-admin-sidebar>
+
+  <div class="main-area">
+    <app-admin-nav (toggleSidebar)="isSidebarCollapsed = !isSidebarCollapsed"></app-admin-nav>
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
