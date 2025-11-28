@@ -1,0 +1,38 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8 text-center">
+    <h2 class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">Complete Your Profile</h2>
+    <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Please fill in the required information to finish setting up your account.</p>
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="mt-5 space-y-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">Phone</label>
+        <input type="text" formControlName="phone" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 mt-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white" placeholder="e.g., +1234567890" />
+        <div *ngIf="profileForm.get('phone')?.invalid && (profileForm.get('phone')?.dirty || profileForm.get('phone')?.touched)" class="text-red-500 text-xs mt-1">
+          <span *ngIf="profileForm.get('phone')?.errors?.['required']">Phone is required.</span>
+          <span *ngIf="profileForm.get('phone')?.errors?.['maxlength']">Phone is too long.</span>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">Role</label>
+        <select formControlName="role" class="w-full border border-gray-300 dark:border-gray-600 rounded-lg p-2 mt-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+          <option value="" disabled>Select your role</option>
+          <option value="student">Student</option>
+          <option value="parent">Parent</option>
+          <option value="teacher">Teacher</option>
+          <option value="center_admin">Center Admin</option>
+          <option value="assistant">Assistant</option>
+        </select>
+        <div *ngIf="profileForm.get('role')?.invalid && (profileForm.get('role')?.dirty || profileForm.get('role')?.touched)" class="text-red-500 text-xs mt-1">
+          <span *ngIf="profileForm.get('role')?.errors?.['required']">Role is required.</span>
+        </div>
+      </div>
+      <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-full py-2 font-semibold">
+        Save Profile
+      </button>
+    </form>
+    <div class="mt-5">
+      <button (click)="logout()" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
+        Sign out
+      </button>
+    </div>
+  </div>
+</div>
