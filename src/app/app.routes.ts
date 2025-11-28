@@ -31,5 +31,8 @@ export const routes: Routes = [
   ...StaffRoutes,
 
   // 404 Page
-  { path: '**', loadComponent: () => import('./features/not-found/not-found').then(m => m.NotFound) }
+  { path: '**', loadComponent: () => import('./features/not-found/not-found').then(m => m.NotFound) },
+
+    // Home page
+  { path: '', component: HomePage },
 ];
