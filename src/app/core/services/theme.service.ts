@@ -1,31 +1,36 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, signal, effect } from '@angular/core';
 
-export type Theme = 'light' | 'dark';
-
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root'
+})
 export class ThemeService {
-  private _theme = new BehaviorSubject<Theme>('light');
-  theme$ = this._theme.asObservable();
+    darkMode = signal<boolean>(false);
 
-  constructor() {
-    const saved = localStorage.getItem('theme') as Theme | null;
-    if (saved) this._theme.next(saved);
-    this.applyToDocument(this._theme.value);
-  }
+    constructor() {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            this.darkMode.set(savedTheme === 'dark');
+        } else {
+            // Check system preference
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            this.darkMode.set(prefersDark);
+        }
 
-  setTheme(theme: Theme) {
-    this._theme.next(theme);
-    localStorage.setItem('theme', theme);
-    this.applyToDocument(theme);
-  }
+        // Effect to apply class to html element
+        effect(() => {
+            if (this.darkMode()) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    }
 
-  toggle() {
-    this.setTheme(this._theme.value === 'light' ? 'dark' : 'light');
-  }
-
-  private applyToDocument(theme: Theme) {
-    const doc = document.documentElement;
-    if (theme === 'dark') doc.classList.add('dark'); else doc.classList.remove('dark');
-  }
+    toggle() {
+        this.darkMode.update(v => !v);
+    }
 }
+
+
