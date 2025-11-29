@@ -61,8 +61,13 @@
             </div>
 
             <div class="field">
-              <label>{{ preferences.language === 'ar' ? 'الدور' : 'Role' }}</label>
-              <input type="text" [(ngModel)]="user.role" />
+              <label>{{ preferences.language === 'ar' ? 'الأدوار' : 'Roles' }}</label>
+              <input
+                type="text"
+                [ngModel]="rolesInput"
+                (ngModelChange)="onRolesInputChange($event)"
+                placeholder="admin, teacher"
+              />
             </div>
 
             <div class="actions-right">

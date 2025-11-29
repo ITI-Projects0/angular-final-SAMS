@@ -14,8 +14,7 @@ export const AdminRoutes: Routes = [
     path: 'dashboard/admin',
     component: AdminLayout,
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: AdminDashboard },
+      { path: '', component: AdminDashboard },
       { path: 'setting', component: Setting },
       { path: 'centers', component: Centers },
       { path: 'courses', component: Courses },
@@ -23,7 +22,6 @@ export const AdminRoutes: Routes = [
       { path: 'students', component: Students },
       { path: 'contacts', component: Contacts },
       { path: 'payments', component: Payments },
-      
-        ]
-    }
+    ],
+  },
 ];

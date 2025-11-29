@@ -17,10 +17,11 @@ export class Setting implements OnInit {
   user = {
     name: 'John Doe',
     email: 'john@example.com',
-    role: 'Staff Member',
+    roles: ['Staff Member'],
     avatar:
       'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=compress&cs=tinysrgb&w=200',
   };
+  rolesInput = '';
 
   // تفضيلات عامة
   preferences: {
@@ -49,6 +50,7 @@ export class Setting implements OnInit {
   };
 
   ngOnInit(): void {
+    this.rolesInput = this.user.roles.join(', ');
     this.applyTheme();
     this.applyLanguage();
   }
@@ -130,5 +132,13 @@ export class Setting implements OnInit {
 
   changePassword() {
     console.log('Open change password flow');
+  }
+
+  onRolesInputChange(value: string): void {
+    this.rolesInput = value;
+    this.user.roles = value
+      .split(',')
+      .map((role) => role.trim())
+      .filter((role) => role.length > 0);
   }
 }

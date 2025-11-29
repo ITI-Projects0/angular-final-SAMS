@@ -9,7 +9,9 @@ export const roleGuard: CanActivateFn = (route, state) => {
     const user = tokenStorage.getUser();
     const expectedRoles = route.data['roles'] as Array<string>;
 
-    if (user && user.roles && user.roles.some(role => expectedRoles.includes(role))) {
+    const userRoles = Array.isArray(user?.roles) ? user.roles : [];
+
+    if (user && userRoles.some(role => expectedRoles.includes(role))) {
         return true;
     }
 

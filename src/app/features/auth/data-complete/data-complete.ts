@@ -17,7 +17,7 @@ export class DataComplete {
 
   profileForm = this.fb.group({
     phone: ['', [Validators.required, Validators.maxLength(20)]],
-    role: ['', Validators.required]
+    roles: [[], Validators.required]
   });
 
   logout() {

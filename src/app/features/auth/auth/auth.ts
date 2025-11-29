@@ -479,7 +479,7 @@ export class Auth {
         this.mode.set('reset-password');
         this.position.set('right');
         this.setupFormForMode('reset-password');
-        
+
         const resetCode = params.get('code');
         if (resetCode) {
           this.loadingService.show();
@@ -515,8 +515,9 @@ export class Auth {
     if (!user) {
       return false;
     }
+    const hasAdminRole = Array.isArray(user.roles) && user.roles.includes('admin');
     // Only require profile completion when backend explicitly marks user as incomplete
-    return user.role !== 'admin' && user.is_data_complete === false;
+    return !hasAdminRole && user.is_data_complete === false;
   }
 
   private updateUrl(mode: AuthMode, params?: Record<string, string | null>) {
