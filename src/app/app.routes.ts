@@ -55,7 +55,7 @@ export const routes: Routes = [
   },
 
       ...StaffRoutes,
-      ...AdminRoutes
+      ...AdminRoutes,
 
   // 404 Page
   {
