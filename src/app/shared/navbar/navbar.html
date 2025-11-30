@@ -1,43 +1,53 @@
-<div class="bg-[#0f1729] text-slate-100 border-b border-slate-800 shadow-md">
+<div class="navbar">
   <div class="w-full px-6 py-3 flex items-center justify-between gap-4">
     <div class="flex items-center gap-3 flex-1">
       <button (click)="toggleSidebar.emit()" aria-label="Toggle sidebar"
-        class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-700 text-slate-100 bg-slate-800 hover:bg-slate-700 shadow-sm hover:-translate-y-0.5 transition duration-150">
-        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h12M4 17h16"/></svg>
+        class="icon-btn sidebar-toggle inline-flex items-center justify-center w-10 h-10 rounded-xl shadow-sm hover:-translate-y-0.5 transition duration-150">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round">
+          <path d="M4 7h16M4 12h12M4 17h16" /></svg>
       </button>
-      <div class="flex items-center gap-2 font-bold text-slate-100">
+      <div class="flex items-center gap-2 font-bold">
         <span class="inline-flex w-2.5 h-2.5 rounded-full bg-teal-400 shadow-[0_0_0_6px_rgba(45,212,191,0.2)]"></span>
         <span class="text-lg">Staff Portal</span>
       </div>
     </div>
 
     <div class="flex items-center gap-2">
-      <div class="hidden sm:inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/90 px-3 py-1 text-sm text-slate-200 shadow-sm">
+      <div class="hidden sm:inline-flex items-center gap-2 rounded-full user-status px-3 py-1 text-sm shadow-sm">
         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
         Admin
       </div>
 
-      <div class="relative inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/90 px-2 py-1 shadow-sm cursor-pointer hover:-translate-y-0.5 transition duration-150" (click)="dropdown = !dropdown" (document:click)="dropdown = false" (click)="$event.stopPropagation()">
-        <img src="https://via.placeholder.com/80/4b5563/ffffff?text=JD" alt="avatar" class="w-9 h-9 rounded-full object-cover">
+      <div
+        class="relative inline-flex items-center gap-2 rounded-full user-menu px-2 py-1 shadow-sm cursor-pointer hover:-translate-y-0.5 transition duration-150"
+        (click)="dropdown = !dropdown" (document:click)="dropdown = false" (click)="$event.stopPropagation()">
+        <img src="https://via.placeholder.com/80/4b5563/ffffff?text=JD" alt="avatar"
+          class="w-9 h-9 rounded-full object-cover">
         <div class="hidden sm:flex flex-col leading-tight">
           <span class="text-sm font-semibold">John Doe</span>
-          <span class="text-xs text-slate-400">Admin</span>
+          <span class="text-xs muted">Admin</span>
         </div>
-        <svg viewBox="0 0 24 24" class="w-4 h-4 text-slate-300 transition-transform duration-150" [class.rotate-180]="dropdown" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        <svg viewBox="0 0 24 24" class="w-4 h-4 transition-transform duration-150" [class.rotate-180]="dropdown"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m6 9 6 6 6-6" /></svg>
         @if(dropdown) {
-          <div class="absolute right-0 top-12 w-52 rounded-2xl border border-slate-700 bg-slate-900/95 shadow-2xl overflow-hidden animate-fade">
-            <div class="px-4 py-3 flex items-center gap-3 border-b border-slate-800">
-              <img src="https://via.placeholder.com/80/4b5563/ffffff?text=JD" alt="avatar" class="w-10 h-10 rounded-full object-cover">
+          <div
+            class="absolute right-0 top-12 w-52 rounded-2xl border user-dropdown shadow-2xl overflow-hidden animate-fade">
+            <div class="px-4 py-3 flex items-center gap-3 border-b user-dropdown-header">
+              <img src="https://via.placeholder.com/80/4b5563/ffffff?text=JD" alt="avatar"
+                class="w-10 h-10 rounded-full object-cover">
               <div>
-                <p class="text-sm font-semibold text-slate-100">John Doe</p>
-                <p class="text-xs text-slate-400">john@example.com</p>
+                <p class="text-sm font-semibold">John Doe</p>
+                <p class="text-xs muted">john@example.com</p>
               </div>
             </div>
-            <a class="block px-4 py-2.5 text-sm text-slate-100 hover:bg-slate-800 transition">Profile</a>
-            <a class="block px-4 py-2.5 text-sm text-slate-100 hover:bg-slate-800 transition">Settings</a>
-            <button type="button" (click)="logout()" class="block w-full text-left px-4 py-2.5 text-sm text-rose-400 hover:bg-rose-900/20 transition">Logout</button>
+            <a class="block px-4 py-2.5 text-sm transition">Profile</a>
+            <a class="block px-4 py-2.5 text-sm transition">Settings</a>
+            <button type="button" (click)="logout()"
+              class="block w-full text-left px-4 py-2.5 text-sm text-rose-400 transition">Logout</button>
           </div>
-        }
+          }
       </div>
     </div>
   </div>

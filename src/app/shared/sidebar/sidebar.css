@@ -1,9 +1,14 @@
+/* Sidebar - theme aware, responsive */
 .sidebar {
   width: 250px;
-  background: #fff;
-  border-right: 1px solid #e6e9ef;
+  background: var(--card);
+  border-right: 1px solid var(--glass-border);
   padding: 18px;
   box-sizing: border-box;
+  color: var(--muted);
+  transition: width .25s ease, transform .25s ease, background .2s ease, color .2s ease;
+  position: relative;
+  z-index: 40;
 }
 
 .sidebar.collapsed {
@@ -14,25 +19,42 @@
   text-align: center;
 }
 
-.menu a {
-  display: block;
-  padding: 10px 8px;
-  color: #333;
+/* nav links */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .5rem .75rem;
+  color: var(--muted);
   text-decoration: none;
-  border-radius: 6px;
-  margin-bottom: 6px;
+  border-radius: 12px;
+  margin: 6px 8px;
+  transition: background .12s ease, color .12s ease, box-shadow .12s ease;
 }
 
+.nav-link:hover {
+  background: var(--card-strong);
+  color: var(--text);
+}
+
+.nav-link.active {
+  background: linear-gradient(90deg, rgba(20, 184, 166, 0.12), rgba(99, 102, 241, 0.06));
+  color: var(--text);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* legacy .menu.active -> keep compatibility */
 .menu a.active {
-  background: #eef6ff;
+  background: color-mix(in srgb, var(--primary) 10%, var(--card));
 }
 
 .badge {
   float: right;
-  background: #dbeafe;
+  background: rgba(99, 102, 241, 0.06);
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 12px;
+  color: var(--text);
 }
 
 .sidebar-footer {
@@ -43,8 +65,41 @@
 }
 
 .sidebar svg {
-  min-width: 24px;
-  min-height: 24px;
-  width: 24px;
-  height: 24px;
+  min-width: 20px;
+  min-height: 20px;
+  width: 20px;
+  height: 20px;
+  color: currentColor;
+}
+
+.brand-mark {
+  background: linear-gradient(135deg, rgba(45, 212, 191, 1), rgba(96, 165, 250, 1));
+  box-shadow: 0 10px 30px rgba(96, 165, 250, 0.12);
+}
+
+/* collapsed state */
+.sidebar.collapsed {
+  width: 72px;
+}
+
+/* small screens: sidebar slides in/out */
+@media (max-width: 639px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-115%);
+    width: 240px;
+    box-shadow: 0 10px 40px rgba(2, 6, 23, 0.4);
+  }
+
+  .sidebar:not(.collapsed) {
+    transform: translateX(0);
+    z-index: 60;
+  }
+
+  .sidebar.collapsed {
+    width: 72px;
+  }
 }

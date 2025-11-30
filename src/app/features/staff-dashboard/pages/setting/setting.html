@@ -1,4 +1,4 @@
-<section class="settings-wrapper" [class.rtl]="preferences.language === 'ar'">
+<section class="page-container settings-wrapper" [class.rtl]="preferences.language === 'ar'">
   <!-- Header -->
   <header class="settings-header">
     <div>
@@ -62,12 +62,8 @@
 
             <div class="field">
               <label>{{ preferences.language === 'ar' ? 'الأدوار' : 'Roles' }}</label>
-              <input
-                type="text"
-                [ngModel]="rolesInput"
-                (ngModelChange)="onRolesInputChange($event)"
-                placeholder="admin, teacher"
-              />
+              <input type="text" [ngModel]="rolesInput" (ngModelChange)="onRolesInputChange($event)"
+                placeholder="admin, teacher" />
             </div>
 
             <div class="actions-right">
@@ -172,17 +168,24 @@
 
         <div class="field">
           <label>{{ preferences.language === 'ar' ? 'المظهر' : 'Theme' }}</label>
-          <select [(ngModel)]="preferences.theme" (ngModelChange)="onThemeChange($event)">
-            <option value="light">
-              {{ preferences.language === 'ar' ? 'فاتح' : 'Light' }}
-            </option>
-            <option value="dark">
-              {{ preferences.language === 'ar' ? 'داكن' : 'Dark' }}
-            </option>
-            <option value="system">
-              {{ preferences.language === 'ar' ? 'حسب النظام' : 'System default' }}
-            </option>
-          </select>
+          <div style="display:flex;gap:.5rem;align-items:center">
+            <select [(ngModel)]="preferences.theme" (ngModelChange)="onThemeChange($event)">
+              <option value="light">
+                {{ preferences.language === 'ar' ? 'فاتح' : 'Light' }}
+              </option>
+              <option value="dark">
+                {{ preferences.language === 'ar' ? 'داكن' : 'Dark' }}
+              </option>
+              <option value="system">
+                {{ preferences.language === 'ar' ? 'حسب النظام' : 'System default' }}
+              </option>
+            </select>
+            <!-- quick toggle -->
+            <div style="display:flex;gap:.4rem">
+              <button type="button" class="btn-secondary small" (click)="onThemeChange('light')">☀️</button>
+              <button type="button" class="btn-secondary small" (click)="onThemeChange('dark')">🌙</button>
+            </div>
+          </div>
         </div>
 
         <div class="field">

@@ -1,0 +1,240 @@
+/* Clean canonical stylesheet for student-info (use this file) */
+.student-info-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+  min-height: calc(100vh - 80px);
+  box-sizing: border-box;
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.top-bar {
+  margin-bottom: 1rem;
+}
+
+.back-btn {
+  font-size: .85rem;
+  color: var(--text);
+  background: var(--card-strong);
+  padding: .35rem .75rem;
+  border-radius: 999px;
+  border: 1px solid var(--glass-border);
+}
+
+.card {
+  background: var(--card);
+  border-radius: 1.25rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+  padding: 1rem;
+  color: var(--text);
+}
+
+.card-header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.avatar-big {
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 3px solid var(--glass-border);
+}
+
+.avatar-big img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block
+}
+
+.main-info {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem
+}
+
+.name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text)
+}
+
+.role {
+  font-size: .9rem;
+  color: var(--muted)
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .75rem;
+  padding: .2rem .7rem;
+  border-radius: 999px;
+  font-weight: 600;
+  margin-top: .25rem
+}
+
+.badge-accept {
+  background: color-mix(in srgb, var(--success) 18%, var(--card));
+  color: var(--success)
+}
+
+.badge-pending {
+  background: color-mix(in srgb, var(--warning) 16%, var(--card));
+  color: var(--warning)
+}
+
+.badge-reject {
+  background: color-mix(in srgb, var(--danger) 16%, var(--card));
+  color: var(--danger)
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem
+}
+
+.info-item .label {
+  font-size: .75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .04em
+}
+
+.info-item .value {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--text)
+}
+
+.value-muted {
+  font-weight: 400;
+  color: var(--muted)
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: .75rem;
+  margin-bottom: 1.25rem
+}
+
+.stat-card {
+  background: var(--card-strong);
+  border-radius: .75rem;
+  padding: .75rem;
+  border: 1px solid var(--glass-border)
+}
+
+.stat-card .stat-label {
+  font-size: .75rem;
+  color: var(--muted);
+  margin-bottom: .25rem
+}
+
+.stat-card .stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text)
+}
+
+.stat-card.green {
+  background: color-mix(in srgb, var(--success) 14%, var(--card));
+  border-color: color-mix(in srgb, var(--success) 30%, transparent)
+}
+
+.stat-card.red {
+  background: color-mix(in srgb, var(--danger) 12%, var(--card));
+  border-color: color-mix(in srgb, var(--danger) 24%, transparent)
+}
+
+.section {
+  margin-top: .75rem
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .25rem
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: .2rem
+}
+
+.table-wrapper {
+  margin-top: .5rem;
+  border-radius: .75rem;
+  border: 1px solid var(--glass-border);
+  overflow: hidden
+}
+
+.simple-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .85rem
+}
+
+.simple-table thead {
+  background: var(--card-strong)
+}
+
+.simple-table th,
+.simple-table td {
+  padding: .6rem .75rem;
+  border-bottom: 1px solid var(--glass-border);
+  text-align: left
+}
+
+.simple-table th {
+  font-size: .75rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--muted)
+}
+
+.simple-table tbody tr:nth-child(even) {
+  background: var(--card)
+}
+
+.simple-table td.muted {
+  color: var(--muted);
+  font-size: .8rem
+}
+
+@media (max-width:640px) {
+  .student-info-wrapper {
+    padding: 1rem
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start
+  }
+
+  .avatar-big {
+    width: 72px;
+    height: 72px
+  }
+
+  .class-actions {
+    flex-direction: column;
+    align-items: stretch
+  }
+}

@@ -51,7 +51,13 @@ export class Setting implements OnInit {
 
   ngOnInit(): void {
     this.rolesInput = this.user.roles.join(', ');
+    // load persisted theme if available
+    const persisted = localStorage.getItem('sams_theme') as Theme | null;
+    if (persisted) this.preferences.theme = persisted;
     this.applyTheme();
+    // load language preference
+    const lang = (localStorage.getItem('sams_language') as LanguageCode | null) ?? null;
+    if (lang) this.preferences.language = lang;
     this.applyLanguage();
   }
 
@@ -60,11 +66,13 @@ export class Setting implements OnInit {
   // -------------------------------------
   onThemeChange(value: Theme): void {
     this.preferences.theme = value;
+    localStorage.setItem('sams_theme', value);
     this.applyTheme();
   }
 
   onLanguageChange(value: LanguageCode): void {
     this.preferences.language = value;
+    localStorage.setItem('sams_language', value);
     this.applyLanguage();
   }
 

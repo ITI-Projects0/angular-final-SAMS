@@ -5,28 +5,30 @@
   max-width: 900px;
   margin: auto;
   padding: 20px;
-  color: #1f2937;
-  /* نص واضح */
-  font-family: sans-serif;
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 .back-btn {
-  background: #e5e7eb;
+  background: var(--card-strong);
   padding: 8px 14px;
   border-radius: 6px;
   margin-bottom: 20px;
+  color: var(--text);
+  border: 1px solid var(--glass-border);
 }
 
 /* ============================
    GROUP CARD
 ================================ */
 .group-card {
-  background: white;
-  padding: 2rem;
+  background: var(--card);
+  padding: 1.25rem;
   border-radius: 14px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--glass-border);
   text-align: center;
   margin-bottom: 35px;
+  color: var(--text);
 }
 
 .group-img {
@@ -36,7 +38,7 @@
   object-fit: cover;
   display: block;
   margin: auto;
-  border: 3px solid #eee;
+  border: 3px solid var(--glass-border);
 }
 
 .group-title {
@@ -54,22 +56,23 @@
 }
 
 .tag {
-  background: #eef2ff;
+  background: var(--panel);
   padding: 6px 14px;
-  color: #4f46e5;
+  color: var(--primary);
   border-radius: 6px;
 }
 
 .members,
 .online {
-  background: #f3f4f6;
+  background: var(--card-strong);
   padding: 6px 14px;
   border-radius: 6px;
+  border: 1px solid var(--glass-border);
 }
 
 .group-desc {
   margin-top: 15px;
-  color: #444;
+  color: var(--muted);
 }
 
 /* ============================
@@ -84,22 +87,24 @@
 .schedule-table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: var(--card);
   border-radius: 12px;
   overflow: hidden;
   margin-bottom: 30px;
+  border: 1px solid var(--glass-border);
 }
 
 .schedule-table th {
-  background: #f3f4f6;
+  background: var(--card-strong);
   padding: 14px;
   text-align: left;
   font-weight: bold;
+  color: var(--muted);
 }
 
 .schedule-table td {
   padding: 14px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .status {
@@ -110,15 +115,15 @@
 }
 
 .red {
-  background: #ef4444;
+  background: var(--danger);
 }
 
 .green {
-  background: #10b981;
+  background: var(--success);
 }
 
 .details-btn {
-  background: #2563eb;
+  background: var(--primary);
   color: white;
   border-radius: 6px;
   padding: 6px 14px;
@@ -146,15 +151,16 @@
 .attendance-panel {
   position: fixed;
   top: 0;
-  right: -450px;
-  width: 420px;
+  right: -460px;
+  width: min(92%, 420px);
   height: 100%;
-  background: white;
+  background: var(--card);
   padding: 25px;
-  transition: 0.35s ease;
-  box-shadow: -3px 0 10px rgba(0, 0, 0, 0.15);
+  transition: .35s ease;
+  box-shadow: -3px 0 20px rgba(0, 0, 0, 0.22);
   overflow-y: auto;
-  color: #1f2937;
+  color: var(--text);
+  border-left: 1px solid var(--glass-border);
 }
 
 .attendance-panel.open {
@@ -181,9 +187,11 @@
   width: 100%;
   padding: 10px;
   border-radius: 6px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--glass-border);
   margin: 15px 0;
   font-size: 1rem;
+  background: var(--card-strong);
+  color: var(--text)
 }
 
 /* ============================
@@ -197,28 +205,28 @@
 }
 
 .list-title.green {
-  color: #059669;
+  color: var(--success)
 }
 
 .list-title.red {
-  color: #dc2626;
+  color: var(--danger)
 }
 
 .name-list {
-  background: #f9fafb;
+  background: var(--card-strong);
   padding: 15px;
   border-radius: 10px;
   max-height: 250px;
-  overflow-y: auto;
+  overflow-y: auto
 }
 
 .name-list li {
   padding: 8px 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--glass-border);
   font-size: 1rem;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center
 }
 
 /* buttons */
@@ -231,11 +239,11 @@
 }
 
 .mark-btn.red {
-  background: #ef4444;
+  background: var(--danger)
 }
 
 .mark-btn.green {
-  background: #10b981;
+  background: var(--success)
 }
 
 /* ============================
@@ -260,12 +268,13 @@
   position: fixed;
   right: -380px;
   top: 0;
-  width: 350px;
+  width: min(95%, 350px);
   height: 100%;
-  background: white;
+  background: var(--card);
   padding: 20px;
   transition: .35s ease;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, .2);
+  box-shadow: -2px 0 20px rgba(0, 0, 0, 0.22);
+  border-left: 1px solid var(--glass-border);
 }
 
 .session-panel.open {
@@ -273,7 +282,7 @@
 }
 
 .btn-save {
-  background: #2563eb;
+  background: var(--primary);
   color: white;
   padding: 10px;
   width: 100%;
@@ -283,9 +292,29 @@
 }
 
 .add-session-btn {
-  background: #10b981;
+  background: var(--success);
   color: white;
   padding: 8px 14px;
   border-radius: 6px;
   margin-bottom: 15px;
+}
+
+@media (max-width: 640px) {
+  .group-info-container {
+    padding: 12px
+  }
+
+  .group-card {
+    padding: 1rem
+  }
+
+  .attendance-panel,
+  .session-panel {
+    right: -96%
+  }
+
+  .attendance-panel.open,
+  .session-panel.open {
+    right: 0
+  }
 }

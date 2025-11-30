@@ -1,70 +1,132 @@
 /* Global theme variables and glass effect */
-:root{
+:root {
   --bg: #f5f7fb;
-  --card: rgba(255,255,255,0.9);
+  --card: rgba(255, 255, 255, 0.9);
   --muted: #5b6170;
   --text: #0b1021;
   --primary: #3b82f6;
-  --glass: rgba(255,255,255,0.72);
-  --glass-border: rgba(60,68,85,0.14);
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(60, 68, 85, 0.14);
   --panel: #eef2ff;
   --card-strong: #ffffff;
   --muted-strong: #454c5f;
   --success: #0ea5e9;
   --warning: #f59e0b;
   --danger: #ef4444;
-  --shadow-strong: 0 25px 60px rgba(15,23,42,0.14);
-  --shadow-soft: 0 12px 30px rgba(15,23,42,0.08);
+  --shadow-strong: 0 25px 60px rgba(15, 23, 42, 0.14);
+  --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
-.dark{
+.dark {
   --bg: #0b1220;
-  --card: rgba(15,23,42,0.7);
+  --card: rgba(15, 23, 42, 0.7);
   --muted: #94a3b8;
   --text: #e2e8f0;
   --primary: #60a5fa;
-  --glass: rgba(255,255,255,0.06);
-  --glass-border: rgba(255,255,255,0.12);
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-border: rgba(255, 255, 255, 0.12);
   --panel: #111827;
   --card-strong: #0f172a;
   --muted-strong: #cbd5e1;
   --success: #34d399;
   --warning: #fbbf24;
   --danger: #f87171;
-  --shadow-strong: 0 25px 60px rgba(0,0,0,0.35);
-  --shadow-soft: 0 12px 30px rgba(0,0,0,0.28);
+  --shadow-strong: 0 25px 60px rgba(0, 0, 0, 0.35);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+
+/* Component helpers (use throughout app) */
+.page-container {
+  width: 100%;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  color: var(--text);
+}
+
+.card {
+  background: var(--card);
+  color: var(--text);
+  border-radius: 1rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+}
+
+.card-strong {
+  background: var(--card-strong);
+  color: var(--text);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.text-muted-strong {
+  color: var(--muted-strong);
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 68%, white));
+  color: white;
+  border: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text);
+}
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
 }
 
 /* glass helper */
-.glass{
-  background: linear-gradient(135deg, var(--glass), rgba(255,255,255,0.03));
+.glass {
+  background: linear-gradient(135deg, var(--glass), rgba(255, 255, 255, 0.03));
   backdrop-filter: blur(10px) saturate(125%);
   border: 1px solid var(--glass-border);
 }
 
-body{
+body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Space Grotesk','Inter','Cairo',system-ui,-apple-system,sans-serif;
+  font-family: 'Space Grotesk', 'Inter', 'Cairo', system-ui, -apple-system, sans-serif;
   margin: 0;
   transition: background-color 180ms ease, color 180ms ease;
 }
 
 /* keep subtle glow only in light mode */
 :root:not(.dark) body {
-  background: radial-gradient(circle at 20% 20%, rgba(124,58,237,0.06), transparent 32%),
-              radial-gradient(circle at 80% 0%, rgba(59,130,246,0.08), transparent 30%),
-              var(--bg);
+  background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.06), transparent 32%),
+    radial-gradient(circle at 80% 0%, rgba(59, 130, 246, 0.08), transparent 30%),
+    var(--bg);
 }
 
-html.rtl, html.rtl body { direction: rtl; }
-html:not(.rtl), html:not(.rtl) body { direction: ltr; }
+html.rtl,
+html.rtl body {
+  direction: rtl;
+}
 
-.surface { box-shadow: 0 18px 40px rgba(0,0,0,0.08); }
+html:not(.rtl),
+html:not(.rtl) body {
+  direction: ltr;
+}
+
+.surface {
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
 
 /* Utility buttons */
-.btn-simple{ transition: transform 120ms ease, border-color 120ms ease; }
-.btn-simple:hover{ transform: translateY(-1px); border-color: var(--primary); }
+.btn-simple {
+  transition: transform 120ms ease, border-color 120ms ease;
+}
+
+.btn-simple:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary);
+}
 
 /* You can add global styles to this file, and also import other style files */
 

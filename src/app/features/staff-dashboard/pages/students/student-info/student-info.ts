@@ -47,7 +47,7 @@ interface ParentContact {
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './student-info.html',
-  styleUrl: './student-info.css',
+  styleUrl: './student-info.clean.css',
 })
 export class StudentInfo {
   student: Student | undefined;

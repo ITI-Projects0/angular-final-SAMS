@@ -7,13 +7,14 @@ import { GroupInfo } from './pages/groups/group-info/group-info';
 import { Groups } from './pages/groups/groups';
 import { authGuard } from '../../core/auth/auth.guard';
 import { roleGuard } from '../../core/auth/role.guard';
-
+import { Students } from './pages/students/students';
+import { Setting } from './pages/setting/setting';
+import { StudentInfo } from './pages/students/student-info/student-info';
 export const StaffRoutes: Routes = [
   {
     path: 'dashboard/staff',
     component: DashboardLayout,
     canActivate: [authGuard, roleGuard],
-    // Allow all staff-facing roles; missing center_admin was causing a redirect loop
     data: { roles: ['teacher', 'assistant', 'center_admin'] },
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -21,9 +22,10 @@ export const StaffRoutes: Routes = [
       { path: 'groups', component: Groups },
       { path: 'groups/:id', component: GroupInfo },
       { path: 'staff', component: Staff },
-      //   { path: 'attendance', component: AttendanceComponent },
-      //   { path: 'groups', component: GroupsComponent },
-      // other staff pages...
+      { path: 'students', component: Students },
+      { path: 'students/:id', component: StudentInfo },
+      { path: 'setting', component: Setting },
+
     ]
   }
 ];
