@@ -26,7 +26,6 @@ export const AdminRoutes: Routes = [
       { path: 'students', component: Students },
       { path: 'contacts', component: Contacts },
       { path: 'payments', component: Payments },
-
     ]
   }
 ];
