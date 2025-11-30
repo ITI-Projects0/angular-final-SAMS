@@ -1,0 +1,44 @@
+#background {
+    position: fixed;
+    inset: 0;
+    background-image: url('/assets/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+    position: relative;
+}
+
+.dark-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--icon-color, #555);
+    cursor: pointer;
+}
+
+.dark .dark-toggle {
+    color: #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --card-bg: #1a1a1a;
+        --icon-color: #ddd;
+    }
+
+    .auth-card {
+        color: #fafafa;
+    }
+}

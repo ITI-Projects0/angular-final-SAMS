@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { ThemeService } from '../../../core/services/theme.service';
 import { AuthService } from '../../../core/auth/auth.service';
+import { TokenStorageService } from '../../../core/auth/token-storage.service';
 
 @Component({
   selector: 'app-home-page',
@@ -117,9 +118,12 @@ export class Home implements OnInit, OnDestroy {
     });
   }
 
+  private readonly tokenStorage = inject(TokenStorageService);
+
   goToDashboard(): void {
-    // Basic redirect; adjust per-role routing if needed
-    this.router.navigate(['/dashboard/staff']);
+    const user = this.tokenStorage.getUser();
+    const redirectUrl = this.authService.getDashboardUrl(user?.roles || []);
+    this.router.navigate([redirectUrl]);
   }
 
   setActiveSlide(index: number): void {

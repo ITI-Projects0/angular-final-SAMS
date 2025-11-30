@@ -10,12 +10,8 @@ export const guestGuard: CanActivateFn = (route, state) => {
 
   if (authService.isLoggedIn()) {
     const user = tokenStorage.getUser();
-    const needsProfile = user?.role !== 'admin' && user?.is_data_complete === false;
-    if (needsProfile) {
-      return router.createUrlTree(['/complete-profile']);
-    }
-    // Default dashboard after login
-    return router.createUrlTree(['/dashboard/staff']);
+    const redirectUrl = authService.getDashboardUrl(user?.roles || []);
+    return router.createUrlTree([redirectUrl]);
   }
 
   return true;

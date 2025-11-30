@@ -33,7 +33,7 @@ export class TokenStorageService {
         const sessionToken = this.getStorage('session')?.getItem(TOKEN_KEY);
         if (sessionToken) {
             return sessionToken;
-        }
+    }
         return this.getStorage('local')?.getItem(TOKEN_KEY) ?? null;
     }
 
@@ -46,7 +46,7 @@ export class TokenStorageService {
         try {
             return JSON.parse(raw);
         } catch {
-            return null;
+        return null;
         }
     }
 

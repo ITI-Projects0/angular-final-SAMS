@@ -1,135 +1,74 @@
-# SAMS Frontend (Angular 21 + TailwindCSS)
+# SAMS - Frontend (Angular)
 
-This project is the frontend for the **SAMS Educational Center Management System**, built using:
+## Overview
+This is the frontend application for the Student Attendance Management System (SAMS), built with **Angular 18+**. It features a modern, responsive design with a robust authentication system and dynamic role-based dashboards.
 
-- **Angular 21 (Standalone Components)**
-- **TailwindCSS**
-- **Role-based dashboards**
-- **Clean scalable architecture**
+## 🚀 Key Features
 
-### User Roles:
-- `admin`
-- `center_admin`
-- `teacher`
-- `assistant`
-- `parent`
-- `student`
+### Authentication & Security
+- **Secure Auth Flow**: JWT-based authentication with `HttpInterceptor` to attach tokens automatically.
+- **Google Login**: Implements **Secure Exchange Token** flow to safely authenticate with the backend.
+- **Guards**: 
+  - `AuthGuard`: Protects private routes.
+  - `GuestGuard`: Prevents logged-in users from accessing login/register pages.
+  - `RoleGuard`: Restricts access based on user roles (Admin vs Staff vs Student).
+- **Auto-Logout**: Handles 401 Unauthorized errors by clearing session and redirecting to login.
 
-### Dashboard Grouping:
-| Roles | Dashboard |
-|-------|-----------|
-| admin | **Admin Dashboard** (exclusive) |
-| center_admin, teacher, assistant | **Shared Staff Dashboard** |
-| parent, student | **Shared Family Dashboard** |
+### Architecture
+- **Standalone Components**: Modern Angular architecture without NgModules.
+- **Layouts**:
+  - `AuthLayout`: For login, register, and reset password pages.
+  - `MainLayout`: For dashboard and internal pages (Sidebar, Navbar).
+  - `PublicLayout`: For landing pages.
+- **Services**: Centralized `AuthService`, `ApiService`, and `TokenStorageService`.
 
----
+### UI/UX
+- **Responsive Design**: Mobile-first approach.
+- **Dark Mode**: Built-in theme switcher with persistence.
+- **Feedback**: Toast notifications and loading indicators.
 
-# 📁 Project Structure (With Descriptions)
+## 🛠️ Tech Stack
+- **Framework**: Angular 18+
+- **Styling**: Vanilla CSS (with custom design system variables).
+- **State Management**: RxJS (Signals for some UI states).
+- **Routing**: Angular Router with lazy loading.
 
-Below is the complete project structure including **comments explaining each folder and file**.
+## ⚙️ Setup & Installation
 
-```txt
-src/
-└── app/
-    ├── core/                                   # Core global logic for the entire app
-    │   ├── auth/                               # Authentication/Authorization logic
-    │   │   ├── auth.service.ts                 # Login, register, logout, token refresh
-    │   │   ├── auth.guard.ts                   # Blocks access if user is not authenticated
-    │   │   ├── role.guard.ts                   # Checks user role before loading dashboard
-    │   │   └── token-storage.service.ts        # Handles token and user data storage
-    │   │
-    │   ├── interceptors/                       # HTTP interceptors
-    │   │   ├── auth.interceptor.ts             # Attaches JWT token to API requests
-    │   │   └── error.interceptor.ts            # Global error handler (401/500/etc)
-    │   │
-    │   ├── services/                           # Global reusable services
-    │   │   ├── api.service.ts                  # Generic HTTP API wrapper
-    │   │   ├── notification.service.ts         # Toast and alert service
-    │   │   └── loading.service.ts              # Controls global loading spinner
-    │   │
-    │   ├── models/                             # TypeScript interfaces and types
-    │   │   ├── user.model.ts                   # User interface with role
-    │   │   ├── group.model.ts                  # Groups data model
-    │   │   └── assessment.model.ts             # Assessment data model
-    │   │
-    │   └── utils/                              # Utility helper functions
-    │       └── date.util.ts                    # Example date formatting utility
-    │
-    ├── shared/                                 # Reusable UI blocks + pipes + directives
-    │   ├── components/                         # Shared UI components
-    │   │   ├── navbar/                         # Global navigation bar
-    │   │   │   └── navbar.component.ts
-    │   │   ├── footer/                         # Global footer
-    │   │   │   └── footer.component.ts
-    │   │   └── sidebar/                        # Sidebar used inside dashboards
-    │   │       └── sidebar.component.ts
-    │   │
-    │   ├── ui/                                 # Tailwind UI kit components
-    │   │   ├── button/                         # Reusable button component
-    │   │   │   └── button.component.ts
-    │   │   ├── card/                           # Reusable card wrapper
-    │   │   │   └── card.component.ts
-    │   │   └── modal/                          # Popup modal component
-    │   │       └── modal.component.ts
-    │   │
-    │   ├── directives/                         # Custom Angular directives
-    │   │   └── role.directive.ts               # Show/hide elements based on role
-    │   │
-    │   ├── pipes/                              # Custom pipes
-    │   │   └── capitalize.pipe.ts              # Example pipe
-    │   │
-    │   └── shared.module.ts (optional)         # Optional grouping for standalone components
-    │
-    ├── layout/                                 # Page layout wrappers
-    │   ├── public-layout/                      # Layout for public pages (home/login/register)
-    │   │   └── public-layout.component.ts
-    │   │
-    │   └── dashboard-layout/                   # Layout for all dashboard pages
-    │       └── dashboard-layout.component.ts
-    │
-    ├── features/                               # All main features grouped here
-    │   ├── public/                             # Public pages
-    │   │   └── home/
-    │   │       └── home.component.ts           # Landing page with services info + login/register
-    │   │
-    │   ├── auth/                               # Authentication screens
-    │   │   ├── login/                          # Login page
-    │   │   │   └── login.component.ts
-    │   │   ├── register/                       # Registration page
-    │   │   │   └── register.component.ts
-    │   │   └── auth.routes.ts                  # Routes for /auth/*
-    │   │
-    │   ├── admin-dashboard/                    # ADMIN-ONLY dashboard
-    │   │   ├── pages/
-    │   │   │   ├── overview/                   # Admin overview page
-    │   │   │   │   └── admin-overview.component.ts
-    │   │   │   ├── centers-management/         # Manage centers
-    │   │   │   │   └── centers-management.component.ts
-    │   │   │   └── users-management/           # Manage all users
-    │   │   │       └── users-management.component.ts
-    │   │   └── admin.routes.ts                 # /dashboard/admin routes
-    │   │
-    │   ├── staff-dashboard/                    # Shared dashboard (center_admin / teacher / assistant)
-    │   │   ├── pages/
-    │   │   │   ├── staff-overview/             # Staff dashboard home page
-    │   │   │   │   └── staff-overview.component.ts
-    │   │   │   ├── groups/                     # Group management/viewing
-    │   │   │   │   └── groups.component.ts
-    │   │   │   └── attendance/                 # Attendance tracking
-    │   │   │       └── attendance.component.ts
-    │   │   └── staff.routes.ts                 # /dashboard/staff routes
-    │   │
-    │   ├── family-dashboard/                   # Shared dashboard (parent / student)
-    │   │   ├── pages/
-    │   │   │   ├── family-overview/            # Dashboard home for parent/student
-    │   │   │   │   └── family-overview.component.ts
-    │   │   │   ├── timetable/                  # Student schedule
-    │   │   │   │   └── timetable.component.ts
-    │   │   │   └── results/                    # Exams, assessments, grades
-    │   │   │       └── results.component.ts
-    │   │   └── family.routes.ts                # /dashboard/family routes
-    │   │
-    │   └── dashboard.routes.ts                 # Determines which dashboard a role can access
-    │
-    ├── app.routes.ts                           # Main routing file for the entire app
-    └── app.component.ts                        # Root component
+1. **Navigate to the directory**
+   ```bash
+   cd angular-final-SAMS
+   ```
+
+2. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Run Development Server**
+   ```bash
+   npm start
+   ```
+   The app will typically run on `http://localhost:4200` (or `http://localhost:35045` if configured).
+
+## 📂 Project Structure
+
+```
+src/app/
+├── core/               # Singleton services, guards, interceptors, models
+│   ├── auth/           # Auth logic (Service, Guards, TokenStorage)
+│   ├── interceptors/   # HTTP Interceptors
+│   ├── models/         # TypeScript Interfaces (User, etc.)
+│   └── services/       # Global services (Api, Theme, Loading)
+├── features/           # Feature modules (Pages)
+│   ├── admin/          # Admin Dashboard & Routes
+│   ├── auth/           # Login, Register, Reset Password components
+│   ├── public/         # Home, Landing pages
+│   └── staff-dashboard/# Staff/Teacher Dashboard
+├── layouts/            # Layout components (Auth, Main, Public)
+└── shared/             # Reusable UI components
+```
+
+## 🔗 Backend Integration
+This frontend is configured to talk to the Laravel backend at `http://localhost:8000/api`.
+Ensure the backend is running and CORS is configured correctly.

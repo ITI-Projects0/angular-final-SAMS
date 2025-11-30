@@ -3,26 +3,8 @@ import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { ApiService } from '../services/api.service';
 import { TokenStorageService } from './token-storage.service';
-import { finalize, map, tap } from 'rxjs/operators';
-import { User } from '../models/user.model';
-
-interface ApiResponse<T> {
-    success: boolean;
-    message: string;
-    data: T;
-    errors?: any;
-    meta?: any;
-}
-
-interface AuthPayload {
-    token?: string;
-    user?: User;
-}
-
-interface ResetPayload {
-    email: string;
-    token: string;
-}
+import { tap, finalize, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
@@ -34,22 +16,11 @@ export class AuthService {
         private tokenStorage: TokenStorageService
     ) { }
 
-    private unwrap<T>(response: ApiResponse<T> | T): T {
-        return (response as ApiResponse<T>)?.data ?? response as T;
-    }
-
-    private persistIfPresent(payload?: AuthPayload, remember = false): void {
-        if (!payload?.token || !payload?.user) {
-            console.warn('AuthService: Missing token or user in response payload', payload);
-            return;
-        }
-        this.tokenStorage.persistAuthResponse(payload.token, payload.user, remember);
-    }
-
-    login(credentials: any, remember = false): Observable<AuthPayload> {
-        return this.apiService.post<ApiResponse<AuthPayload>>('/auth/login', credentials).pipe(
-            map((response) => this.unwrap<AuthPayload>(response)),
-            tap((payload) => this.persistIfPresent(payload, remember))
+    login(credentials: any, remember = false): Observable<any> {
+        return this.apiService.post<any>('/auth/login', credentials).pipe(
+            tap(data => {
+                this.tokenStorage.persistAuthResponse(data.token, data.user, remember);
+            })
         );
     }
 
@@ -57,13 +28,12 @@ export class AuthService {
         return this.apiService.post('/auth/register', user);
     }
 
-    logout(): Observable<void> {
-        const token = this.tokenStorage.getToken();
-        const headers = token ? new HttpHeaders().set('Authorization', `Bearer ${token}`) : undefined;
-
-        return this.apiService.post<ApiResponse<null>>('/auth/logout', {}, headers ? { headers } : {}).pipe(
-            map(() => undefined),
-            finalize(() => this.tokenStorage.signOut())
+    logout(): Observable<any> {
+        return this.apiService.post('/auth/logout', {}).pipe(
+            catchError(() => of(null)),
+            finalize(() => {
+                this.tokenStorage.signOut();
+            })
         );
     }
 
@@ -75,20 +45,26 @@ export class AuthService {
         return this.apiService.post('/auth/send-reset-code', { email });
     }
 
-    validateResetCode(code: string): Observable<ResetPayload> {
-        return this.apiService.post<ApiResponse<ResetPayload>>('/auth/validate-reset-code', { code }).pipe(
-            map((response) => this.unwrap<ResetPayload>(response))
-        );
-    }
-
     resetPassword(data: { email: string; token: string; password: string; password_confirmation: string }): Observable<any> {
         return this.apiService.post('/auth/reset-password', data);
     }
 
-    exchangeToken(code: string): Observable<AuthPayload> {
-        return this.apiService.post<ApiResponse<AuthPayload>>('/auth/exchange-token', { code }).pipe(
-            map((response) => this.unwrap<AuthPayload>(response)),
-            tap((payload) => this.persistIfPresent(payload, false))
+    loginWithGoogle(token: string, remember = false): Observable<any> {
+        this.tokenStorage.seedToken(token, remember);
+        // Manually attach header to ensure it's sent immediately after seeding
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        return this.apiService.get<any>('/me', undefined, headers).pipe(
+            tap(user => {
+                this.tokenStorage.persistAuthResponse(token, user, remember);
+            })
+        );
+    }
+
+    exchangeToken(exchangeToken: string, remember = false): Observable<any> {
+        return this.apiService.post<any>('/auth/exchange-token', { exchange_token: exchangeToken }).pipe(
+            tap(data => {
+                this.tokenStorage.persistAuthResponse(data.token, data.user, remember);
+            })
         );
     }
 
@@ -102,15 +78,16 @@ export class AuthService {
         return this.apiService.post('/auth/send-verification-email', {});
     }
 
-    completeProfile(profileData: any): Observable<User> {
-        return this.apiService.post<ApiResponse<{ user: User }>>('/auth/complete-profile', profileData).pipe(
-            map((response) => this.unwrap<{ user: User }>(response)),
-            tap((payload) => {
-                if (payload?.user) {
-                    this.tokenStorage.updateStoredUser(payload.user);
-                }
-            }),
-            map((payload) => payload.user)
-        );
+    getDashboardUrl(roles: string[]): string {
+        if (roles.includes('admin')) {
+            return '/dashboard/admin';
+        }
+        if (roles.some(r => ['center_admin', 'teacher', 'assistant'].includes(r))) {
+            return '/dashboard/staff';
+        }
+        if (roles.some(r => ['student', 'parent'].includes(r))) {
+            return '/dashboard';
+        }
+        return '/';
     }
 }

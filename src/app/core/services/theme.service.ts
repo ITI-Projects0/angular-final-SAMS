@@ -1,10 +1,13 @@
 import { Injectable, signal, effect } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ThemeService {
     darkMode = signal<boolean>(false);
+    theme$ = toObservable(this.darkMode).pipe(map(isDark => isDark ? 'dark' : 'light'));
 
     constructor() {
         const savedTheme = localStorage.getItem('theme');

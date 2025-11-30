@@ -1,0 +1,13 @@
+<div class="auth-wrapper">
+  <button class="dark-toggle" (click)="toggleDarkMode()" aria-label="Toggle dark mode">
+    <i class="fa-solid" [ngClass]="isDark() ? 'fa-moon' : 'fa-sun'"></i>
+  </button>
+
+  <!-- Logo -->
+  <div
+    class="absolute top-4 left-4 z-50 flex items-center justify-center bg-white dark:bg-neutral-700 shadow-md rounded-full cursor-pointer transition-all">
+    <img src="/images/auth.jpg" class="w-10 h-10 object-cover rounded-full shadow">
+  </div>
+  
+    <router-outlet></router-outlet>
+</div>
