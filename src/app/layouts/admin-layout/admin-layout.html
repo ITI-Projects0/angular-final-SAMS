@@ -1,9 +1,9 @@
-<div class="dashboard-layout" [attr.dir]="i18n.lang === 'ar' ? 'rtl' : 'ltr'">
-  <app-admin-sidebar [collapsed]="isSidebarCollapsed"></app-admin-sidebar>
+<div class="dashboard-layout bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen relative" [attr.dir]="i18n.lang === 'ar' ? 'rtl' : 'ltr'">
+  <app-admin-sidebar [collapsed]="isSidebarCollapsed" class="z-40 min-h-screen"></app-admin-sidebar>
 
-  <div class="main-area">
+  <div class="main-area transition-all duration-300 min-h-screen flex flex-col">
     <app-admin-nav (toggleSidebar)="isSidebarCollapsed = !isSidebarCollapsed"></app-admin-nav>
-    <main class="content">
+    <main class="content flex-1 bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <router-outlet></router-outlet>
     </main>
   </div>

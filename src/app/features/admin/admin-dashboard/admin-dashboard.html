@@ -1,47 +1,110 @@
-<section class="admin-dash-wrapper glass surface">
-  <header class="dash-header">
-    <div>
-      <h1 class="dash-title">{{ i18n.t('overview.title') }}</h1>
-      <p class="dash-sub">{{ i18n.t('overview.subtitle') }}</p>
+<section class="w-full max-w-6xl mx-auto px-4 lg:px-0 py-4 space-y-4 text-slate-900 dark:text-slate-100">
+  <div class="rounded-2xl p-4 lg:p-6 grid lg:grid-cols-[1.4fr_1fr] gap-4 lg:gap-6 items-center bg-white border border-slate-200 shadow-xl dark:bg-slate-900 dark:border-slate-800">
+    <div class="space-y-3">
+      <p class="uppercase tracking-[0.18em] text-xs text-slate-500 dark:text-slate-400">Operations pulse</p>
+      <h1 class="text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white">{{ i18n.t('overview.title') }}</h1>
+      <p class="text-slate-600 dark:text-slate-300">{{ i18n.t('overview.subtitle') }}</p>
+      <div class="flex flex-wrap gap-2">
+        <button routerLink="/dashboard/admin/centers" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-fuchsia-500 to-indigo-500 text-white font-semibold shadow-lg shadow-fuchsia-500/30 hover:-translate-y-0.5 transition">{{ i18n.t('actions.viewCenters') }}</button>
+        <button routerLink="/dashboard/admin/courses" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-800 shadow-sm hover:-translate-y-0.5 transition dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">{{ i18n.t('actions.viewCourses') }}</button>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-100 text-sm font-semibold text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">{{ i18n.t('stats.students') }}: {{stats.students}}</span>
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/15 text-sm font-semibold text-emerald-800 dark:text-emerald-100 dark:bg-emerald-500/20">{{ i18n.t('stats.attendanceToday') }}: {{stats.attendanceToday}}</span>
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200 bg-slate-100 text-sm font-semibold text-slate-800 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">{{ i18n.t('stats.online') }}: {{stats.onlineTeachers}}</span>
+      </div>
     </div>
-    <div class="dash-actions">
-      <button routerLink="/dashboard/admin/centers" class="btn-simple">{{ i18n.t('actions.viewCenters') }}</button>
-      <button routerLink="/dashboard/admin/courses" class="btn-simple">{{ i18n.t('actions.viewCourses') }}</button>
+    <div class="grid sm:grid-cols-2 gap-3">
+      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <p class="text-sm text-slate-500 dark:text-slate-400">{{ i18n.t('stats.courses') }}</p>
+        <p class="text-3xl font-extrabold text-slate-900 dark:text-white">{{stats.courses}}</p>
+        <span class="text-sm text-slate-500 dark:text-slate-400">{{ i18n.t('stats.active') }}: {{stats.activeCourses}}</span>
+      </div>
+      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <p class="text-sm text-slate-500 dark:text-slate-400">{{ i18n.t('stats.centers') }}</p>
+        <p class="text-3xl font-extrabold text-slate-900 dark:text-white">{{stats.centers}}</p>
+        <span class="text-sm text-slate-500 dark:text-slate-400">{{ i18n.t('stats.paid') }}: {{stats.paidCenters}} | {{ i18n.t('stats.unpaid') }}: {{stats.unpaidCenters}}</span>
+      </div>
     </div>
-  </header>
+  </div>
 
-  <div class="stats-grid">
-    <article class="stat-card centers glass">
-      <div class="stat-head">{{ i18n.t('stats.centers') }}</div>
-      <div class="stat-value">{{stats.centers}}</div>
-      <div class="stat-sub">{{ i18n.t('stats.paid') }}: {{stats.paidCenters}} • {{ i18n.t('stats.unpaid') }}: {{stats.unpaidCenters}}</div>
+  <div class="grid md:grid-cols-2 gap-4">
+    <article class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2 text-slate-500 text-sm font-semibold dark:text-slate-400">
+          <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+          {{ i18n.t('stats.centers') }}
+        </div>
+        <span class="text-xs text-slate-500 dark:text-slate-400">{{ i18n.t('stats.paid') }} / {{ i18n.t('stats.unpaid') }}</span>
+      </div>
+      <div class="text-3xl font-extrabold text-slate-900 dark:text-white">{{stats.centers}}</div>
+      <p class="text-sm text-slate-500 dark:text-slate-400">{{ i18n.t('stats.paid') }}: {{stats.paidCenters}} | {{ i18n.t('stats.unpaid') }}: {{stats.unpaidCenters}}</p>
+      <div class="mt-3 w-full h-2 rounded-full bg-slate-200 overflow-hidden dark:bg-slate-800">
+        <span class="block h-full rounded-full bg-gradient-to-r from-indigo-500 to-blue-500" [style.width.%]="(stats.paidCenters + stats.unpaidCenters) ? (stats.paidCenters / (stats.paidCenters + stats.unpaidCenters)) * 100 : 0"></span>
+      </div>
     </article>
 
-    <article class="stat-card courses glass">
-      <div class="stat-head">{{ i18n.t('stats.courses') }}</div>
-      <div class="stat-value">{{stats.courses}}</div>
-      <div class="stat-sub">{{ i18n.t('stats.active') }}: {{stats.activeCourses}}</div>
+    <article class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2 text-slate-500 text-sm font-semibold dark:text-slate-400">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+          {{ i18n.t('stats.courses') }}
+        </div>
+        <span class="text-xs text-slate-500 dark:text-slate-400">{{ i18n.t('stats.active') }}</span>
+      </div>
+      <div class="text-3xl font-extrabold text-slate-900 dark:text-white">{{stats.courses}}</div>
+      <p class="text-sm text-slate-500 dark:text-slate-400">{{ i18n.t('stats.active') }}: {{stats.activeCourses}}</p>
+      <div class="mt-3 w-full h-2 rounded-full bg-slate-200 overflow-hidden dark:bg-slate-800">
+        <span class="block h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-400" [style.width.%]="stats.courses ? (stats.activeCourses / stats.courses) * 100 : 0"></span>
+      </div>
     </article>
 
-    <article class="stat-card teachers glass">
-      <div class="stat-head">{{ i18n.t('stats.teachers') }}</div>
-      <div class="stat-value">{{stats.teachers}}</div>
-      <div class="stat-sub">{{ i18n.t('stats.online') }}: {{stats.onlineTeachers}}</div>
+    <article class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2 text-slate-500 text-sm font-semibold dark:text-slate-400">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+          {{ i18n.t('stats.teachers') }}
+        </div>
+        <span class="text-xs text-slate-500 dark:text-slate-400">{{ i18n.t('stats.online') }}</span>
+      </div>
+      <div class="text-3xl font-extrabold text-slate-900 dark:text-white">{{stats.teachers}}</div>
+      <p class="text-sm text-slate-500 dark:text-slate-400">{{ i18n.t('stats.online') }}: {{stats.onlineTeachers}}</p>
+      <div class="mt-3 w-full h-2 rounded-full bg-slate-200 overflow-hidden dark:bg-slate-800">
+        <span class="block h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-400" [style.width.%]="stats.teachers ? (stats.onlineTeachers / stats.teachers) * 100 : 0"></span>
+      </div>
     </article>
 
-    <article class="stat-card students glass">
-      <div class="stat-head">{{ i18n.t('stats.students') }}</div>
-      <div class="stat-value">{{stats.students}}</div>
-      <div class="stat-sub">{{ i18n.t('stats.attendanceToday') }}: {{stats.attendanceToday}}</div>
+    <article class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+      <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-2 text-slate-500 text-sm font-semibold dark:text-slate-400">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+          {{ i18n.t('stats.students') }}
+        </div>
+        <span class="text-xs text-slate-500 dark:text-slate-400">{{ i18n.t('stats.attendanceToday') }}</span>
+      </div>
+      <div class="text-3xl font-extrabold text-slate-900 dark:text-white">{{stats.students}}</div>
+      <p class="text-sm text-slate-500 dark:text-slate-400">{{ i18n.t('stats.attendanceToday') }}: {{stats.attendanceToday}}</p>
+      <div class="mt-3 w-full h-2 rounded-full bg-slate-200 overflow-hidden dark:bg-slate-800">
+        <span class="block h-full rounded-full bg-gradient-to-r from-rose-400 to-pink-400" [style.width.%]="stats.students ? (stats.attendanceToday / stats.students) * 100 : 0"></span>
+      </div>
     </article>
   </div>
 
-  <section class="recent-section glass">
-    <h2 class="section-title">{{ i18n.t('recent.title') }}</h2>
-    <ul class="activity-list">
-      <li *ngFor="let item of recent" class="activity-item">
-        <div class="activity-left">{{ i18n.t(item.titleKey) }}</div>
-        <div class="activity-right">{{item.time}}</div>
+  <section class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+      <div>
+        <p class="uppercase tracking-[0.18em] text-xs text-slate-500 dark:text-slate-400">{{ i18n.t('recent.title') }}</p>
+        <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Latest activity</h2>
+      </div>
+      <button class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-800 shadow-sm hover:-translate-y-0.5 transition dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">{{ i18n.t('actions.viewCenters') }}</button>
+    </div>
+    <ul class="divide-y divide-slate-200 dark:divide-slate-800">
+      <li *ngFor="let item of recent" class="flex flex-col sm:flex-row sm:items-center justify-between py-3 gap-2">
+        <div class="flex items-center gap-3 text-slate-800 dark:text-slate-200">
+          <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 shadow"></span>
+          <span>{{ i18n.t(item.titleKey) }}</span>
+        </div>
+        <span class="text-sm text-slate-500 dark:text-slate-400">{{item.time}}</span>
       </li>
     </ul>
   </section>

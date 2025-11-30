@@ -13,7 +13,8 @@ export const StaffRoutes: Routes = [
     path: 'dashboard/staff',
     component: DashboardLayout,
     canActivate: [authGuard, roleGuard],
-    data: { roles: ['teacher', 'assistant'] },
+    // Allow all staff-facing roles; missing center_admin was causing a redirect loop
+    data: { roles: ['teacher', 'assistant', 'center_admin'] },
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: StaffDashboard },

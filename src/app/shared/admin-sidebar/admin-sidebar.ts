@@ -1,8 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../core/services/theme.service';
 import { TranslateService } from '../../core/services/translate.service';
+import { AuthService } from '../../core/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-sidebar',
@@ -14,5 +16,15 @@ import { TranslateService } from '../../core/services/translate.service';
 export class AdminSidebar {
   @Input() collapsed = false;
   constructor(public theme: ThemeService, public i18n: TranslateService) {}
+
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
+  logout(): void {
+    this.authService.logout().subscribe({
+      next: () => this.router.navigate(['/login']),
+      error: () => this.router.navigate(['/login'])
+    });
+  }
 
 }

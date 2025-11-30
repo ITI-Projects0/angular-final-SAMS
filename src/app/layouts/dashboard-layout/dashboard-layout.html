@@ -1,10 +1,15 @@
-<div class="dashboard-layout">
-  <app-sidebar [collapsed]="isSidebarCollapsed"></app-sidebar>
+<div class="dashboard-layout bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen relative" [attr.dir]="i18n?.lang === 'ar' ? 'rtl' : 'ltr'">
+  <app-sidebar [collapsed]="isSidebarCollapsed" class="z-40 min-h-screen"></app-sidebar>
 
-  <div class="main-area">
+  <!-- mobile overlay -->
+  @if (!isSidebarCollapsed) {
+    <div class="fixed inset-0 bg-black/40 sm:hidden z-30" (click)="isSidebarCollapsed = true"></div>
+  }
+
+  <div class="main-area transition-all duration-300 min-h-screen flex flex-col">
     <app-navbar (toggleSidebar)="isSidebarCollapsed = !isSidebarCollapsed"></app-navbar>
 
-    <main class="content">
+    <main class="content flex-1 bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       <router-outlet></router-outlet>
     </main>
   </div>

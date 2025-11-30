@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Sidebar } from "../../shared/sidebar/sidebar";
-import { Navbar } from "../../shared/navbar/navbar";
+import { Sidebar } from '../../shared/sidebar/sidebar';
+import { Navbar } from '../../shared/navbar/navbar';
 import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-dashboard-layout',
@@ -10,5 +10,5 @@ import { RouterOutlet } from '@angular/router';
 })
 export class DashboardLayout {
   isSidebarCollapsed = false;
-
+  i18n: any;
 }

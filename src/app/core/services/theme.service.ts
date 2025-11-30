@@ -6,32 +6,36 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ThemeService {
-    darkMode = signal<boolean>(false);
-    theme$ = toObservable(this.darkMode).pipe(map(isDark => isDark ? 'dark' : 'light'));
+  darkMode = signal<boolean>(false);
+  theme$ = toObservable(this.darkMode).pipe(map(isDark => isDark ? 'dark' : 'light'));
+  private initialized = false;
 
-  constructor() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      this.darkMode.set(savedTheme === 'dark');
-    } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      this.darkMode.set(prefersDark);
+  constructor() { }
+
+  init(): void {
+    if (this.initialized || typeof window === 'undefined') {
+      return;
     }
 
-    // Effect to apply class to html element
+    const savedTheme = window.localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.darkMode.set(savedTheme ? savedTheme === 'dark' : prefersDark);
+
     effect(() => {
       if (this.darkMode()) {
         document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
+        window.localStorage.setItem('theme', 'dark');
       } else {
         document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
+        window.localStorage.setItem('theme', 'light');
       }
     });
+
+    this.initialized = true;
   }
 
   toggle() {
+    this.init();
     this.darkMode.update(v => !v);
   }
 }

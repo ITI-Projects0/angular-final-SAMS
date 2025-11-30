@@ -1,14 +1,14 @@
 import { Component, Input, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-sidebar',
-  imports: [ RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
-
   @Input() collapsed = false;
 
   private readonly authService = inject(AuthService);
@@ -17,7 +17,7 @@ export class Sidebar {
   logout(): void {
     this.authService.logout().subscribe({
       next: () => this.router.navigate(['/login']),
-      error: () => this.router.navigate(['/login'])
+      error: () => this.router.navigate(['/login']),
     });
   }
 }
