@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,6 +15,19 @@ export class Navbar {
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly theme = inject(ThemeService);
+
+  constructor() {
+    this.theme.init();
+  }
+
+  get themeLabel(): string {
+    return this.theme.darkMode() ? 'Light mode' : 'Dark mode';
+  }
+
+  toggleTheme(): void {
+    this.theme.toggle();
+  }
 
   logout(): void {
     this.authService.logout().subscribe({

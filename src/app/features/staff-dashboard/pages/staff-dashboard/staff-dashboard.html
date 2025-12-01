@@ -1,20 +1,22 @@
-<div class="page-container space-y-6">
+<div class="page-container space-y-6 text-slate-900 dark:text-slate-100">
 
-  <div class="flex flex-col space-y-4 md:space-y-0 md:flex-row justify-between items-center card p-4 shadow-xl">
+  <div
+    class="flex flex-col space-y-4 md:space-y-0 md:flex-row justify-between items-center card p-4 shadow-xl bg-white border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
     <div>
-      <h1 class="text-3xl font-extrabold">Staff Dashboard</h1>
-      <h2 class="text-slate-400">Cohort performance and workload</h2>
+      <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white">Staff Dashboard</h1>
+      <h2 class="text-slate-500 dark:text-slate-300">Cohort performance and workload</h2>
     </div>
     <div class="flex flex-wrap items-start justify-end gap-3">
       <button
-        class="inline-flex px-4 py-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-100 hover:-translate-y-0.5 transition">Manage</button>
+        class="inline-flex px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 shadow-sm hover:-translate-y-0.5 transition dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">Manage</button>
       <button
         class="inline-flex px-4 py-2 rounded-xl bg-gradient-to-r from-fuchsia-500 to-indigo-500 text-white font-semibold shadow-lg shadow-fuchsia-500/30 hover:-translate-y-0.5 transition">Create</button>
     </div>
   </div>
 
   <section class="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
-    <div class="flex items-center p-5 card rounded-2xl shadow">
+    <div
+      class="flex items-center p-5 card rounded-2xl shadow border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
       <div
         class="inline-flex flex-shrink-0 items-center justify-center h-14 w-14 text-fuchsia-300 bg-fuchsia-500/20 rounded-full mr-4">
         <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
@@ -24,10 +26,11 @@
       </div>
       <div>
         <span class="block text-xl font-bold">62</span>
-        <span class="block text-slate-400 text-sm">Students</span>
+        <span class="block text-slate-500 dark:text-slate-400 text-sm">Students</span>
       </div>
     </div>
-    <div class="flex items-center p-5 card rounded-2xl shadow">
+    <div
+      class="flex items-center p-5 card rounded-2xl shadow border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
       <div
         class="inline-flex flex-shrink-0 items-center justify-center h-14 w-14 text-emerald-300 bg-emerald-500/20 rounded-full mr-4">
         <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
@@ -36,10 +39,11 @@
       </div>
       <div>
         <span class="block text-xl font-bold">6.8</span>
-        <span class="block text-slate-400 text-sm">Average mark</span>
+        <span class="block text-slate-500 dark:text-slate-400 text-sm">Average mark</span>
       </div>
     </div>
-    <div class="flex items-center p-5 card rounded-2xl shadow">
+    <div
+      class="flex items-center p-5 card rounded-2xl shadow border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
       <div
         class="inline-flex flex-shrink-0 items-center justify-center h-14 w-14 text-amber-300 bg-amber-500/20 rounded-full mr-4">
         <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
@@ -48,11 +52,12 @@
       </div>
       <div>
         <span class="inline-block text-xl font-bold">9</span>
-        <span class="inline-block text-base text-slate-400 font-semibold">(14%)</span>
-        <span class="block text-slate-400 text-sm">Underperforming</span>
+        <span class="inline-block text-base text-slate-500 dark:text-slate-400 font-semibold">(14%)</span>
+        <span class="block text-slate-500 dark:text-slate-400 text-sm">Underperforming</span>
       </div>
     </div>
-    <div class="flex items-center p-5 card rounded-2xl shadow">
+    <div
+      class="flex items-center p-5 card rounded-2xl shadow border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
       <div
         class="inline-flex flex-shrink-0 items-center justify-center h-14 w-14 text-sky-300 bg-sky-500/20 rounded-full mr-4">
         <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
@@ -62,23 +67,25 @@
       </div>
       <div>
         <span class="block text-xl font-bold">83%</span>
-        <span class="block text-slate-400 text-sm">Finished homeworks</span>
+        <span class="block text-slate-500 dark:text-slate-400 text-sm">Finished homeworks</span>
       </div>
     </div>
   </section>
 
   <section class="grid md:grid-cols-2 xl:grid-cols-4 xl:grid-rows-3 xl:grid-flow-col gap-4">
-    <div class="flex flex-col md:col-span-2 md:row-span-2 card rounded-2xl shadow">
-      <div class="px-6 py-5 font-semibold border-b border-slate-800 text-slate-200">Applied vs left students (monthly)
+    <div
+      class="flex flex-col md:col-span-2 md:row-span-2 card rounded-2xl shadow border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+      <div class="px-6 py-5 font-semibold border-b border-slate-200 text-slate-700 dark:border-slate-800 dark:text-slate-200">Applied vs left students (monthly)
       </div>
       <div class="p-4 flex-grow">
         <div
-          class="flex items-center justify-center h-full px-4 py-16 text-xl font-semibold card-strong border border-dashed rounded-xl text-muted">
+          class="flex items-center justify-center h-full px-4 py-16 text-xl font-semibold card-strong border border-dashed rounded-xl text-slate-400 dark:text-slate-500 border-slate-300 dark:border-slate-700">
           Chart
         </div>
       </div>
     </div>
-    <div class="flex items-center p-5 card rounded-2xl shadow">
+    <div
+      class="flex items-center p-5 card rounded-2xl shadow border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
       <div
         class="inline-flex flex-shrink-0 items-center justify-center h-14 w-14 text-yellow-200 bg-yellow-500/20 rounded-full mr-4">
         <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
@@ -91,10 +98,11 @@
       </div>
       <div>
         <span class="block text-xl font-bold">25</span>
-        <span class="block text-slate-400 text-sm">Lections left</span>
+        <span class="block text-slate-500 dark:text-slate-400 text-sm">Lections left</span>
       </div>
     </div>
-    <div class="flex items-center p-5 card rounded-2xl shadow">
+    <div
+      class="flex items-center p-5 card rounded-2xl shadow border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
       <div
         class="inline-flex flex-shrink-0 items-center justify-center h-14 w-14 text-teal-200 bg-teal-500/20 rounded-full mr-4">
         <svg aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6">
@@ -104,11 +112,12 @@
       </div>
       <div>
         <span class="block text-xl font-bold">139</span>
-        <span class="block text-slate-400 text-sm">Hours on lectures</span>
+        <span class="block text-slate-500 dark:text-slate-400 text-sm">Hours on lectures</span>
       </div>
     </div>
-    <div class="row-span-3 card rounded-2xl shadow">
-      <div class="flex items-center justify-between px-6 py-5 font-semibold border-b text-muted">
+    <div
+      class="row-span-3 card rounded-2xl shadow border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+      <div class="flex items-center justify-between px-6 py-5 font-semibold border-b border-slate-200 text-slate-700 dark:border-slate-800 dark:text-slate-200">
         <span>Students by average mark</span>
         <button type="button"
           class="inline-flex justify-center rounded-md px-2 bg-slate-800 text-sm leading-5 font-medium text-slate-300 hover:text-white">
@@ -126,38 +135,39 @@
             <div class="h-10 w-10 mr-3 card-strong rounded-full overflow-hidden">
               <img src="https://randomuser.me/api/portraits/women/82.jpg" alt="Annette Watson profile picture">
             </div>
-            <span class="muted">Annette Watson</span>
+            <span class="muted text-slate-700 dark:text-slate-300">Annette Watson</span>
             <span class="ml-auto font-semibold">9.3</span>
           </li>
-          <li class="flex items-center text-slate-200">
+          <li class="flex items-center text-slate-700 dark:text-slate-200">
             <div class="h-10 w-10 mr-3 bg-slate-800 rounded-full overflow-hidden">
               <img src="https://randomuser.me/api/portraits/men/81.jpg" alt="Calvin Steward profile picture">
             </div>
-            <span class="text-slate-300">Calvin Steward</span>
+            <span class="text-slate-600 dark:text-slate-300">Calvin Steward</span>
             <span class="ml-auto font-semibold">8.9</span>
           </li>
-          <li class="flex items-center text-slate-200">
+          <li class="flex items-center text-slate-700 dark:text-slate-200">
             <div class="h-10 w-10 mr-3 bg-slate-800 rounded-full overflow-hidden">
               <img src="https://randomuser.me/api/portraits/men/80.jpg" alt="Ralph Richards profile picture">
             </div>
-            <span class="text-slate-300">Ralph Richards</span>
+            <span class="text-slate-600 dark:text-slate-300">Ralph Richards</span>
             <span class="ml-auto font-semibold">8.7</span>
           </li>
-          <li class="flex items-center text-slate-200">
+          <li class="flex items-center text-slate-700 dark:text-slate-200">
             <div class="h-10 w-10 mr-3 bg-slate-800 rounded-full overflow-hidden">
               <img src="https://randomuser.me/api/portraits/men/79.jpg" alt="Bernard Murphy profile picture">
             </div>
-            <span class="text-slate-300">Bernard Murphy</span>
+            <span class="text-slate-600 dark:text-slate-300">Bernard Murphy</span>
             <span class="ml-auto font-semibold">8.2</span>
           </li>
         </ul>
       </div>
     </div>
-    <div class="flex flex-col row-span-3 card rounded-2xl shadow">
-      <div class="px-6 py-5 font-semibold border-b border-slate-800 text-slate-200">Students by study type</div>
+    <div
+      class="flex flex-col row-span-3 card rounded-2xl shadow border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+      <div class="px-6 py-5 font-semibold border-b border-slate-200 text-slate-700 dark:border-slate-800 dark:text-slate-200">Students by study type</div>
       <div class="p-4 flex-grow">
         <div
-          class="flex items-center justify-center h-full px-4 py-24 text-xl font-semibold card-strong border border-dashed rounded-xl text-muted">
+          class="flex items-center justify-center h-full px-4 py-24 text-xl font-semibold card-strong border border-dashed rounded-xl text-slate-400 dark:text-slate-500 border-slate-300 dark:border-slate-700">
           Chart
         </div>
       </div>

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ThemeService } from '../../../../core/services/theme.service';
 
 type Theme = 'light' | 'dark' | 'system';
 type LanguageCode = 'en' | 'ar';
@@ -11,8 +12,10 @@ type LanguageCode = 'en' | 'ar';
   imports: [CommonModule, FormsModule],
   templateUrl: './setting.html',
   styleUrl: './setting.css',
-})
+}) 
 export class Setting implements OnInit {
+  private readonly theme = inject(ThemeService);
+
   // بيانات المستخدم (dummy دلوقتي)
   user = {
     name: 'John Doe',
@@ -51,12 +54,17 @@ export class Setting implements OnInit {
 
   ngOnInit(): void {
     this.rolesInput = this.user.roles.join(', ');
+    this.theme.init();
     // load persisted theme if available
-    const persisted = localStorage.getItem('sams_theme') as Theme | null;
-    if (persisted) this.preferences.theme = persisted;
+    const persisted = localStorage.getItem('theme') as Theme | null;
+    if (persisted === 'dark' || persisted === 'light' || persisted === 'system') {
+      this.preferences.theme = persisted;
+    } else if (document.documentElement.classList.contains('dark')) {
+      this.preferences.theme = 'dark';
+    }
     this.applyTheme();
     // load language preference
-    const lang = (localStorage.getItem('sams_language') as LanguageCode | null) ?? null;
+    const lang = (localStorage.getItem('lang') as LanguageCode | null) ?? null;
     if (lang) this.preferences.language = lang;
     this.applyLanguage();
   }
@@ -66,13 +74,12 @@ export class Setting implements OnInit {
   // -------------------------------------
   onThemeChange(value: Theme): void {
     this.preferences.theme = value;
-    localStorage.setItem('sams_theme', value);
     this.applyTheme();
   }
 
   onLanguageChange(value: LanguageCode): void {
     this.preferences.language = value;
-    localStorage.setItem('sams_language', value);
+    localStorage.setItem('lang', value);
     this.applyLanguage();
   }
 
@@ -84,7 +91,6 @@ export class Setting implements OnInit {
     const theme = this.preferences.theme;
 
     // شيل أي state قديم
-    root.classList.remove('dark');
     root.dataset['theme'] = theme;
 
     let finalTheme: Theme = theme;
@@ -95,9 +101,10 @@ export class Setting implements OnInit {
       finalTheme = prefersDark ? 'dark' : 'light';
     }
 
-    if (finalTheme === 'dark') {
-      root.classList.add('dark'); // Tailwind dark: هيشتغل
-    }
+    this.theme.init();
+    this.theme.darkMode.set(finalTheme === 'dark');
+    localStorage.setItem('theme', finalTheme);
+    root.classList.toggle('dark', finalTheme === 'dark'); // Tailwind dark: U?USO'O?O?U,
   }
 
   // -------------------------------------
@@ -150,3 +157,4 @@ export class Setting implements OnInit {
       .filter((role) => role.length > 0);
   }
 }
+

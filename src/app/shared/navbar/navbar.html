@@ -8,7 +8,7 @@
           <path d="M4 7h16M4 12h12M4 17h16" /></svg>
       </button>
       <div class="flex items-center gap-2 font-bold">
-        <span class="inline-flex w-2.5 h-2.5 rounded-full bg-teal-400 shadow-[0_0_0_6px_rgba(45,212,191,0.2)]"></span>
+        <span class="inline-flex w-2.5 h-2.5 rounded-full bg-fuchsia-500 shadow-[0_0_0_6px_rgba(217,70,239,0.2)]"></span>
         <span class="text-lg">Staff Portal</span>
       </div>
     </div>
@@ -16,8 +16,18 @@
     <div class="flex items-center gap-2">
       <div class="hidden sm:inline-flex items-center gap-2 rounded-full user-status px-3 py-1 text-sm shadow-sm">
         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-        Admin
+        Staff
       </div>
+
+      <button
+        class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white text-slate-800 px-3 py-1.5 text-sm shadow-sm hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+        (click)="toggleTheme()">
+        <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path d="M12 3c.132 0 .263 0 .392.01A7.5 7.5 0 1 0 20.99 11.608 9 9 0 0 1 12 3Z" />
+        </svg>
+        <span>{{ themeLabel }}</span>
+      </button>
 
       <div
         class="relative inline-flex items-center gap-2 rounded-full user-menu px-2 py-1 shadow-sm cursor-pointer hover:-translate-y-0.5 transition duration-150"
@@ -26,7 +36,7 @@
           class="w-9 h-9 rounded-full object-cover">
         <div class="hidden sm:flex flex-col leading-tight">
           <span class="text-sm font-semibold">John Doe</span>
-          <span class="text-xs muted">Admin</span>
+          <span class="text-xs muted">Staff</span>
         </div>
         <svg viewBox="0 0 24 24" class="w-4 h-4 transition-transform duration-150" [class.rotate-180]="dropdown"
           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

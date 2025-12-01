@@ -1,14 +1,17 @@
 /* Sidebar - theme aware, responsive */
 .sidebar {
   width: 250px;
-  background: var(--card);
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.04), rgba(16, 185, 129, 0.04)),
+    var(--card);
   border-right: 1px solid var(--glass-border);
   padding: 18px;
   box-sizing: border-box;
   color: var(--muted);
-  transition: width .25s ease, transform .25s ease, background .2s ease, color .2s ease;
+  transition: width .25s ease, transform .25s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
   position: relative;
   z-index: 40;
+  box-shadow: 0 14px 42px rgba(2, 6, 23, 0.12);
+  backdrop-filter: blur(10px);
 }
 
 .sidebar.collapsed {
@@ -27,20 +30,25 @@
   padding: .5rem .75rem;
   color: var(--muted);
   text-decoration: none;
-  border-radius: 12px;
+  border-radius: 14px;
   margin: 6px 8px;
-  transition: background .12s ease, color .12s ease, box-shadow .12s ease;
+  transition: background .16s ease, color .16s ease, box-shadow .16s ease, border-color .16s ease;
+  border: 1px solid transparent;
+  backdrop-filter: blur(6px);
 }
 
 .nav-link:hover {
-  background: var(--card-strong);
+  background: color-mix(in srgb, var(--glass) 60%, var(--card-strong));
   color: var(--text);
+  border-color: var(--glass-border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
 }
 
 .nav-link.active {
-  background: linear-gradient(90deg, rgba(20, 184, 166, 0.12), rgba(99, 102, 241, 0.06));
+  background: linear-gradient(120deg, rgba(59, 130, 246, 0.2), rgba(236, 72, 153, 0.12));
   color: var(--text);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 /* legacy .menu.active -> keep compatibility */
@@ -70,6 +78,7 @@
   width: 20px;
   height: 20px;
   color: currentColor;
+  opacity: .9;
 }
 
 .brand-mark {
