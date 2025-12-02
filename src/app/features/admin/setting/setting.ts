@@ -1,8 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { ThemePreference, ThemeService } from '../../../core/services/theme.service';
+import { TranslateService } from '../../../core/services/translate.service';
+import { ApiService } from '../../../core/services/api.service';
+import { TokenStorageService } from '../../../core/auth/token-storage.service';
+import { User } from '../../../core/models/user.model';
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = ThemePreference;
 type LanguageCode = 'en' | 'ar';
 
 @Component({
@@ -12,8 +18,8 @@ type LanguageCode = 'en' | 'ar';
   templateUrl: './setting.html',
   styleUrl: './setting.css',
 })
-export class Setting implements OnInit {
-  // بيانات المستخدم (dummy دلوقتي)
+export class Setting implements OnInit, OnDestroy {
+  // Dummy user data until API is wired
   user = {
     name: 'John Doe',
     email: 'john@example.com',
@@ -23,7 +29,6 @@ export class Setting implements OnInit {
   };
   rolesInput = '';
 
-  // تفضيلات عامة
   preferences: {
     theme: Theme;
     language: LanguageCode;
@@ -36,7 +41,6 @@ export class Setting implements OnInit {
     compactSidebar: false,
   };
 
-  // إشعارات
   notifications = {
     email: true,
     sms: false,
@@ -44,15 +48,34 @@ export class Setting implements OnInit {
     attendanceAlerts: true,
   };
 
-  // أمان
   security = {
     twoFactor: false,
   };
 
+  loading = false;
+  private themeSub?: Subscription;
+
+  constructor(
+    private themeService: ThemeService,
+    private i18n: TranslateService,
+    private api: ApiService,
+    private tokenStorage: TokenStorageService
+  ) {}
+
   ngOnInit(): void {
     this.rolesInput = this.user.roles.join(', ');
-    this.applyTheme();
+    this.preferences.theme = this.themeService.currentPreference;
+    this.preferences.language = this.i18n.lang;
     this.applyLanguage();
+    this.applyTheme();
+    this.themeSub = this.themeService.theme$.subscribe(() => {
+      this.preferences.theme = this.themeService.currentPreference;
+    });
+    this.loadUser();
+  }
+
+  ngOnDestroy(): void {
+    this.themeSub?.unsubscribe();
   }
 
   // -------------------------------------
@@ -69,49 +92,20 @@ export class Setting implements OnInit {
   }
 
   // -------------------------------------
-  // تطبيق الثيم فعليًا
+  // Theme and language helpers
   // -------------------------------------
   private applyTheme(): void {
-    const root = document.documentElement;
-    const theme = this.preferences.theme;
+    this.themeService.setThemePreference(this.preferences.theme);
 
-    // شيل أي state قديم
-    root.classList.remove('dark');
-    root.dataset['theme'] = theme;
-
-    let finalTheme: Theme = theme;
-
-    if (theme === 'system') {
-      const prefersDark = window.matchMedia &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches;
-      finalTheme = prefersDark ? 'dark' : 'light';
-    }
-
-    if (finalTheme === 'dark') {
-      root.classList.add('dark'); // Tailwind dark: هيشتغل
-    }
+    document.documentElement.dataset['theme'] = this.preferences.theme;
   }
 
-  // -------------------------------------
-  // تطبيق اللغة / الاتجاه
-  // -------------------------------------
   private applyLanguage(): void {
-    const root = document.documentElement;
-    const lang = this.preferences.language;
-
-    if (lang === 'ar') {
-      root.lang = 'ar';
-      root.dir = 'rtl';
-      root.classList.add('rtl');
-    } else {
-      root.lang = 'en';
-      root.dir = 'ltr';
-      root.classList.remove('rtl');
-    }
+    this.i18n.setLang(this.preferences.language);
   }
 
   // -------------------------------------
-  // Actions (placeholder لحد ما توصّل API)
+  // Actions (placeholder until API wiring)
   // -------------------------------------
   saveAccount() {
     console.log('Saving account data', this.user);
@@ -119,7 +113,6 @@ export class Setting implements OnInit {
 
   savePreferences() {
     console.log('Saving preferences', this.preferences);
-    // هنا ممكن برضه تحفظ في localStorage
   }
 
   saveNotifications() {
@@ -140,5 +133,53 @@ export class Setting implements OnInit {
       .split(',')
       .map((role) => role.trim())
       .filter((role) => role.length > 0);
+  }
+
+  // -------------------------------------
+  // Data loading
+  // -------------------------------------
+  private loadUser(): void {
+    this.loading = true;
+    this.api.get<any>('/me').subscribe({
+      next: (res) => {
+        const payload = (res as any)?.data ?? res;
+        this.hydrateUser(payload);
+      },
+      error: () => {
+        const cached = this.tokenStorage.getUser();
+        if (cached) {
+          this.hydrateUser(cached);
+        }
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  private hydrateUser(payload: any | User): void {
+    const name =
+      payload?.name ||
+      [payload?.first_name, payload?.last_name].filter(Boolean).join(' ').trim() ||
+      this.user.name;
+
+    const roles =
+      Array.isArray(payload?.roles)
+        ? payload.roles
+            .map((r: any) => (typeof r === 'string' ? r : r?.name))
+            .filter((r: any) => !!r && typeof r === 'string')
+        : payload?.role
+          ? [payload.role]
+          : this.user.roles;
+
+    this.user = {
+      ...this.user,
+      name,
+      email: payload?.email ?? this.user.email,
+      roles,
+      avatar: payload?.avatar ?? payload?.photo ?? this.user.avatar,
+    };
+
+    this.rolesInput = this.user.roles.join(', ');
   }
 }

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateService } from '../../../core/services/translate.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../../../core/services/api.service';
 
 @Component({
   selector: 'app-admin-centers',
@@ -10,18 +11,41 @@ import { Component } from '@angular/core';
   templateUrl: './centers.html',
   styleUrl: './centers.css',
 })
-export class Centers {
-  constructor(public i18n: TranslateService) {}
-  centers = [
-    { name: 'Skyline Learning', city: 'Cairo', phone: '+20 123 456 7890', paid: true },
-    { name: 'Future Skills Hub', city: 'Alexandria', phone: '+20 111 222 3344', paid: false },
-    { name: 'Gulf Academy', city: 'Riyadh', phone: '+966 50 123 4567', paid: true },
-  ];
+export class Centers implements OnInit {
+  constructor(public i18n: TranslateService, private api: ApiService) {}
+
+  centers: any[] = [];
+  loading = false;
+  currentId: number | null = null;
 
   isFormOpen = false;
   isEditMode = false;
   currentIndex: number | null = null;
   formCenter = { name: '', city: '', phone: '', paid: false };
+
+  ngOnInit(): void {
+    this.loadCenters();
+  }
+
+  private loadCenters() {
+    this.loading = true;
+    this.api.get<any>('/centers').subscribe({
+      next: (res) => {
+        const payload = res?.data ?? res;
+        const items = payload?.data ?? payload ?? [];
+        this.centers = items.map((c: any) => ({
+          id: c.id,
+          name: c.name,
+          city: c.subdomain || '',
+          phone: c.owner?.phone || '',
+          paid: !!c.is_active,
+          raw: c,
+        }));
+      },
+      error: () => { this.loading = false; },
+      complete: () => { this.loading = false; }
+    });
+  }
 
   openForm(center?: typeof this.formCenter) {
     this.isFormOpen = true;
@@ -29,24 +53,45 @@ export class Centers {
       this.isEditMode = true;
       this.formCenter = { ...center };
       this.currentIndex = this.centers.findIndex(c => c.name === center.name && c.phone === center.phone);
+      this.currentId = this.centers[this.currentIndex]?.id ?? null;
     } else {
       this.isEditMode = false;
       this.currentIndex = null;
+      this.currentId = null;
       this.formCenter = { name: '', city: '', phone: '', paid: false };
     }
   }
 
   save() {
-    if (this.isEditMode && this.currentIndex !== null) {
-      this.centers[this.currentIndex] = { ...this.formCenter };
+    const payload = {
+      name: this.formCenter.name,
+      subdomain: this.formCenter.city,
+      is_active: this.formCenter.paid,
+    };
+
+    if (this.isEditMode && this.currentId !== null) {
+      this.api.put<any>(`/centers/${this.currentId}`, payload).subscribe(() => {
+        this.loadCenters();
+        this.closeForm();
+      });
     } else {
-      this.centers = [...this.centers, { ...this.formCenter }];
+      this.api.post<any>('/centers', payload).subscribe(() => {
+        this.loadCenters();
+        this.closeForm();
+      });
     }
-    this.closeForm();
   }
 
   delete(center: typeof this.formCenter) {
-    this.centers = this.centers.filter(c => !(c.name === center.name && c.phone === center.phone));
+    const found = this.centers.find(c => c.name === center.name && c.phone === center.phone);
+    if (!found?.id) {
+      this.centers = this.centers.filter(c => !(c.name === center.name && c.phone === center.phone));
+      return;
+    }
+
+    this.api.delete(`/centers/${found.id}`).subscribe(() => {
+      this.centers = this.centers.filter(c => c.id !== found.id);
+    });
   }
 
   closeForm() {

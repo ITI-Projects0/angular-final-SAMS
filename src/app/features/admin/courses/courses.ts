@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateService } from '../../../core/services/translate.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../../../core/services/api.service';
 
 @Component({
   selector: 'app-admin-courses',
@@ -10,43 +11,100 @@ import { Component } from '@angular/core';
   templateUrl: './courses.html',
   styleUrl: './courses.css',
 })
-export class Courses {
-  constructor(public i18n: TranslateService) {}
-  courses = [
-    { title: 'React Bootcamp', center: 'Skyline Learning', teacher: 'Mohamed Adel', status: 'Active' },
-    { title: 'Python Fundamentals', center: 'Future Skills Hub', teacher: 'Sara Ibrahim', status: 'Draft' },
-    { title: 'UI Design Basics', center: 'Gulf Academy', teacher: 'Ali Hassan', status: 'Active' },
-  ];
+export class Courses implements OnInit {
+  constructor(public i18n: TranslateService, private api: ApiService) {}
+  courses: any[] = [];
+  loading = false;
+  currentId: number | null = null;
 
   isFormOpen = false;
   isEditMode = false;
   currentIndex: number | null = null;
   formCourse = { title: '', center: '', teacher: '', status: 'Active' };
 
-  openForm(course?: typeof this.formCourse) {
+  ngOnInit(): void {
+    this.loadCourses();
+  }
+
+  private loadCourses() {
+    this.loading = true;
+    this.api.get<any>('/groups').subscribe({
+      next: (res) => {
+        const payload = res?.data ?? res;
+        const items = payload?.data ?? payload ?? [];
+        this.courses = items.map((g: any) => ({
+          id: g.id,
+          title: g.name,
+          center: g.center?.name || '',
+          teacher: g.teacher?.name || '',
+          status: g.is_active ? 'Active' : 'Inactive',
+          raw: g,
+        }));
+      },
+      error: () => { this.loading = false; },
+      complete: () => { this.loading = false; }
+    });
+  }
+
+  openForm(course?: any) {
     this.isFormOpen = true;
     if (course) {
       this.isEditMode = true;
-      this.formCourse = { ...course };
-      this.currentIndex = this.courses.indexOf(course);
+      this.formCourse = {
+        title: course.title,
+        center: course.center,
+        teacher: course.teacher,
+        status: course.status,
+      };
+      this.currentIndex = this.courses.findIndex(c => c.id === course.id);
+      this.currentId = course.id ?? null;
     } else {
       this.isEditMode = false;
       this.currentIndex = null;
+      this.currentId = null;
       this.formCourse = { title: '', center: '', teacher: '', status: 'Active' };
     }
   }
 
   save() {
-    if (this.isEditMode && this.currentIndex !== null) {
-      this.courses[this.currentIndex] = { ...this.formCourse };
+    const referenceCourse = this.currentIndex !== null ? this.courses[this.currentIndex] : null;
+    const payload: any = {
+      name: this.formCourse.title,
+      description: '',
+      subject: this.formCourse.title,
+      is_active: this.formCourse.status === 'Active',
+      is_approval_required: false,
+      center_id: referenceCourse?.raw?.center_id,
+      teacher_id: referenceCourse?.raw?.teacher_id,
+    };
+
+    if (this.isEditMode && this.currentId !== null) {
+      this.api.put(`/groups/${this.currentId}`, payload).subscribe(() => {
+        this.loadCourses();
+        this.closeForm();
+      });
     } else {
-      this.courses = [...this.courses, { ...this.formCourse }];
+      if (!payload.center_id || !payload.teacher_id) {
+        this.closeForm();
+        return;
+      }
+      this.api.post('/groups', payload).subscribe(() => {
+        this.loadCourses();
+        this.closeForm();
+      });
     }
-    this.closeForm();
   }
 
-  delete(course: typeof this.formCourse) {
-    this.courses = this.courses.filter(c => c !== course);
+  delete(course: any) {
+    const found = this.courses.find(c => c.id === course.id);
+    if (!found?.id) {
+      this.courses = this.courses.filter(c => c !== course);
+      return;
+    }
+
+    this.api.delete(`/groups/${found.id}`).subscribe(() => {
+      this.courses = this.courses.filter(c => c.id !== found.id);
+    });
   }
 
   closeForm() {
