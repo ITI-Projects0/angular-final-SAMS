@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateService } from '../../../core/services/translate.service';
+import { ApiService } from '../../../core/services/api.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -10,25 +11,48 @@ import { TranslateService } from '../../../core/services/translate.service';
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })
+export class AdminDashboard implements OnInit {
+  constructor(public i18n: TranslateService, private api: ApiService) {}
 
-export class AdminDashboard {
-  constructor(public i18n: TranslateService) {}
-  // small sample data to render the overview
   stats = {
-    centers: 12,
-    paidCenters: 8,
-    unpaidCenters: 4,
-    courses: 48,
-    activeCourses: 34,
-    teachers: 28,
-    onlineTeachers: 10,
-    students: 420,
-    attendanceToday: 388,
+    centers: 0,
+    paidCenters: 0,
+    unpaidCenters: 0,
+    courses: 0,
+    activeCourses: 0,
+    teachers: 0,
+    onlineTeachers: 0,
+    students: 0,
+    attendanceToday: 0,
   };
 
-  recent = [
-    { titleKey: 'recent.item1', time: 'Today, 10:00 AM' },
-    { titleKey: 'recent.item2', time: 'Today, 03:00 PM' },
-    { titleKey: 'recent.item3', time: 'Today, 05:00 PM' },
-  ];
+  recent: any[] = [];
+  loading = false;
+
+  ngOnInit(): void {
+    this.loadStats();
+  }
+
+  private loadStats() {
+    this.loading = true;
+    this.api.get<any>('/admin/stats').subscribe({
+      next: (res) => {
+        const payload = res?.data ?? res;
+        this.stats = { ...this.stats, ...(payload?.stats ?? {}) };
+        this.recent = (payload?.recent ?? []).map((item: any) => ({
+          title: item.name || item.titleKey || 'Activity',
+          titleKey: item.titleKey,
+          time: item.created_at
+            ? new Date(item.created_at).toLocaleString()
+            : item.time || '',
+        }));
+      },
+      error: () => {
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
 }

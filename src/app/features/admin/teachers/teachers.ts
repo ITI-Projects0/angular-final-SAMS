@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateService } from '../../../core/services/translate.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../../../core/services/api.service';
 
 @Component({
   selector: 'app-admin-teachers',
@@ -10,18 +11,40 @@ import { Component } from '@angular/core';
   templateUrl: './teachers.html',
   styleUrl: './teachers.css',
 })
-export class Teachers {
-  constructor(public i18n: TranslateService) {}
-  teachers = [
-    {name: 'Mohamed Adel', email: 'mohamed@example.com', center: 'Skyline Learning', courses: 5, phone: '+20 123 456 7890'},
-    {name: 'Sara Ibrahim', email: 'sara@example.com', center: 'Future Skills Hub', courses: 3, phone: '+20 111 222 3344'},
-    {name: 'Ali Hassan', email: 'ali@example.com', center: 'Gulf Academy', courses: 7, phone: '+966 50 123 4567'},
-  ];
+export class Teachers implements OnInit {
+  constructor(public i18n: TranslateService, private api: ApiService) {}
+  teachers: any[] = [];
+  loading = false;
 
   isFormOpen = false;
   isEditMode = false;
   currentIndex: number | null = null;
   formTeacher = { name: '', email: '', center: '', courses: 0, phone: '' };
+
+  ngOnInit(): void {
+    this.loadTeachers();
+  }
+
+  private loadTeachers() {
+    this.loading = true;
+    this.api.get<any>('/teachers').subscribe({
+      next: (res) => {
+        const payload = res?.data ?? res;
+        const items = payload?.data ?? payload ?? [];
+        this.teachers = items.map((t: any) => ({
+          id: t.id,
+          name: t.name,
+          email: t.email,
+          center: t.taught_groups?.[0]?.center?.name || t.center?.name || '',
+          courses: t.taught_groups_count ?? t.taughtGroups_count ?? t.taught_groups?.length ?? 0,
+          phone: t.phone || '',
+          raw: t,
+        }));
+      },
+      error: () => { this.loading = false; },
+      complete: () => { this.loading = false; }
+    });
+  }
 
   openForm(teacher?: typeof this.formTeacher) {
     this.isFormOpen = true;
@@ -38,15 +61,44 @@ export class Teachers {
 
   save() {
     if (this.isEditMode && this.currentIndex !== null) {
-      this.teachers[this.currentIndex] = { ...this.formTeacher };
+      const teacher = this.teachers[this.currentIndex];
+      if (!teacher?.id) {
+        this.teachers[this.currentIndex] = { ...this.formTeacher };
+        this.closeForm();
+        return;
+      }
+      this.api.put(`/users/${teacher.id}`, {
+        name: this.formTeacher.name,
+        email: this.formTeacher.email,
+        phone: this.formTeacher.phone,
+        role: 'teacher',
+      }).subscribe(() => {
+        this.loadTeachers();
+        this.closeForm();
+      });
     } else {
-      this.teachers = [...this.teachers, { ...this.formTeacher }];
+      this.api.post('/users', {
+        name: this.formTeacher.name,
+        email: this.formTeacher.email,
+        password: 'Password123',
+        phone: this.formTeacher.phone,
+        role: 'teacher',
+      }).subscribe(() => {
+        this.loadTeachers();
+        this.closeForm();
+      });
     }
-    this.closeForm();
   }
 
   delete(teacher: typeof this.formTeacher) {
-    this.teachers = this.teachers.filter(t => t !== teacher);
+    const found = this.teachers.find(t => t.email === teacher.email && t.name === teacher.name);
+    if (!found?.id) {
+      this.teachers = this.teachers.filter(t => t !== teacher);
+      return;
+    }
+    this.api.delete(`/users/${found.id}`).subscribe(() => {
+      this.teachers = this.teachers.filter(t => t.id !== found.id);
+    });
   }
 
   closeForm() {

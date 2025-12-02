@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateService } from '../../../core/services/translate.service';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../../../core/services/api.service';
 
 @Component({
   selector: 'app-admin-students',
@@ -10,18 +11,47 @@ import { Component } from '@angular/core';
   templateUrl: './students.html',
   styleUrl: './students.css',
 })
-export class Students {
-  constructor(public i18n: TranslateService) {}
-  students = [
-    { name: 'Omar Khaled', email: 'student1@example.com', center: 'Skyline Learning', status: 'Active' },
-    { name: 'Mona El-Sayed', email: 'student2@example.com', center: 'Future Skills Hub', status: 'Pending' },
-    { name: 'Sara Ibrahim', email: 'student3@example.com', center: 'Gulf Academy', status: 'Active' },
-  ];
+export class Students implements OnInit {
+  constructor(public i18n: TranslateService, private api: ApiService) {}
+  students: any[] = [];
+  loading = false;
+  currentId: number | null = null;
 
   isFormOpen = false;
   isEditMode = false;
   currentIndex: number | null = null;
   formStudent = { name: '', email: '', center: '', status: '' };
+
+  ngOnInit(): void {
+    this.loadStudents();
+  }
+
+  private loadStudents() {
+    this.loading = true;
+    this.api.get<any>('/users').subscribe({
+      next: (res) => {
+        const payload = res?.data ?? res;
+        const items = payload?.data ?? payload ?? [];
+        this.students = items
+          .filter((u: any) => {
+            const hasRole = Array.isArray(u.roles)
+              ? u.roles.some((r: any) => (typeof r === 'string' ? r : r?.name) === 'student')
+              : false;
+            return hasRole || u.role === 'student';
+          })
+          .map((u: any) => ({
+            id: u.id,
+            name: u.name,
+            email: u.email,
+            center: u.center?.name || '',
+            status: u.status || 'active',
+            raw: u,
+          }));
+      },
+      error: () => { this.loading = false; },
+      complete: () => { this.loading = false; }
+    });
+  }
 
   openForm(student?: typeof this.formStudent) {
     this.isFormOpen = true;
@@ -38,15 +68,46 @@ export class Students {
 
   save() {
     if (this.isEditMode && this.currentIndex !== null) {
-      this.students[this.currentIndex] = { ...this.formStudent };
+      const id = this.students[this.currentIndex]?.id;
+      if (!id) {
+        this.students[this.currentIndex] = { ...this.formStudent };
+        this.closeForm();
+        return;
+      }
+
+      this.api.put(`/users/${id}`, {
+        name: this.formStudent.name,
+        email: this.formStudent.email,
+        status: this.formStudent.status,
+        role: 'student',
+      }).subscribe(() => {
+        this.loadStudents();
+        this.closeForm();
+      });
     } else {
-      this.students = [...this.students, { ...this.formStudent }];
+      this.api.post('/users', {
+        name: this.formStudent.name,
+        email: this.formStudent.email,
+        password: 'Password123', // placeholder; in real UI we should request it
+        status: this.formStudent.status || 'active',
+        role: 'student',
+      }).subscribe(() => {
+        this.loadStudents();
+        this.closeForm();
+      });
     }
-    this.closeForm();
   }
 
   delete(student: typeof this.formStudent) {
-    this.students = this.students.filter(s => s !== student);
+    const found = this.students.find(s => s.email === student.email && s.name === student.name);
+    if (!found?.id) {
+      this.students = this.students.filter(s => s !== student);
+      return;
+    }
+
+    this.api.delete(`/users/${found.id}`).subscribe(() => {
+      this.students = this.students.filter(s => s.id !== found.id);
+    });
   }
 
   closeForm() {
