@@ -1,0 +1,91 @@
+<div class="p-6 space-y-6">
+  <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Children's Attendance</h1>
+      <p class="text-slate-500 dark:text-slate-400">View attendance records for your children.</p>
+    </div>
+  </header>
+
+  <!-- Filters -->
+  <div
+    class="p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 shadow-sm grid gap-4 md:grid-cols-3">
+    <div>
+      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Select Child</label>
+      <select [(ngModel)]="selectedChildId" (change)="onFilterChange()"
+        class="p-2 w-full rounded-lg border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+        <option [ngValue]="null">All Children</option>
+        @for (child of children$ | async; track child.id) {
+        <option [value]="child.id">{{ child.name }}</option>
+        }
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Date</label>
+      <input type="date" [(ngModel)]="selectedDate" (change)="onFilterChange()"
+        class="p-2 w-full rounded-lg border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Subject</label>
+      <select [(ngModel)]="selectedSubject" (change)="onFilterChange()"
+        class="p-2 w-full rounded-lg border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-indigo-500 focus:border-indigo-500">
+        <option value="">All Subjects</option>
+        @for (subject of subjects; track subject) {
+        <option [value]="subject">{{ subject }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div
+    class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-slate-50 dark:bg-slate-700/50 text-slate-500 dark:text-slate-400 font-medium">
+          <tr>
+            <th class="px-6 py-4">Child</th>
+            <th class="px-6 py-4">Subject</th>
+            <th class="px-6 py-4">Date</th>
+            <th class="px-6 py-4">Status</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+          @for (record of attendance$ | async; track record.date) {
+          <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+            <td class="px-6 py-4 text-slate-900 dark:text-white font-medium">
+              {{ record.childName }}
+            </td>
+            <td class="px-6 py-4 text-slate-500 dark:text-slate-400">
+              {{ record.subject }}
+            </td>
+            <td class="px-6 py-4 text-slate-500 dark:text-slate-400">
+              {{ record.date | date:'mediumDate' }}
+            </td>
+            <td class="px-6 py-4">
+              <span
+                class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium uppercase tracking-wider"
+                [ngClass]="{
+                    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300': record.status === 'present',
+                    'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300': record.status === 'absent',
+                    'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300': record.status === 'late'
+                  }">
+                <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{
+                      'bg-emerald-500': record.status === 'present',
+                      'bg-red-500': record.status === 'absent',
+                      'bg-amber-500': record.status === 'late'
+                    }"></span>
+                {{ record.status }}
+              </span>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="3" class="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+              No attendance records found.
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

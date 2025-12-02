@@ -1,0 +1,53 @@
+<div class="flex h-screen bg-slate-50 dark:bg-slate-900">
+  <!-- Main Video Area -->
+  <div class="flex-1 p-6 overflow-y-auto">
+    <div class="max-w-6xl mx-auto space-y-4">
+      <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ videoTitle }}</h1>
+      
+      @if (videoUrl) {
+        <div class="relative w-full" style="padding-bottom: 56.25%;">
+          <iframe 
+            [src]="videoUrl" 
+            class="absolute top-0 left-0 w-full h-full rounded-xl shadow-lg"
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      } @else {
+        <div class="flex items-center justify-center h-96 bg-slate-200 dark:bg-slate-800 rounded-xl">
+          <p class="text-slate-500 dark:text-slate-400">No video selected</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Sidebar - Video Playlist -->
+  <div class="w-80 bg-white dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 overflow-y-auto">
+    <div class="p-4 border-b border-slate-200 dark:border-slate-700">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white">Lesson Videos</h2>
+    </div>
+    <div class="divide-y divide-slate-100 dark:divide-slate-700">
+      @for (video of allVideos; track video.id) {
+        <div 
+          (click)="playVideo(video)"
+          class="p-4 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50"
+          [class.bg-indigo-50]="video.active"
+          [class.dark:bg-indigo-900/20]="video.active">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded bg-slate-200 dark:bg-slate-700 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5" [class.text-indigo-600]="video.active" [class.dark:text-indigo-400]="video.active" [class.text-slate-400]="!video.active" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-sm" [class.text-indigo-600]="video.active" [class.dark:text-indigo-400]="video.active" [class.text-slate-900]="!video.active" [class.dark:text-white]="!video.active">
+                {{ video.title }}
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

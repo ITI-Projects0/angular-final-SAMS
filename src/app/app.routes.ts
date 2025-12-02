@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { guestGuard } from './core/auth/guest.guard';
+import { authGuard } from './core/auth/auth.guard';
 import { StaffRoutes } from './features/staff-dashboard/staff.routes';
 import { AdminRoutes } from './features/admin/admin.routes';
 
@@ -35,6 +36,25 @@ export const routes: Routes = [
   ...StaffRoutes,
   ...AdminRoutes,
 
+  // Student & Parent Pages
+  {
+    path: 'dashboard',
+    loadComponent: () => import('./layouts/student-dashboard/student-dashboard').then(m => m.StudentDashboard),
+    canActivate: [authGuard],
+    children: [
+      { path: '', loadComponent: () => import('./features/student-pages/overview/overview').then(m => m.StudentOverview) },
+      { path: 'classes', loadComponent: () => import('./features/student-pages/classes/classes').then(m => m.StudentClasses) },
+      { path: 'classes/:id', loadComponent: () => import('./features/student-pages/class-details/class-details').then(m => m.StudentClassDetails) },
+      { path: 'assignments', loadComponent: () => import('./features/student-pages/assignments/assignments').then(m => m.StudentAssignments) },
+      { path: 'attendance', loadComponent: () => import('./features/student-pages/attendance/attendance').then(m => m.StudentAttendance) },
+      { path: 'profile', loadComponent: () => import('./features/student-pages/profile/profile').then(m => m.StudentProfile) },
+      { path: 'video', loadComponent: () => import('./features/student-pages/video-viewer/video-viewer').then(m => m.VideoViewer) },
+      { path: 'children', loadComponent: () => import('./features/parent-pages/children/children').then(m => m.ParentChildren) },
+      { path: 'children/:id', loadComponent: () => import('./features/parent-pages/child-details/child-details').then(m => m.ParentChildDetails) },
+      { path: 'children/:childId/classes/:classId', loadComponent: () => import('./features/parent-pages/child-class-details/child-class-details').then(m => m.ChildClassDetails) },
+      { path: 'parent-profile', loadComponent: () => import('./features/parent-pages/profile/profile').then(m => m.ParentProfile) },
+    ]
+  },
   // 404 Page
   { path: '**', loadComponent: () => import('./features/not-found/not-found').then(m => m.NotFound) }
 ];

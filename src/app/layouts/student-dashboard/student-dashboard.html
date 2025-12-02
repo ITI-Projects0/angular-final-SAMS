@@ -1,1 +1,11 @@
-<p>student-dashboard works!</p>
+<div
+    class="dashboard-layout bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen relative flex flex-col">
+
+    <app-header></app-header>
+
+    <main class="mt-[56px] content flex-1 bg-slate-50 dark:bg-slate-900/50 p-6 overflow-y-auto">
+        <router-outlet></router-outlet>
+    </main>
+
+    <app-footer></app-footer>
+</div>

@@ -1,0 +1,68 @@
+<footer class="relative z-10 border-t"
+    [ngClass]="isDark ? 'border-slate-800 bg-slate-950/80' : 'border-slate-200 bg-white/90'">
+    <div class="mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 py-12 lg:flex-row lg:items-start lg:justify-between">
+        <div class="space-y-4 max-w-md">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-2xl bg-linear-to-br from-indigo-400 via-sky-400 to-emerald-300"></div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-[0.35em]"
+                        [ngClass]="isDark ? 'text-slate-400' : 'text-slate-500'">SAMS</p>
+                    <p class="text-sm" [ngClass]="isDark ? 'text-slate-200' : 'text-slate-700'">Smart Attendance &
+                        Management Suite</p>
+                </div>
+            </div>
+            <p class="text-sm" [ngClass]="isDark ? 'text-slate-400' : 'text-slate-600'">
+                A single control center for attendance, staff, and student success—built for teams that crave clarity
+                and speed.
+            </p>
+        </div>
+        <div class="grid flex-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="space-y-3">
+                <p class="text-xs uppercase tracking-[0.3em]" [ngClass]="isDark ? 'text-slate-500' : 'text-slate-500'">
+                    Product</p>
+                <a href="#features" class="block text-sm transition"
+                    [ngClass]="isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'">Features</a>
+                <a href="#stories" class="block text-sm transition"
+                    [ngClass]="isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'">Live
+                    stories</a>
+                <a href="#contact" class="block text-sm transition"
+                    [ngClass]="isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'">Contact</a>
+            </div>
+            <div class="space-y-3">
+                <p class="text-xs uppercase tracking-[0.3em]" [ngClass]="isDark ? 'text-slate-500' : 'text-slate-500'">
+                    Resources</p>
+                <a routerLink="/dashboard/staff/staff-dashboard" class="block text-sm transition"
+                    [ngClass]="isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'">Dashboard</a>
+                <a routerLink="/dashboard/staff/students" class="block text-sm transition"
+                    [ngClass]="isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'">Students</a>
+                <a routerLink="/dashboard/staff/groups" class="block text-sm transition"
+                    [ngClass]="isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'">Groups</a>
+            </div>
+            <div class="space-y-3">
+                <p class="text-xs uppercase tracking-[0.3em]" [ngClass]="isDark ? 'text-slate-500' : 'text-slate-500'">
+                    Get started</p>
+                <a href="mailto:team@sams.app" class="block text-sm transition"
+                    [ngClass]="isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'">Email
+                    us</a>
+                <a href="#hero" class="block text-sm transition"
+                    [ngClass]="isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'">Back
+                    to top</a>
+                <a href="#contact" class="block text-sm transition"
+                    [ngClass]="isDark ? 'text-slate-200 hover:text-white' : 'text-slate-700 hover:text-slate-900'">Book
+                    a walkthrough</a>
+            </div>
+        </div>
+    </div>
+    <div class="border-t" [ngClass]="isDark ? 'border-white/10' : 'border-slate-200'">
+        <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-6 py-5 text-xs"
+            [ngClass]="isDark ? 'text-slate-500' : 'text-slate-600'">
+            <p>© {{ currentYear }} SAMS. All rights reserved.</p>
+            <div class="flex items-center gap-4">
+                <a routerLink="/dashboard/staff/staff-dashboard" class="transition"
+                    [ngClass]="isDark ? 'hover:text-slate-300' : 'hover:text-slate-900'">Dashboard</a>
+                <a href="#hero" class="transition"
+                    [ngClass]="isDark ? 'hover:text-slate-300' : 'hover:text-slate-900'">Back to top</a>
+            </div>
+        </div>
+    </div>
+</footer>

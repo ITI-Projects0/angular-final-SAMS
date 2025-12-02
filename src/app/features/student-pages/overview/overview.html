@@ -1,0 +1,176 @@
+@if (isParent) {
+<app-parent-overview></app-parent-overview>
+} @else {
+<div class="p-6 space-y-6">
+    <header>
+        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Welcome back, {{ user?.name }}!</h1>
+        <p class="text-slate-500 dark:text-slate-400">Here's what's happening with your studies today.</p>
+    </header>
+
+    @if (summary$ | async; as summary) {
+    <div class="grid gap-6 md:grid-cols-3">
+        <!-- Classes Card -->
+        <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="p-3 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Enrolled Classes</p>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ summary.classesCount }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignments Card -->
+        <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="p-3 rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Pending Assignments</p>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ summary.assignmentsCount }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Card -->
+        <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="p-3 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Attendance Rate</p>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ summary.attendanceRate }}%</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- Upcoming Classes Today & Tomorrow -->
+    <div
+        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700">
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Upcoming Classes</h2>
+        </div>
+        <div class="p-4">
+            @if (upcomingClasses$ | async; as classes) {
+            @if (classes.length > 0) {
+            <div class="space-y-3">
+                @for (cls of classes; track cls.id) {
+                <div class="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/30">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">{{ cls.name }}</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ cls.teacherName }} • {{
+                                cls.location }}</p>
+                        </div>
+                    </div>
+                    <span class="text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                        {{ cls.scheduledAt | date:'shortTime' }}
+                    </span>
+                </div>
+                }
+            </div>
+            } @else {
+            <p class="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No classes scheduled for today or
+                tomorrow</p>
+            }
+            }
+        </div>
+    </div>
+
+    <!-- Upcoming Exams -->
+    <div
+        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700">
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Upcoming Exams</h2>
+        </div>
+        <div class="p-4">
+            @if (upcomingExams$ | async; as exams) {
+            @if (exams.length > 0) {
+            <div class="space-y-3">
+                @for (exam of exams; track exam.id) {
+                <div class="flex items-center justify-between p-3 rounded-lg bg-amber-50 dark:bg-amber-900/10">
+                    <div>
+                        <p class="font-medium text-slate-900 dark:text-white">{{ exam.title }}</p>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">{{ exam.subject }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-amber-600 dark:text-amber-400">{{ exam.date |
+                            date:'mediumDate' }}</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ exam.time }}</p>
+                    </div>
+                </div>
+                }
+            </div>
+            } @else {
+            <p class="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No upcoming exams</p>
+            }
+            }
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div
+        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Recent Notifications</h2>
+            <button (click)="markAllAsRead()"
+                class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
+                Mark All as Read
+            </button>
+        </div>
+        <div class="divide-y divide-slate-100 dark:divide-slate-700">
+            @if (notifications$ | async; as notifications) {
+            @if (notifications.length > 0) {
+            @for (notif of notifications; track notif.id) {
+            <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors group"
+                [class.bg-blue-50]="!notif.read" [class.dark:bg-blue-900/10]="!notif.read">
+                <div class="flex items-start gap-3">
+                    <div class="w-2 h-2 rounded-full mt-2 shrink-0" [class.bg-blue-500]="!notif.read"
+                        [class.bg-slate-300]="notif.read">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium text-slate-900 dark:text-white">{{ notif.title }}</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">{{ notif.message }}</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-500 mt-2">{{ notif.timestamp | date:'short' }}
+                        </p>
+                    </div>
+                    @if (!notif.read) {
+                    <button (click)="markAsRead(notif.id)"
+                        class="opacity-0 group-hover:opacity-100 px-3 py-1 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 transition-all shrink-0">
+                        Mark as Read
+                    </button>
+                    }
+                </div>
+            </div>
+            }
+            } @else {
+            <p class="text-sm text-slate-500 dark:text-slate-400 text-center py-8">No notifications</p>
+            }
+            }
+        </div>
+    </div>
+</div>
+}
