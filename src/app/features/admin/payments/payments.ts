@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateService } from '../../../core/services/translate.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -11,7 +10,6 @@ import { Component } from '@angular/core';
   styleUrl: './payments.css',
 })
 export class Payments {
-  constructor(public i18n: TranslateService) {}
   filter: 'all' | 'paid' | 'unpaid' = 'all';
 
   centers = [

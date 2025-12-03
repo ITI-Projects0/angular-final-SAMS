@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { AdminSidebar } from "../../shared/admin-sidebar/admin-sidebar";
 import { AdminNav } from "../../shared/admin-nav/admin-nav";
 import { ThemeService } from '../../core/services/theme.service';
-import { TranslateService } from '../../core/services/translate.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -15,7 +14,7 @@ import { TranslateService } from '../../core/services/translate.service';
 })
 export class AdminLayout {
   isSidebarCollapsed = false;
-  constructor(public theme: ThemeService, public i18n: TranslateService) {
+  constructor(public theme: ThemeService) {
     this.theme.init();
   }
 }

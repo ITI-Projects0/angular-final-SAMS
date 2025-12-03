@@ -1,29 +1,29 @@
 <section class="list-wrapper">
   <header class="list-header">
-    <h2>{{ i18n.t('centers.title') }}</h2>
-    <p class="muted">{{ i18n.t('centers.subtitle') }}</p>
+    <h2>Centers</h2>
+    <p class="muted">All registered centers with payment status</p>
   </header>
 
   <div class="toolbar">
-    <input [placeholder]="i18n.t('centers.search')" class="search" />
-    <button class="btn-primary" (click)="openForm()">{{ i18n.t('centers.add') }}</button>
+    <input placeholder="Search centers..." class="search" />
+    <button class="btn-primary" (click)="openForm()">Add center</button>
   </div>
 
   <table class="list-table glass">
     <thead>
-      <tr><th>{{ i18n.t('table.name') }}</th><th>{{ i18n.t('table.location') }}</th><th>{{ i18n.t('table.phone') }}</th><th>{{ i18n.t('table.status') }}</th><th>{{ i18n.t('table.actions') }}</th></tr>
+      <tr><th>Name</th><th>City</th><th>Phone</th><th>Status</th><th>Actions</th></tr>
     </thead>
     <tbody>
       <tr *ngFor="let c of centers">
-        <td>{{c.name}}</td>
-        <td>{{c.city}}</td>
-        <td>{{c.phone}}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.city }}</td>
+        <td>{{ c.phone }}</td>
         <td>
-          <span [class.paid]="c.paid">{{c.paid ? i18n.t('status.paid') : i18n.t('status.unpaid')}}</span>
+          <span [class.paid]="c.paid">{{ c.paid ? 'Paid' : 'Unpaid' }}</span>
         </td>
         <td>
-          <button class="btn-simple" (click)="openForm(c)">{{ i18n.t('action.edit') }}</button>
-          <button class="btn-simple muted" (click)="delete(c)">{{ i18n.t('action.delete') }}</button>
+          <button class="btn-simple" (click)="openForm(c)">Edit</button>
+          <button class="btn-simple muted" (click)="delete(c)">Delete</button>
         </td>
       </tr>
     </tbody>
@@ -34,25 +34,25 @@
 <div class="overlay" [class.open]="isFormOpen" (click)="closeForm()"></div>
 <div class="side-panel glass" [class.open]="isFormOpen" (click)="$event.stopPropagation()">
   <div class="panel-header">
-    <h3>{{ isEditMode ? i18n.t('action.edit') : i18n.t('centers.add') }}</h3>
-    <button class="close-btn" (click)="closeForm()">×</button>
+    <h3>{{ isEditMode ? 'Edit' : 'Add center' }}</h3>
+    <button class="close-btn" (click)="closeForm()">X</button>
   </div>
   <form class="panel-body" (ngSubmit)="save()">
-    <label class="label">{{ i18n.t('table.name') }}</label>
+    <label class="label">Name</label>
     <input class="input" name="name" [(ngModel)]="formCenter.name" required />
 
-    <label class="label">{{ i18n.t('table.location') }}</label>
+    <label class="label">City</label>
     <input class="input" name="city" [(ngModel)]="formCenter.city" required />
 
-    <label class="label">{{ i18n.t('table.phone') }}</label>
+    <label class="label">Phone</label>
     <input class="input" name="phone" [(ngModel)]="formCenter.phone" required />
 
-    <label class="label">{{ i18n.t('table.status') }}</label>
+    <label class="label">Status</label>
     <select class="input" name="paid" [(ngModel)]="formCenter.paid">
-      <option [ngValue]="true">{{ i18n.t('status.paid') }}</option>
-      <option [ngValue]="false">{{ i18n.t('status.unpaid') }}</option>
+      <option [ngValue]="true">Paid</option>
+      <option [ngValue]="false">Unpaid</option>
     </select>
 
-    <button type="submit" class="btn-primary full">{{ isEditMode ? i18n.t('action.edit') : i18n.t('centers.add') }}</button>
+    <button type="submit" class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add center' }}</button>
   </form>
 </div>

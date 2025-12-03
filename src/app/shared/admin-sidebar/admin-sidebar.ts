@@ -2,7 +2,6 @@ import { Component, Input, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../core/services/theme.service';
-import { TranslateService } from '../../core/services/translate.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { Router } from '@angular/router';
 
@@ -15,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class AdminSidebar {
   @Input() collapsed = false;
-  constructor(public theme: ThemeService, public i18n: TranslateService) {}
+  constructor(public theme: ThemeService) {}
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);

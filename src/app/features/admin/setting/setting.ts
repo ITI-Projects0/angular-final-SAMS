@@ -3,13 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ThemePreference, ThemeService } from '../../../core/services/theme.service';
-import { TranslateService } from '../../../core/services/translate.service';
 import { ApiService } from '../../../core/services/api.service';
 import { TokenStorageService } from '../../../core/auth/token-storage.service';
 import { User } from '../../../core/models/user.model';
 
 type Theme = ThemePreference;
-type LanguageCode = 'en' | 'ar';
 
 @Component({
   selector: 'app-setting',
@@ -31,12 +29,10 @@ export class Setting implements OnInit, OnDestroy {
 
   preferences: {
     theme: Theme;
-    language: LanguageCode;
     use24hTime: boolean;
     compactSidebar: boolean;
   } = {
     theme: 'light',
-    language: 'en',
     use24hTime: true,
     compactSidebar: false,
   };
@@ -57,7 +53,6 @@ export class Setting implements OnInit, OnDestroy {
 
   constructor(
     private themeService: ThemeService,
-    private i18n: TranslateService,
     private api: ApiService,
     private tokenStorage: TokenStorageService
   ) {}
@@ -65,8 +60,6 @@ export class Setting implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.rolesInput = this.user.roles.join(', ');
     this.preferences.theme = this.themeService.currentPreference;
-    this.preferences.language = this.i18n.lang;
-    this.applyLanguage();
     this.applyTheme();
     this.themeSub = this.themeService.theme$.subscribe(() => {
       this.preferences.theme = this.themeService.currentPreference;
@@ -86,22 +79,12 @@ export class Setting implements OnInit, OnDestroy {
     this.applyTheme();
   }
 
-  onLanguageChange(value: LanguageCode): void {
-    this.preferences.language = value;
-    this.applyLanguage();
-  }
-
   // -------------------------------------
-  // Theme and language helpers
+  // Theme helper
   // -------------------------------------
   private applyTheme(): void {
     this.themeService.setThemePreference(this.preferences.theme);
-
     document.documentElement.dataset['theme'] = this.preferences.theme;
-  }
-
-  private applyLanguage(): void {
-    this.i18n.setLang(this.preferences.language);
   }
 
   // -------------------------------------

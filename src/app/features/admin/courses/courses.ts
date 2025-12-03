@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateService } from '../../../core/services/translate.service';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 
@@ -12,7 +11,7 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './courses.css',
 })
 export class Courses implements OnInit {
-  constructor(public i18n: TranslateService, private api: ApiService) {}
+  constructor(private api: ApiService) {}
   courses: any[] = [];
   loading = false;
   currentId: number | null = null;

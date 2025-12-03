@@ -1,27 +1,27 @@
-﻿<section class="list-wrapper">
+<section class="list-wrapper">
   <header class="list-header">
-    <h2>{{ i18n.t('students.title') }}</h2>
-    <p class="muted">{{ i18n.t('students.subtitle') }}</p>
+    <h2>Students</h2>
+    <p class="muted">Enrolled students and their centers</p>
   </header>
 
   <div class="toolbar">
-    <input [placeholder]="i18n.t('students.search')" class="search" />
-    <button class="btn-primary" (click)="openForm()">{{ i18n.t('students.add') }}</button>
+    <input placeholder="Search students..." class="search" />
+    <button class="btn-primary" (click)="openForm()">Add student</button>
   </div>
 
   <table class="list-table glass">
     <thead>
-      <tr><th>{{ i18n.t('table.name') }}</th><th>{{ i18n.t('table.email') }}</th><th>{{ i18n.t('table.center') }}</th><th>{{ i18n.t('table.status') }}</th><th>{{ i18n.t('table.actions') }}</th></tr>
+      <tr><th>Name</th><th>Email</th><th>Center</th><th>Status</th><th>Actions</th></tr>
     </thead>
     <tbody>
       <tr *ngFor="let s of students">
-        <td>{{s.name}}</td>
-        <td>{{s.email}}</td>
-        <td>{{s.center}}</td>
-        <td>{{s.status}}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.email }}</td>
+        <td>{{ s.center }}</td>
+        <td>{{ s.status }}</td>
         <td>
-          <button class="btn-simple" (click)="openForm(s)">{{ i18n.t('action.edit') }}</button>
-          <button class="btn-simple muted" (click)="delete(s)">{{ i18n.t('action.delete') }}</button>
+          <button class="btn-simple" (click)="openForm(s)">Edit</button>
+          <button class="btn-simple muted" (click)="delete(s)">Delete</button>
         </td>
       </tr>
     </tbody>
@@ -31,22 +31,22 @@
 <div class="overlay" [class.open]="isFormOpen" (click)="closeForm()"></div>
 <div class="side-panel glass" [class.open]="isFormOpen" (click)="$event.stopPropagation()">
   <div class="panel-header">
-    <h3>{{ isEditMode ? i18n.t('action.edit') : i18n.t('students.add') }}</h3>
-    <button class="close-btn" (click)="closeForm()">×</button>
+    <h3>{{ isEditMode ? 'Edit' : 'Add student' }}</h3>
+    <button class="close-btn" (click)="closeForm()">X</button>
   </div>
   <form class="panel-body" (ngSubmit)="save()">
-    <label class="label">{{ i18n.t('table.name') }}</label>
+    <label class="label">Name</label>
     <input class="input" name="name" [(ngModel)]="formStudent.name" required />
 
-    <label class="label">{{ i18n.t('table.email') }}</label>
+    <label class="label">Email</label>
     <input class="input" name="email" [(ngModel)]="formStudent.email" required />
 
-    <label class="label">{{ i18n.t('table.center') }}</label>
+    <label class="label">Center</label>
     <input class="input" name="center" [(ngModel)]="formStudent.center" required />
 
-    <label class="label">{{ i18n.t('table.status') }}</label>
+    <label class="label">Status</label>
     <input class="input" name="status" [(ngModel)]="formStudent.status" required />
 
-    <button type="submit" class="btn-primary full">{{ isEditMode ? i18n.t('action.edit') : i18n.t('students.add') }}</button>
+    <button type="submit" class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add student' }}</button>
   </form>
 </div>

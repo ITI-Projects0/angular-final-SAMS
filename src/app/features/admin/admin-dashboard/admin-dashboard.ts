@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { TranslateService } from '../../../core/services/translate.service';
 import { ApiService } from '../../../core/services/api.service';
 
 @Component({
@@ -12,7 +11,7 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './admin-dashboard.css',
 })
 export class AdminDashboard implements OnInit {
-  constructor(public i18n: TranslateService, private api: ApiService) {}
+  constructor(private api: ApiService) {}
 
   stats = {
     centers: 0,

@@ -10,5 +10,4 @@ import { RouterOutlet } from '@angular/router';
 })
 export class DashboardLayout {
   isSidebarCollapsed = false;
-  i18n: any;
 }

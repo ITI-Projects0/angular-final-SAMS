@@ -1,25 +1,25 @@
-﻿<section class="list-wrapper">
+<section class="list-wrapper">
   <header class="list-header">
-    <h2>{{ i18n.t('contacts.title') }}</h2>
-    <p class="muted">{{ i18n.t('contacts.subtitle') }}</p>
+    <h2>Contacts</h2>
+    <p class="muted">Key contacts with their roles</p>
   </header>
 
   <div class="toolbar">
-    <input [placeholder]="i18n.t('contacts.search')" class="search" />
-    <button class="btn-primary" (click)="openForm()">{{ i18n.t('contacts.add') }}</button>
+    <input placeholder="Search name or email..." class="search" />
+    <button class="btn-primary" (click)="openForm()">Add contact</button>
   </div>
 
   <ul class="contact-list glass">
     <li *ngFor="let c of contacts" class="contact-item">
       <div class="left">
-        <div class="name">{{c.name}}</div>
-        <div class="muted">{{c.email}} • {{c.phone}}</div>
+        <div class="name">{{ c.name }}</div>
+        <div class="muted">{{ c.email }} � {{ c.phone }}</div>
       </div>
       <div class="right">
-        <div class="muted">{{c.role}}</div>
+        <div class="muted">{{ c.role }}</div>
         <div class="actions">
-          <button class="btn-simple" (click)="openForm(c)">{{ i18n.t('action.edit') }}</button>
-          <button class="btn-simple muted" (click)="delete(c)">{{ i18n.t('action.delete') }}</button>
+          <button class="btn-simple" (click)="openForm(c)">Edit</button>
+          <button class="btn-simple muted" (click)="delete(c)">Delete</button>
         </div>
       </div>
     </li>
@@ -29,22 +29,22 @@
 <div class="overlay" [class.open]="isFormOpen" (click)="closeForm()"></div>
 <div class="side-panel glass" [class.open]="isFormOpen" (click)="$event.stopPropagation()">
   <div class="panel-header">
-    <h3>{{ isEditMode ? i18n.t('action.edit') : i18n.t('contacts.add') }}</h3>
-    <button class="close-btn" (click)="closeForm()">×</button>
+    <h3>{{ isEditMode ? 'Edit' : 'Add contact' }}</h3>
+    <button class="close-btn" (click)="closeForm()">X</button>
   </div>
   <form class="panel-body" (ngSubmit)="save()">
-    <label class="label">{{ i18n.t('table.name') }}</label>
+    <label class="label">Name</label>
     <input class="input" name="name" [(ngModel)]="formContact.name" required />
 
-    <label class="label">{{ i18n.t('table.email') }}</label>
+    <label class="label">Email</label>
     <input class="input" name="email" [(ngModel)]="formContact.email" required />
 
-    <label class="label">{{ i18n.t('table.phone') }}</label>
+    <label class="label">Phone</label>
     <input class="input" name="phone" [(ngModel)]="formContact.phone" required />
 
-    <label class="label">{{ i18n.t('table.role') }}</label>
+    <label class="label">Role</label>
     <input class="input" name="role" [(ngModel)]="formContact.role" required />
 
-    <button type="submit" class="btn-primary full">{{ isEditMode ? i18n.t('action.edit') : i18n.t('contacts.add') }}</button>
+    <button type="submit" class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add contact' }}</button>
   </form>
 </div>

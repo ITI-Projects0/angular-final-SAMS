@@ -1,6 +1,5 @@
-﻿import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateService } from '../../../core/services/translate.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -11,7 +10,7 @@ import { Component } from '@angular/core';
   styleUrl: './contacts.css',
 })
 export class Contacts {
-  constructor(public i18n: TranslateService) {}
+  constructor() {}
   contacts = [
     { name: 'Mohamed Adel', email: 'mohamed@example.com', phone: '+20 123 456 7890', role: 'Teacher' },
     { name: 'Mona El-Sayed', email: 'mona@example.com', phone: '+20 112 223 3344', role: 'Student' },

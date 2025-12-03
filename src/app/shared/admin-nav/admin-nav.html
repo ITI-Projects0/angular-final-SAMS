@@ -23,19 +23,13 @@
 
       <div class="hidden sm:inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-sm text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-200">
         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-        {{ i18n.t('user.role.admin') }}
+        Admin
       </div>
 
       <button class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-sm text-slate-800 shadow-sm hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-100" (click)="theme.toggle()">
         <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.132 0 .263 0 .392.01A7.5 7.5 0 1 0 20.99 11.608 9 9 0 0 1 12 3Z"/></svg>
-        <span>{{ (theme.theme$ | async) === 'dark' ? i18n.t('theme.light') : i18n.t('theme.dark') }}</span>
+        <span>{{ (theme.theme$ | async) === 'dark' ? 'Light mode' : 'Dark mode' }}</span>
       </button>
-
-      <select (change)="i18n.setLang($any($event.target).value)" [value]="i18n.lang"
-        class="rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-sm text-slate-800 shadow-sm focus:outline-none dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-100">
-        <option value="en">{{ i18n.t('language.en') }}</option>
-        <option value="ar">{{ i18n.t('language.ar') }}</option>
-      </select>
 
       <div class="relative inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2 py-1 shadow-sm cursor-pointer hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800/90" (click)="dropdown = !dropdown" (document:click)="dropdown = false" (click)="$event.stopPropagation()">
         <img src="https://via.placeholder.com/80/4b5563/ffffff?text=JD" alt="avatar" class="w-9 h-9 rounded-full object-cover">
@@ -49,8 +43,8 @@
                 <p class="text-xs text-slate-500 dark:text-slate-400">admin@example.com</p>
               </div>
             </div>
-            <a class="block px-4 py-2.5 text-sm text-slate-800 hover:bg-slate-100 transition dark:text-slate-100 dark:hover:bg-slate-800">{{ i18n.t('settings') }}</a>
-            <a class="block px-4 py-2.5 text-sm text-rose-500 hover:bg-rose-50 transition dark:text-rose-400 dark:hover:bg-rose-900/20">{{ i18n.t('auth.logout') }}</a>
+            <a class="block px-4 py-2.5 text-sm text-slate-800 hover:bg-slate-100 transition dark:text-slate-100 dark:hover:bg-slate-800">Settings</a>
+            <a class="block px-4 py-2.5 text-sm text-rose-500 hover:bg-rose-50 transition dark:text-rose-400 dark:hover:bg-rose-900/20">Logout</a>
           </div>
         }
       </div>

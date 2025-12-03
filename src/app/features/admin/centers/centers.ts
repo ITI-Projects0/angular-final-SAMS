@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateService } from '../../../core/services/translate.service';
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 
@@ -12,7 +11,7 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './centers.css',
 })
 export class Centers implements OnInit {
-  constructor(public i18n: TranslateService, private api: ApiService) {}
+  constructor(private api: ApiService) {}
 
   centers: any[] = [];
   loading = false;
