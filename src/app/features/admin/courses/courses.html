@@ -5,8 +5,12 @@
   </header>
 
   <div class="toolbar">
-    <input placeholder="Search courses..." class="search" />
-    <button class="btn-primary" (click)="openForm()">Add course</button>
+    <input placeholder="Search courses..." class="search" [(ngModel)]="searchTerm" />
+  </div>
+
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="spinner"></div>
+    <span>Loading courses...</span>
   </div>
 
   <table class="list-table glass">
@@ -14,40 +18,31 @@
       <tr><th>Course title</th><th>Center</th><th>Teacher</th><th>Status</th><th>Actions</th></tr>
     </thead>
     <tbody>
-      <tr *ngFor="let c of courses">
+      <tr *ngFor="let c of filteredCourses">
         <td>{{ c.title }}</td>
         <td>{{ c.center }}</td>
         <td>{{ c.teacher }}</td>
         <td>{{ c.status }}</td>
         <td>
-          <button class="btn-simple" (click)="openForm(c)">Edit</button>
-          <button class="btn-simple muted" (click)="delete(c)">Delete</button>
+          <button class="btn-simple" (click)="openInfo(c)">Info</button>
         </td>
       </tr>
     </tbody>
   </table>
 </section>
 
-<!-- overlay form -->
-<div class="overlay" [class.open]="isFormOpen" (click)="closeForm()"></div>
-<div class="side-panel glass" [class.open]="isFormOpen" (click)="$event.stopPropagation()">
+<div class="overlay" [class.open]="infoOpen" (click)="closeInfo()"></div>
+<div class="side-panel glass" [class.open]="infoOpen" (click)="$event.stopPropagation()">
   <div class="panel-header">
-    <h3>{{ isEditMode ? 'Edit' : 'Add course' }}</h3>
-    <button class="close-btn" (click)="closeForm()">X</button>
+    <h3>Course info</h3>
+    <button class="close-btn" (click)="closeInfo()">X</button>
   </div>
-  <form class="panel-body" (ngSubmit)="save()">
-    <label class="label">Course title</label>
-    <input class="input" name="title" [(ngModel)]="formCourse.title" required />
-
-    <label class="label">Center</label>
-    <input class="input" name="center" [(ngModel)]="formCourse.center" required />
-
-    <label class="label">Teacher</label>
-    <input class="input" name="teacher" [(ngModel)]="formCourse.teacher" required />
-
-    <label class="label">Status</label>
-    <input class="input" name="status" [(ngModel)]="formCourse.status" required />
-
-    <button type="submit" class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add course' }}</button>
-  </form>
+  <div class="panel-body" *ngIf="selectedCourse">
+    <p><strong>Title:</strong> {{ selectedCourse.title }}</p>
+    <p><strong>Center:</strong> {{ selectedCourse.center || '-' }}</p>
+    <p><strong>Teacher:</strong> {{ selectedCourse.teacher || '-' }}</p>
+    <p><strong>Status:</strong> {{ selectedCourse.status }}</p>
+    <p><strong>Group ID:</strong> {{ selectedCourse.id }}</p>
+    <p><strong>Approval required:</strong> {{ selectedCourse.raw?.is_approval_required ? 'Yes' : 'No' }}</p>
+  </div>
 </div>

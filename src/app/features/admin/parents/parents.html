@@ -1,0 +1,54 @@
+<section class="list-wrapper">
+  <header class="list-header">
+    <h2>Parents</h2>
+    <p class="muted">Parent accounts linked to students</p>
+  </header>
+
+  <div class="toolbar">
+    <input placeholder="Search parents..." class="search" [(ngModel)]="searchTerm" />
+  </div>
+
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="spinner"></div>
+    <span>Loading parents...</span>
+  </div>
+
+  <table class="list-table glass">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of filteredParents">
+        <td>{{ p.name }}</td>
+        <td>{{ p.email }}</td>
+        <td>{{ p.phone || '-' }}</td>
+        <td>{{ p.status }}</td>
+        <td>
+          <button class="btn-simple" (click)="openInfo(p)">Info</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="overlay" [class.open]="infoOpen" (click)="closeInfo()"></div>
+<div class="side-panel glass" [class.open]="infoOpen" (click)="$event.stopPropagation()">
+  <div class="panel-header">
+    <h3>Parent info</h3>
+    <button class="close-btn" (click)="closeInfo()">X</button>
+  </div>
+  <div class="panel-body" *ngIf="selectedParent">
+    <p><strong>Name:</strong> {{ selectedParent.name }}</p>
+    <p><strong>Email:</strong> {{ selectedParent.email }}</p>
+    <p><strong>Phone:</strong> {{ selectedParent.phone || '-' }}</p>
+    <p><strong>Status:</strong> {{ selectedParent.status }}</p>
+    <p><strong>User ID:</strong> {{ selectedParent.id }}</p>
+    <!-- <p><strong>Role tags:</strong> {{ selectedParent.raw?.roles?.map((r: any) => r?.name || r).join(', ') || selectedParent.raw?.role || 'parent' }}</p> -->
+  </div>
+</div>

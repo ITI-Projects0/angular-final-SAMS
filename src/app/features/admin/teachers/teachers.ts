@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 
 @Component({
@@ -11,14 +11,13 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './teachers.css',
 })
 export class Teachers implements OnInit {
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
   teachers: any[] = [];
   loading = false;
 
-  isFormOpen = false;
-  isEditMode = false;
-  currentIndex: number | null = null;
-  formTeacher = { name: '', email: '', center: '', courses: 0, phone: '' };
+  searchTerm = '';
+  infoOpen = false;
+  selectedTeacher: any = null;
 
   ngOnInit(): void {
     this.loadTeachers();
@@ -39,68 +38,32 @@ export class Teachers implements OnInit {
           phone: t.phone || '',
           raw: t,
         }));
+        this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; },
-      complete: () => { this.loading = false; }
+      error: () => { this.loading = false; this.cdr.detectChanges(); },
+      complete: () => { this.loading = false; this.cdr.detectChanges(); }
     });
   }
 
-  openForm(teacher?: typeof this.formTeacher) {
-    this.isFormOpen = true;
-    if (teacher) {
-      this.isEditMode = true;
-      this.formTeacher = { ...teacher };
-      this.currentIndex = this.teachers.indexOf(teacher);
-    } else {
-      this.isEditMode = false;
-      this.currentIndex = null;
-      this.formTeacher = { name: '', email: '', center: '', courses: 0, phone: '' };
-    }
+  get filteredTeachers() {
+    const q = this.searchTerm.toLowerCase().trim();
+    if (!q) return this.teachers;
+    return this.teachers.filter(t =>
+      (t.name || '').toLowerCase().includes(q) ||
+      (t.email || '').toLowerCase().includes(q) ||
+      (t.center || '').toLowerCase().includes(q) ||
+      String(t.courses ?? '').toLowerCase().includes(q) ||
+      (t.phone || '').toLowerCase().includes(q)
+    );
   }
 
-  save() {
-    if (this.isEditMode && this.currentIndex !== null) {
-      const teacher = this.teachers[this.currentIndex];
-      if (!teacher?.id) {
-        this.teachers[this.currentIndex] = { ...this.formTeacher };
-        this.closeForm();
-        return;
-      }
-      this.api.put(`/users/${teacher.id}`, {
-        name: this.formTeacher.name,
-        email: this.formTeacher.email,
-        phone: this.formTeacher.phone,
-        role: 'teacher',
-      }).subscribe(() => {
-        this.loadTeachers();
-        this.closeForm();
-      });
-    } else {
-      this.api.post('/users', {
-        name: this.formTeacher.name,
-        email: this.formTeacher.email,
-        password: 'Password123',
-        phone: this.formTeacher.phone,
-        role: 'teacher',
-      }).subscribe(() => {
-        this.loadTeachers();
-        this.closeForm();
-      });
-    }
+  openInfo(teacher: any) {
+    this.selectedTeacher = teacher;
+    this.infoOpen = true;
   }
 
-  delete(teacher: typeof this.formTeacher) {
-    const found = this.teachers.find(t => t.email === teacher.email && t.name === teacher.name);
-    if (!found?.id) {
-      this.teachers = this.teachers.filter(t => t !== teacher);
-      return;
-    }
-    this.api.delete(`/users/${found.id}`).subscribe(() => {
-      this.teachers = this.teachers.filter(t => t.id !== found.id);
-    });
-  }
-
-  closeForm() {
-    this.isFormOpen = false;
+  closeInfo() {
+    this.infoOpen = false;
+    this.selectedTeacher = null;
   }
 }

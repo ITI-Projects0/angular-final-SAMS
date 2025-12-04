@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 
 @Component({
@@ -11,15 +11,13 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './courses.css',
 })
 export class Courses implements OnInit {
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
   courses: any[] = [];
   loading = false;
-  currentId: number | null = null;
 
-  isFormOpen = false;
-  isEditMode = false;
-  currentIndex: number | null = null;
-  formCourse = { title: '', center: '', teacher: '', status: 'Active' };
+  searchTerm = '';
+  infoOpen = false;
+  selectedCourse: any = null;
 
   ngOnInit(): void {
     this.loadCourses();
@@ -39,74 +37,31 @@ export class Courses implements OnInit {
           status: g.is_active ? 'Active' : 'Inactive',
           raw: g,
         }));
+        this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; },
-      complete: () => { this.loading = false; }
+      error: () => { this.loading = false; this.cdr.detectChanges(); },
+      complete: () => { this.loading = false; this.cdr.detectChanges(); }
     });
   }
 
-  openForm(course?: any) {
-    this.isFormOpen = true;
-    if (course) {
-      this.isEditMode = true;
-      this.formCourse = {
-        title: course.title,
-        center: course.center,
-        teacher: course.teacher,
-        status: course.status,
-      };
-      this.currentIndex = this.courses.findIndex(c => c.id === course.id);
-      this.currentId = course.id ?? null;
-    } else {
-      this.isEditMode = false;
-      this.currentIndex = null;
-      this.currentId = null;
-      this.formCourse = { title: '', center: '', teacher: '', status: 'Active' };
-    }
+  get filteredCourses() {
+    const q = this.searchTerm.toLowerCase().trim();
+    if (!q) return this.courses;
+    return this.courses.filter(c =>
+      (c.title || '').toLowerCase().includes(q) ||
+      (c.center || '').toLowerCase().includes(q) ||
+      (c.teacher || '').toLowerCase().includes(q) ||
+      (c.status || '').toLowerCase().includes(q)
+    );
   }
 
-  save() {
-    const referenceCourse = this.currentIndex !== null ? this.courses[this.currentIndex] : null;
-    const payload: any = {
-      name: this.formCourse.title,
-      description: '',
-      subject: this.formCourse.title,
-      is_active: this.formCourse.status === 'Active',
-      is_approval_required: false,
-      center_id: referenceCourse?.raw?.center_id,
-      teacher_id: referenceCourse?.raw?.teacher_id,
-    };
-
-    if (this.isEditMode && this.currentId !== null) {
-      this.api.put(`/groups/${this.currentId}`, payload).subscribe(() => {
-        this.loadCourses();
-        this.closeForm();
-      });
-    } else {
-      if (!payload.center_id || !payload.teacher_id) {
-        this.closeForm();
-        return;
-      }
-      this.api.post('/groups', payload).subscribe(() => {
-        this.loadCourses();
-        this.closeForm();
-      });
-    }
+  openInfo(course: any) {
+    this.selectedCourse = course;
+    this.infoOpen = true;
   }
 
-  delete(course: any) {
-    const found = this.courses.find(c => c.id === course.id);
-    if (!found?.id) {
-      this.courses = this.courses.filter(c => c !== course);
-      return;
-    }
-
-    this.api.delete(`/groups/${found.id}`).subscribe(() => {
-      this.courses = this.courses.filter(c => c.id !== found.id);
-    });
-  }
-
-  closeForm() {
-    this.isFormOpen = false;
+  closeInfo() {
+    this.infoOpen = false;
+    this.selectedCourse = null;
   }
 }

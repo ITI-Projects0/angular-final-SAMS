@@ -29,6 +29,11 @@
         @if(!collapsed) { <span>Students</span> }
       </a>
 
+      <a class="group flex items-center gap-3 rounded-xl px-3 py-2 mx-2 text-sm font-medium text-slate-800 border border-transparent hover:bg-slate-100 hover:border-slate-200 transition dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-700" routerLink="/dashboard/admin/parents" routerLinkActive="!bg-fuchsia-600 !text-white !border-transparent shadow-lg shadow-fuchsia-500/40" [routerLinkActiveOptions]="{ exact: true }" [ngClass]="collapsed ? 'justify-center px-0' : ''">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 21a4 4 0 0 0-8 0"/><circle cx="10" cy="8" r="4"/><path d="M16 11h3a2 2 0 0 1 2 2v2"/><path d="M21 21a3 3 0 0 0-6 0"/></svg>
+        @if(!collapsed) { <span>Parents</span> }
+      </a>
+
       <a class="group flex items-center gap-3 rounded-xl px-3 py-2 mx-2 text-sm font-medium text-slate-800 border border-transparent hover:bg-slate-100 hover:border-slate-200 transition dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-700" routerLink="/dashboard/admin/centers" routerLinkActive="!bg-fuchsia-600 !text-white !border-transparent shadow-lg shadow-fuchsia-500/40" [routerLinkActiveOptions]="{ exact: true }" [ngClass]="collapsed ? 'justify-center px-0' : ''">
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h18M3 12h18M3 16h18"/></svg>
         @if(!collapsed) { <span>Centers</span> }

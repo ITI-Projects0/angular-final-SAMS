@@ -8,6 +8,7 @@ import { Centers } from './centers/centers';
 import { Courses } from './courses/courses';
 import { Teachers } from './teachers/teachers';
 import { Students } from './students/students';
+import { Parents } from './parents/parents';
 import { Contacts } from './contacts/contacts';
 import { Payments } from './payments/payments';
 
@@ -24,6 +25,7 @@ export const AdminRoutes: Routes = [
       { path: 'courses', component: Courses },
       { path: 'teachers', component: Teachers },
       { path: 'students', component: Students },
+      { path: 'parents', component: Parents },
       { path: 'contacts', component: Contacts },
       { path: 'payments', component: Payments },
     ]

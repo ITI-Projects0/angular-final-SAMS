@@ -3,7 +3,7 @@
   <header class="settings-header">
     <div>
       <h2 class="settings-title">Settings</h2>
-      <p class="settings-subtitle">Manage your account, appearance, notifications and security.</p>
+      <p class="settings-subtitle">Update your profile, theme and password.</p>
     </div>
 
     <div class="pill-badge">
@@ -27,7 +27,10 @@
             <div class="avatar">
               <img [src]="user.avatar" [alt]="user.name" />
             </div>
-            <button type="button" class="btn-secondary small">Change photo</button>
+            <input #avatarInput type="file" accept="image/*" class="sr-only" (change)="onAvatarSelected($event)" />
+            <button type="button" class="btn-secondary small upload-btn" (click)="avatarInput.click()">
+              Change photo
+            </button>
           </div>
 
           <div class="account-fields">
@@ -38,17 +41,12 @@
 
             <div class="field">
               <label>Email</label>
-              <input type="email" [(ngModel)]="user.email" />
+              <input type="email" [ngModel]="user.email" readonly />
             </div>
 
             <div class="field">
               <label>Roles</label>
-              <input
-                type="text"
-                [ngModel]="rolesInput"
-                (ngModelChange)="onRolesInputChange($event)"
-                placeholder="admin, teacher"
-              />
+              <input type="text" [ngModel]="user.roles.join(', ')" readonly />
             </div>
 
             <div class="actions-right">
@@ -70,24 +68,20 @@
             <p class="toggle-title">Password</p>
             <p class="toggle-sub">Change your account password.</p>
           </div>
-          <button type="button" class="btn-secondary" (click)="changePassword()">Change password</button>
         </div>
 
-        <div class="toggle-row">
-          <div>
-            <p class="toggle-title">Two-factor authentication</p>
-            <p class="toggle-sub">Add extra security to your account.</p>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" [(ngModel)]="security.twoFactor" />
-            <span class="toggle-slider"></span>
-          </label>
+        <div class="field">
+          <label>New password</label>
+          <input type="password" [(ngModel)]="password.new" />
         </div>
 
-        <div class="security-footer">
-          <p class="danger-title">Danger zone</p>
-          <p class="danger-text">Deactivate your account or request data removal.</p>
-          <button type="button" class="btn-danger small">Deactivate account</button>
+        <div class="field">
+          <label>Confirm password</label>
+          <input type="password" [(ngModel)]="password.confirm" />
+        </div>
+
+        <div class="actions-right">
+          <button type="button" class="btn-primary" (click)="changePassword()">Update password</button>
         </div>
       </section>
     </div>
@@ -106,90 +100,7 @@
           <select [(ngModel)]="preferences.theme" (ngModelChange)="onThemeChange($event)">
             <option value="light">Light</option>
             <option value="dark">Dark</option>
-            <option value="system">System default</option>
           </select>
-        </div>
-
-        <div class="toggle-row">
-          <div>
-            <p class="toggle-title">24-hour time</p>
-            <p class="toggle-sub">Show time in 24h format (13:00).</p>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" [(ngModel)]="preferences.use24hTime" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-row">
-          <div>
-            <p class="toggle-title">Compact sidebar</p>
-            <p class="toggle-sub">Reduce spacing in the left navigation.</p>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" [(ngModel)]="preferences.compactSidebar" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="actions-right">
-          <button type="button" class="btn-primary" (click)="savePreferences()">Save preferences</button>
-        </div>
-      </section>
-
-      <!-- Notifications -->
-      <section class="settings-card">
-        <div class="card-header">
-          <h3>Notifications</h3>
-          <p>How you get notified about updates.</p>
-        </div>
-
-        <div class="toggle-row">
-          <div>
-            <p class="toggle-title">Email notifications</p>
-            <p class="toggle-sub">Receive updates on your email.</p>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" [(ngModel)]="notifications.email" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-row">
-          <div>
-            <p class="toggle-title">SMS notifications</p>
-            <p class="toggle-sub">Use SMS for critical alerts.</p>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" [(ngModel)]="notifications.sms" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-row">
-          <div>
-            <p class="toggle-title">In-app notifications</p>
-            <p class="toggle-sub">Show notifications inside the dashboard.</p>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" [(ngModel)]="notifications.inApp" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-row">
-          <div>
-            <p class="toggle-title">Attendance alerts</p>
-            <p class="toggle-sub">Alert when student absence increases.</p>
-          </div>
-          <label class="toggle">
-            <input type="checkbox" [(ngModel)]="notifications.attendanceAlerts" />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="actions-right">
-          <button type="button" class="btn-primary" (click)="saveNotifications()">Save notifications</button>
         </div>
       </section>
     </div>

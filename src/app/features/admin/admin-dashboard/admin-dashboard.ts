@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef,Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 
@@ -11,7 +11,7 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './admin-dashboard.css',
 })
 export class AdminDashboard implements OnInit {
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
 
   stats = {
     centers: 0,
@@ -45,12 +45,15 @@ export class AdminDashboard implements OnInit {
             ? new Date(item.created_at).toLocaleString()
             : item.time || '',
         }));
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
+        this.cdr.detectChanges();
       },
       complete: () => {
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
