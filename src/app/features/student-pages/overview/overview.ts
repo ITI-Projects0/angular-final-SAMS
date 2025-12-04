@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ParentOverview } from '../../parent-pages/overview/overview';
 import { StudentService } from '../../../core/services/student.service';
 import { ThemeService } from '../../../core/services/theme.service';
-import { map, shareReplay } from 'rxjs';
+import { map, shareReplay, tap } from 'rxjs';
 import { LoaderComponent } from '../../../shared/loader/loader';
 
 @Component({
@@ -23,7 +23,10 @@ export class StudentOverview {
         return this.themeService.darkMode();
     }
 
-    home$ = this.studentService.getHomeDashboard().pipe(shareReplay(1));
+    home$ = this.studentService.getHomeDashboard().pipe(
+        tap((res) => console.log('Student home dashboard', res)),
+        shareReplay(1)
+    );
 
     private pickSummary(res: any) {
         const root = res?.data ?? res ?? {};

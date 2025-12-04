@@ -15,6 +15,25 @@
   --danger: #ef4444;
   --shadow-strong: 0 25px 60px rgba(15, 23, 42, 0.14);
   --shadow-soft: 0 12px 30px rgba(15, 23, 42, 0.08);
+
+  --student-bg: #f8fafc;
+  --student-surface: #ffffff;
+  --student-elevated: #f1f5f9;
+  --student-border: #cbd5e1;
+  --student-border-strong: #2563eb;
+  --student-text: #0f172a;
+  --student-muted: #475569;
+  --student-muted-2: #94a3b8;
+  --student-teal: #14b8a6;
+  --student-teal-strong: #0d9488;
+  --student-teal-hover: #0f766e;
+  --student-indigo: #3b82f6;
+  --student-indigo-strong: #2563eb;
+  --student-indigo-hover: #1d4ed8;
+  --student-success: #10b981;
+  --student-warning: #f59e0b;
+  --student-danger: #ef4444;
+  --student-info: #3b82f6;
 }
 
 .dark {
@@ -33,6 +52,25 @@
   --danger: #f87171;
   --shadow-strong: 0 25px 60px rgba(0, 0, 0, 0.35);
   --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.28);
+
+    --student-bg: #0f172a;
+  --student-surface: #1e293b;
+  --student-elevated: #334155;
+  --student-border: #475569;
+  --student-border-strong: #93c5fd;
+  --student-text: #f8fafc;
+  --student-muted: #cbd5e1;
+  --student-muted-2: #94a3b8;
+  --student-teal: #0d9488;
+  --student-teal-strong: #0d9488;
+  --student-teal-hover: #0f766e;
+  --student-indigo: #2563eb;
+  --student-indigo-strong: #1d4ed8;
+  --student-indigo-hover: #1e40af;
+  --student-success: #059669;
+  --student-warning: #d97706;
+  --student-danger: #dc2626;
+  --student-info: #2563eb;
 }
 
 /* Component helpers (use throughout app) */

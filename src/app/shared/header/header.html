@@ -39,16 +39,18 @@
       <nav class="hidden md:flex items-center gap-1">
         @if (isLoggedIn && menuItems.length > 0) {
         @for (item of menuItems; track item.label) {
-        <a [routerLink]="item.route" routerLinkActive="bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white"
-          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+        <a [routerLink]="item.route" [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' || item.route === '/' }"
+          routerLinkActive="bg-indigo-50 text-slate-900 border border-indigo-200 shadow-inner dark:bg-indigo-900/40 dark:text-slate-50 dark:border-indigo-700"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-transparent"
           [ngClass]="isDark ? 'text-gray-300' : 'text-gray-700'">
           {{ item.label }}
         </a>
         }
         } @else {
         @for (link of navLinks; track link.label) {
-        <a [routerLink]="link.route" [fragment]="link.fragment"
-          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+        <a [routerLink]="link.route" [fragment]="link.fragment" [routerLinkActiveOptions]="{ exact: link.route === '/' }"
+          routerLinkActive="bg-indigo-50 text-slate-900 border border-indigo-200 shadow-inner dark:bg-indigo-900/40 dark:text-slate-50 dark:border-indigo-700"
+          class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 border border-transparent"
           [ngClass]="isDark ? 'text-gray-300' : 'text-gray-700'">
           {{ link.label }}
         </a>
@@ -146,7 +148,9 @@
       @if (isLoggedIn && menuItems.length > 0) {
       @for (item of menuItems; track item.label) {
       <a [routerLink]="item.route" (click)="isMenuOpen = false"
-        class="px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+        class="px-4 py-3 rounded-lg text-sm font-medium transition-colors border border-transparent"
+        routerLinkActive="bg-indigo-50 text-slate-900 border border-indigo-200 shadow-inner dark:bg-indigo-900/40 dark:text-slate-50 dark:border-indigo-700"
+        [routerLinkActiveOptions]="{ exact: item.route === '/' }"
         [ngClass]="isDark ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'">
         {{ item.label }}
       </a>
@@ -154,7 +158,9 @@
       } @else {
       @for (link of navLinks; track link.label) {
       <a [routerLink]="link.route" [fragment]="link.fragment" (click)="isMenuOpen = false"
-        class="px-4 py-3 rounded-lg text-sm font-medium transition-colors"
+        class="px-4 py-3 rounded-lg text-sm font-medium transition-colors border border-transparent"
+        routerLinkActive="bg-indigo-50 text-slate-900 border border-indigo-200 shadow-inner dark:bg-indigo-900/40 dark:text-slate-50 dark:border-indigo-700"
+        [routerLinkActiveOptions]="{ exact: link.route === '/' }"
         [ngClass]="isDark ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'">
         {{ link.label }}
       </a>

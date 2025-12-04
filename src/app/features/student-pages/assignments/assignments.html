@@ -5,45 +5,44 @@
     <p class="student-muted">Track your upcoming and past assignments.</p>
   </header>
 
-  <div class="space-y-4">
-    @for (assignment of assignments$ | async; track assignment.id) {
-    <div
-      class="student-card lift p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div class="flex items-start gap-4">
-        <div class="h-10 w-10 rounded-full flex items-center justify-center shrink-0" [ngClass]="{
-              'bg-[#FEF3C7] text-[#D97706] border border-[#FCD34D]': assignment.status === 'pending',
-              'bg-[#D1FAE5] text-[#059669] border border-[#A7F3D0]': assignment.status === 'submitted',
-              'bg-[#DBEAFE] text-[#1D4ED8] border border-[#BFDBFE]': assignment.status === 'graded'
-            }">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
+  @if (assignments$ | async; as assignments) {
+  <div class="grid gap-4 md:grid-cols-2">
+    @if (assignments.length > 0) {
+      @for (assignment of assignments; track assignment.id ?? assignment.title) {
+      <div class="student-card lift p-4 flex flex-col gap-3 border border-[var(--student-border-strong)]">
+        <div class="flex items-start justify-between gap-3">
+          <div class="flex items-start gap-3">
+            <div class="h-10 w-10 rounded-full flex items-center justify-center shrink-0 bg-[#DBEAFE] text-[#1D4ED8] border border-[#BFDBFE] font-semibold">
+              {{ (assignment.title || 'A').charAt(0) }}
+            </div>
+            <div class="space-y-1">
+              <p class="font-semibold text-[#0F172A] dark:text-[#F8FAFC]">{{ assignment.title }}</p>
+              <p class="text-sm student-muted">Group: {{ assignment.group_name || assignment.group_id || '—' }}</p>
+              <p class="text-sm student-muted">Center: {{ assignment.center_id || '—' }}</p>
+            </div>
+          </div>
+          <div class="text-right space-y-1">
+            <span class="student-pill indigo">Assessment</span>
+            <p class="text-sm font-semibold text-[#0D9488] dark:text-[#34D399]">
+              {{ assignment.scheduled_at | date:'mediumDate' }}
+            </p>
+            <p class="text-xs student-muted">
+              {{ assignment.scheduled_at | date:'shortTime' }}
+            </p>
+          </div>
         </div>
-        <div>
-          <h3 class="font-semibold text-[#0F172A] dark:text-[#F8FAFC]">{{ assignment.title }}</h3>
-          <p class="text-sm student-muted">Due: {{ assignment.dueDate | date:'mediumDate' }}</p>
-        </div>
-      </div>
 
-      <div class="flex items-center gap-3 self-end sm:self-auto">
-        @if (assignment.status === 'graded') {
-        <span class="student-badge info">
-          Grade: {{ assignment.grade }}/100
-        </span>
-        }
-        <span class="student-pill uppercase" [ngClass]="{
-              'warning': assignment.status === 'pending',
-              'teal': assignment.status === 'submitted',
-              'indigo': assignment.status === 'graded'
-            }">
-          {{ assignment.status }}
-        </span>
+        <div class="flex flex-wrap gap-2 text-xs student-muted">
+          <span class="student-pill muted">Max: {{ assignment.max_score || 'N/A' }}</span>
+          <span class="student-pill muted">Score: {{ assignment.score || '—' }}</span>
+          @if (assignment.remarks) {
+          <span class="student-pill muted">Remarks: {{ assignment.remarks }}</span>
+          }
+        </div>
       </div>
-    </div>
-    } @empty {
-    <div
-      class="student-card student-empty py-12 text-center">
+      }
+    } @else {
+    <div class="student-card student-empty py-12 text-center md:col-span-2">
       <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#F1F5F9] dark:bg-[#334155] mb-4">
         <svg class="w-8 h-8 student-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -55,4 +54,7 @@
     </div>
     }
   </div>
+  } @else {
+    <app-loader label="Loading assignments..." size="lg"></app-loader>
+  }
 </div>

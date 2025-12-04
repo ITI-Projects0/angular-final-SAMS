@@ -8,7 +8,6 @@
 }
 
 .animate-cyrcle-full {
-  /* animation: spin-z 8s linear infinite; */
   animation: spin-z 5s cubic-bezier(0.6, 0.3, 0.4, 5) infinite;
   transform-origin: center;
   will-change: transform;
