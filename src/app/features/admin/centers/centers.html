@@ -5,8 +5,13 @@
   </header>
 
   <div class="toolbar">
-    <input placeholder="Search centers..." class="search" />
+    <input placeholder="Search centers..." class="search" [(ngModel)]="searchTerm" />
     <button class="btn-primary" (click)="openForm()">Add center</button>
+  </div>
+
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="spinner"></div>
+    <span>Loading centers...</span>
   </div>
 
   <table class="list-table glass">
@@ -14,7 +19,7 @@
       <tr><th>Name</th><th>City</th><th>Phone</th><th>Status</th><th>Actions</th></tr>
     </thead>
     <tbody>
-      <tr *ngFor="let c of centers">
+      <tr *ngFor="let c of filteredCenters">
         <td>{{ c.name }}</td>
         <td>{{ c.city }}</td>
         <td>{{ c.phone }}</td>
@@ -22,6 +27,7 @@
           <span [class.paid]="c.paid">{{ c.paid ? 'Paid' : 'Unpaid' }}</span>
         </td>
         <td>
+          <button class="btn-simple" (click)="openInfo(c)">Info</button>
           <button class="btn-simple" (click)="openForm(c)">Edit</button>
           <button class="btn-simple muted" (click)="delete(c)">Delete</button>
         </td>
@@ -55,4 +61,19 @@
 
     <button type="submit" class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add center' }}</button>
   </form>
+</div>
+
+<div class="overlay" [class.open]="infoOpen" (click)="closeInfo()"></div>
+<div class="side-panel glass" [class.open]="infoOpen" (click)="$event.stopPropagation()">
+  <div class="panel-header">
+    <h3>Center info</h3>
+    <button class="close-btn" (click)="closeInfo()">X</button>
+  </div>
+  <div class="panel-body" *ngIf="selectedCenter">
+    <p><strong>Name:</strong> {{ selectedCenter.name }}</p>
+    <p><strong>Subdomain:</strong> {{ selectedCenter.city || '-' }}</p>
+    <p><strong>Phone:</strong> {{ selectedCenter.phone || '-' }}</p>
+    <p><strong>Status:</strong> {{ selectedCenter.paid ? 'Paid' : 'Unpaid' }}</p>
+    <p><strong>Center ID:</strong> {{ selectedCenter.id }}</p>
+  </div>
 </div>

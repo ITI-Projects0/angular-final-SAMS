@@ -24,17 +24,17 @@ export class Setting implements OnInit {
     avatar:
       'https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=compress&cs=tinysrgb&w=200',
   };
+  avatarPreview: string | null = null;
+  avatarFile: File | null = null;
   rolesInput = '';
 
   // تفضيلات عامة
   preferences: {
     theme: Theme;
-    language: LanguageCode;
     use24hTime: boolean;
     compactSidebar: boolean;
   } = {
     theme: 'light',
-    language: 'en',
     use24hTime: true,
     compactSidebar: false,
   };
@@ -65,7 +65,6 @@ export class Setting implements OnInit {
     this.applyTheme();
     // load language preference
     const lang = (localStorage.getItem('lang') as LanguageCode | null) ?? null;
-    if (lang) this.preferences.language = lang;
     this.applyLanguage();
   }
 
@@ -77,11 +76,6 @@ export class Setting implements OnInit {
     this.applyTheme();
   }
 
-  onLanguageChange(value: LanguageCode): void {
-    this.preferences.language = value;
-    localStorage.setItem('lang', value);
-    this.applyLanguage();
-  }
 
   // -------------------------------------
   // تطبيق الثيم فعليًا
@@ -112,24 +106,20 @@ export class Setting implements OnInit {
   // -------------------------------------
   private applyLanguage(): void {
     const root = document.documentElement;
-    const lang = this.preferences.language;
-
-    if (lang === 'ar') {
-      root.lang = 'ar';
-      root.dir = 'rtl';
-      root.classList.add('rtl');
-    } else {
-      root.lang = 'en';
-      root.dir = 'ltr';
-      root.classList.remove('rtl');
-    }
+    root.lang = 'en';
+    root.dir = 'ltr';
+    root.classList.remove('rtl');
   }
 
   // -------------------------------------
   // Actions (placeholder لحد ما توصّل API)
   // -------------------------------------
   saveAccount() {
-    console.log('Saving account data', this.user);
+    if (this.avatarPreview) {
+      this.user.avatar = this.avatarPreview;
+      this.avatarFile = null;
+    }
+    localStorage.setItem('staff-user', JSON.stringify(this.user));
   }
 
   savePreferences() {
@@ -147,6 +137,17 @@ export class Setting implements OnInit {
 
   changePassword() {
     console.log('Open change password flow');
+  }
+
+  onAvatarSelected(event: any) {
+    const file = event.target?.files?.[0];
+    if (!file) return;
+    this.avatarFile = file;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.avatarPreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
 
   onRolesInputChange(value: string): void {

@@ -1,54 +1,52 @@
 <section class="list-wrapper">
   <header class="list-header">
     <h2>Teachers</h2>
-    <p class="muted">All registered teachers</p>
+    <p class="muted">Teaching staff and their assigned centers</p>
   </header>
 
   <div class="toolbar">
-    <input placeholder="Search teachers..." class="search" />
-    <button class="btn-primary" (click)="openForm()">Add teacher</button>
+    <input placeholder="Search teachers..." class="search" [(ngModel)]="searchTerm" />
+  </div>
+
+  <div class="loading-overlay" *ngIf="loading">
+    <div class="spinner"></div>
+    <span>Loading teachers...</span>
   </div>
 
   <div class="cards-grid">
-    <div class="teacher-card glass" *ngFor="let t of teachers">
+    <div class="teacher-card glass" *ngFor="let t of filteredTeachers">
       <div class="card-head">
-        <div class="avatar">{{ t.name[0] }}</div>
+        <div class="avatar">{{ t.name ? t.name[0] : '?' }}</div>
         <div>
           <div class="name">{{ t.name }}</div>
           <div class="muted">{{ t.email }}</div>
         </div>
       </div>
-      <div class="meta">Center: {{ t.center }} • Courses: {{ t.courses }} • Phone: {{ t.phone }}</div>
+      <div class="meta">
+        <span>Center: {{ t.center || '-' }}</span>
+        <span>Courses: {{ t.courses }}</span>
+        <span>Phone: {{ t.phone || '-' }}</span>
+      </div>
       <div class="actions">
-        <button class="btn-simple" (click)="openForm(t)">Edit</button>
-        <button class="btn-simple muted" (click)="delete(t)">Delete</button>
+        <button class="btn-simple" (click)="openInfo(t)">Info</button>
       </div>
     </div>
   </div>
 </section>
 
-<div class="overlay" [class.open]="isFormOpen" (click)="closeForm()"></div>
-<div class="side-panel glass" [class.open]="isFormOpen" (click)="$event.stopPropagation()">
+<div class="overlay" [class.open]="infoOpen" (click)="closeInfo()"></div>
+<div class="side-panel glass" [class.open]="infoOpen" (click)="$event.stopPropagation()">
   <div class="panel-header">
-    <h3>{{ isEditMode ? 'Edit' : 'Add teacher' }}</h3>
-    <button class="close-btn" (click)="closeForm()">X</button>
+    <h3>Teacher info</h3>
+    <button class="close-btn" (click)="closeInfo()">X</button>
   </div>
-  <form class="panel-body" (ngSubmit)="save()">
-    <label class="label">Name</label>
-    <input class="input" name="name" [(ngModel)]="formTeacher.name" required />
-
-    <label class="label">Email</label>
-    <input class="input" name="email" [(ngModel)]="formTeacher.email" required />
-
-    <label class="label">Center</label>
-    <input class="input" name="center" [(ngModel)]="formTeacher.center" required />
-
-    <label class="label">Courses</label>
-    <input class="input" type="number" name="courses" [(ngModel)]="formTeacher.courses" required />
-
-    <label class="label">Phone</label>
-    <input class="input" name="phone" [(ngModel)]="formTeacher.phone" required />
-
-    <button type="submit" class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add teacher' }}</button>
-  </form>
+  <div class="panel-body" *ngIf="selectedTeacher">
+    <p><strong>Name:</strong> {{ selectedTeacher.name }}</p>
+    <p><strong>Email:</strong> {{ selectedTeacher.email }}</p>
+    <p><strong>Center:</strong> {{ selectedTeacher.center || '-' }}</p>
+    <p><strong>Courses taught:</strong> {{ selectedTeacher.courses }}</p>
+    <p><strong>Phone:</strong> {{ selectedTeacher.phone || '-' }}</p>
+    <!-- <p><strong>Role tags:</strong> {{ selectedTeacher.raw?.roles?.map((r: any) => r?.name || r).join(', ') || selectedTeacher.raw?.role || 'teacher' }}</p> -->
+    <p><strong>User ID:</strong> {{ selectedTeacher.id }}</p>
+  </div>
 </div>

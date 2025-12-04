@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 
 @Component({
@@ -11,15 +11,13 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './students.css',
 })
 export class Students implements OnInit {
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
   students: any[] = [];
   loading = false;
-  currentId: number | null = null;
 
-  isFormOpen = false;
-  isEditMode = false;
-  currentIndex: number | null = null;
-  formStudent = { name: '', email: '', center: '', status: '' };
+  searchTerm = '';
+  infoOpen = false;
+  selectedStudent: any = null;
 
   ngOnInit(): void {
     this.loadStudents();
@@ -46,70 +44,31 @@ export class Students implements OnInit {
             status: u.status || 'active',
             raw: u,
           }));
+        this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; },
-      complete: () => { this.loading = false; }
+      error: () => { this.loading = false; this.cdr.detectChanges(); },
+      complete: () => { this.loading = false; this.cdr.detectChanges(); }
     });
   }
 
-  openForm(student?: typeof this.formStudent) {
-    this.isFormOpen = true;
-    if (student) {
-      this.isEditMode = true;
-      this.formStudent = { ...student };
-      this.currentIndex = this.students.indexOf(student);
-    } else {
-      this.isEditMode = false;
-      this.currentIndex = null;
-      this.formStudent = { name: '', email: '', center: '', status: '' };
-    }
+  get filteredStudents() {
+    const q = this.searchTerm.toLowerCase().trim();
+    if (!q) return this.students;
+    return this.students.filter(s =>
+      (s.name || '').toLowerCase().includes(q) ||
+      (s.email || '').toLowerCase().includes(q) ||
+      (s.center || '').toLowerCase().includes(q) ||
+      (s.status || '').toLowerCase().includes(q)
+    );
   }
 
-  save() {
-    if (this.isEditMode && this.currentIndex !== null) {
-      const id = this.students[this.currentIndex]?.id;
-      if (!id) {
-        this.students[this.currentIndex] = { ...this.formStudent };
-        this.closeForm();
-        return;
-      }
-
-      this.api.put(`/users/${id}`, {
-        name: this.formStudent.name,
-        email: this.formStudent.email,
-        status: this.formStudent.status,
-        role: 'student',
-      }).subscribe(() => {
-        this.loadStudents();
-        this.closeForm();
-      });
-    } else {
-      this.api.post('/users', {
-        name: this.formStudent.name,
-        email: this.formStudent.email,
-        password: 'Password123', // placeholder; in real UI we should request it
-        status: this.formStudent.status || 'active',
-        role: 'student',
-      }).subscribe(() => {
-        this.loadStudents();
-        this.closeForm();
-      });
-    }
+  openInfo(student: any) {
+    this.selectedStudent = student;
+    this.infoOpen = true;
   }
 
-  delete(student: typeof this.formStudent) {
-    const found = this.students.find(s => s.email === student.email && s.name === student.name);
-    if (!found?.id) {
-      this.students = this.students.filter(s => s !== student);
-      return;
-    }
-
-    this.api.delete(`/users/${found.id}`).subscribe(() => {
-      this.students = this.students.filter(s => s.id !== found.id);
-    });
-  }
-
-  closeForm() {
-    this.isFormOpen = false;
+  closeInfo() {
+    this.infoOpen = false;
+    this.selectedStudent = null;
   }
 }
