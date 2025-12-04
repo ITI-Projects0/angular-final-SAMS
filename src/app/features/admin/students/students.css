@@ -97,4 +97,6 @@
   .toolbar { flex-direction: column; align-items: stretch; }
   .search { width: 100%; }
   .list-table th, .list-table td { padding: 0.6rem; }
+  .list-table { display: block; overflow-x: auto; white-space: nowrap; }
+  .side-panel { width: 100%; }
 }

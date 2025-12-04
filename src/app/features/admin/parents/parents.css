@@ -18,3 +18,11 @@
 .panel-body p { margin: 8px 0; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+@media(max-width:640px) {
+  .toolbar { flex-direction: column; }
+  .search { width: 100%; }
+  .list-table { display: block; overflow-x: auto; white-space: nowrap; }
+  .side-panel { width: 100%; right: -100%; }
+  .side-panel.open { right: 0; }
+}

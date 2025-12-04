@@ -69,4 +69,6 @@
 @media(max-width:640px) {
   .toolbar { flex-direction: column; align-items: stretch; }
   .search { width: 100%; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .side-panel { width: 100%; }
 }

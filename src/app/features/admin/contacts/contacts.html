@@ -13,7 +13,7 @@
     <li *ngFor="let c of contacts" class="contact-item">
       <div class="left">
         <div class="name">{{ c.name }}</div>
-        <div class="muted">{{ c.email }} • {{ c.phone }}</div>
+        <div class="muted">{{ c.email }} ï¿½ {{ c.phone }}</div>
       </div>
       <div class="right">
         <div class="muted">{{ c.role }}</div>
@@ -45,6 +45,7 @@
     <label class="label">Role</label>
     <input class="input" name="role" [(ngModel)]="formContact.role" required />
 
-    <button type="submit" class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add contact' }}</button>
+    <button type="submit"
+      class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add contact' }}</button>
   </form>
 </div>
