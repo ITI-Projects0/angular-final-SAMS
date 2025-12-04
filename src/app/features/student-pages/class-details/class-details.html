@@ -1,147 +1,209 @@
-<div class="p-6 space-y-6" *ngIf="classDetails$ | async as classDetails">
+<div class="student-shell space-y-6">
+  @if (course$ | async; as course) {
   <!-- Header -->
-  <header class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-sm">
+  <header class="student-card p-6 lift">
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">{{ classDetails.name }}</h1>
-        <p class="text-slate-500 dark:text-slate-400 flex items-center gap-2">
+        <p class="text-sm font-semibold text-[#2563EB] uppercase tracking-wide">Course</p>
+        <h1 class="text-3xl font-bold text-[#0F172A] dark:text-[#F8FAFC] mb-2">{{ course.name }}</h1>
+        <p class="student-muted flex items-center gap-2">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
-          {{ classDetails.teacherName }}
+          {{ course.teacher?.name || 'Instructor TBD' }}
         </p>
       </div>
       <div class="flex flex-col items-end gap-2">
-        <span
-          class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 text-sm font-medium">
-          {{ classDetails.subject }}
+        <span class="student-pill indigo">
+          Subject: {{ course.subject || '—' }}
         </span>
-        <p class="text-sm text-slate-600 dark:text-slate-400 flex items-center gap-1">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Next Class: {{ classDetails.nextClassTime }}
-        </p>
+        <span class="student-pill muted">ID {{ course.id || '—' }}</span>
       </div>
     </div>
-    <p class="mt-4 text-slate-600 dark:text-slate-300">{{ classDetails.description }}</p>
+    <p class="mt-4 student-muted">{{ course.description || 'No description provided.' }}</p>
   </header>
 
-  <!-- Class Schedule Calendar -->
-  <div
-    class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-    <div class="p-4 border-b border-slate-100 dark:border-slate-700">
-      <h2 class="text-lg font-bold text-slate-900 dark:text-white">Monthly Schedule</h2>
+  <!-- Quick Facts -->
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="student-card p-4">
+      <p class="text-xs uppercase tracking-wide student-muted">Assignments</p>
+      <p class="text-2xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ (assignments$ | async)?.length ?? 0 }}</p>
     </div>
-    @if (schedule$ | async; as schedule) {
-    <div class="p-4">
-      <!-- Weekday Headers -->
-      <div class="grid grid-cols-7 gap-2 mb-2">
-        @for (day of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']; track day) {
-        <div class="text-center text-xs font-medium text-slate-500 dark:text-slate-400 py-2">{{ day }}</div>
+    <div class="student-card p-4">
+      <p class="text-xs uppercase tracking-wide student-muted">Lessons</p>
+      <p class="text-2xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ (lessons$ | async)?.length ?? 0 }}</p>
+    </div>
+    <div class="student-card p-4">
+      <p class="text-xs uppercase tracking-wide student-muted">Next Class</p>
+      <p class="text-sm font-semibold text-[#2563EB] dark:text-[#93C5FD]">
+        @if (nextClass$ | async; as nextClass) {
+          {{ nextClass?.scheduled_at | date:'medium' }}
+        } @else {
+          Not scheduled
+        }
+      </p>
+    </div>
+  </div>
+
+  <!-- Upcoming Class -->
+  <div class="student-card p-4" *ngIf="nextClass$ | async as nextClass">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-[#E0F2FE] text-[#1D4ED8] flex items-center justify-center font-semibold">
+          {{ (nextClass.title || 'N').charAt(0) }}
+        </div>
+        <div>
+          <p class="font-semibold text-[#0F172A] dark:text-[#F8FAFC]">{{ nextClass.title }}</p>
+          <p class="text-sm student-muted">{{ nextClass.description }}</p>
+        </div>
+      </div>
+      <span class="student-pill indigo">{{ nextClass.scheduled_at | date:'medium' }}</span>
+    </div>
+  </div>
+
+  <!-- Monthly Schedule -->
+  <div class="student-card p-4">
+    <div class="flex items-center justify-between border-b border-[var(--student-border)] pb-3 mb-3">
+      <h2 class="text-lg font-bold text-[#0F172A] dark:text-[#F8FAFC]">Monthly Schedule</h2>
+      <span class="student-pill muted">Calendar</span>
+    </div>
+    @if (calendarDays$ | async; as days) {
+    <div class="grid grid-cols-7 gap-2">
+      @for (day of days; track day.date) {
+      <div
+        class="p-2 rounded-lg border border-[var(--student-border)] transition-colors"
+        [class.opacity-60]="!day.isCurrentMonth"
+        [ngClass]="day.hasClass ? 'bg-[#E0F2FE] dark:bg-[#1E3A8A] border-[#2563EB]' : 'hover:bg-[var(--student-elevated)]'">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-semibold text-[#0F172A] dark:text-[#F8FAFC]">{{ day.dayNumber }}</span>
+          @if (day.hasClass) {
+          <span class="w-2 h-2 rounded-full bg-[#2563EB]"></span>
+          }
+        </div>
+        @if (day.hasClass) {
+        <div class="mt-1 space-y-1">
+          <p class="text-xs font-medium text-[#2563EB] dark:text-[#93C5FD] truncate">{{ day.title }}</p>
+          <p class="text-[11px] text-[#475569] dark:text-[#CBD5E1]">{{ day.time }}</p>
+        </div>
         }
       </div>
+      }
+    </div>
+    } @else {
+    <app-loader label="Loading schedule..." size="sm"></app-loader>
+    }
+  </div>
 
-      <!-- Calendar Grid -->
-      <div class="grid grid-cols-7 gap-2">
-        @for (day of getCalendarDays(); track day.date) {
-        <div
-          class="aspect-square border border-slate-200 dark:border-slate-600 rounded-lg p-2 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors"
-          [class.bg-slate-50]="!day.isCurrentMonth" [class.dark:bg-slate-700/20]="!day.isCurrentMonth"
-          [class.border-indigo-500]="day.hasClass" [class.bg-indigo-50]="day.hasClass"
-          [class.dark:bg-indigo-900/20]="day.hasClass">
-          <div class="text-sm font-medium text-slate-900 dark:text-white" [class.text-slate-400]="!day.isCurrentMonth">
-            {{ day.dayNumber }}
+  <!-- Lessons -->
+  <div class="space-y-3">
+    <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">Lessons</h2>
+      <span class="student-pill muted">Schedule</span>
+    </div>
+
+    @if (lessons$ | async; as lessons) {
+    @if (lessons.length > 0) {
+    <div class="space-y-3">
+      @for (lesson of lessons; track lesson.id ?? lesson.title) {
+      <div class="student-card p-4 flex flex-col gap-2">
+        <div class="flex items-start justify-between gap-3">
+          <div class="space-y-1">
+            <p class="font-semibold text-[#0F172A] dark:text-[#F8FAFC]">{{ lesson.title }}</p>
+            <p class="text-sm student-muted">{{ lesson.description }}</p>
+            <p class="text-xs student-muted">Lesson ID: {{ lesson.id || '—' }} • Group: {{ lesson.group_id || '—' }}</p>
           </div>
-          @if (day.hasClass) {
-          <div class="mt-1">
-            <div class="text-xs font-medium text-indigo-600 dark:text-indigo-400">{{ day.classTime }}</div>
-            <div class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ day.location }}</div>
+          <div class="text-right">
+            <p class="text-sm font-semibold text-[#2563EB] dark:text-[#93C5FD]">
+              {{ (lesson.scheduled_at || lesson.scheduledAt) | date:'medium' }}
+            </p>
+            <p class="text-xs student-muted">Created: {{ lesson.created_at || lesson.updated_at ? (lesson.created_at || lesson.updated_at | date:'medium') : '—' }}</p>
           </div>
+        </div>
+        <div class="flex items-center gap-2 text-xs student-muted">
+          <span class="student-pill indigo">Resources: {{ lesson.resources?.length ?? 0 }}</span>
+        </div>
+        @if (lesson.resources?.length) {
+        <div class="grid gap-2 sm:grid-cols-2">
+          @for (resource of lesson.resources; track resource.id ?? resource.title) {
+          <a [href]="resource.url" target="_blank"
+            class="flex items-center gap-3 p-3 rounded-lg border border-[var(--student-border)] hover:border-[var(--student-teal)] hover:bg-[var(--student-elevated)] transition-colors">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" [ngClass]="{
+                'bg-[#DBEAFE] text-[#1D4ED8] dark:bg-[#1E3A8A] dark:text-[#BFDBFE]': resource.type === 'file',
+                'bg-[#D1FAE5] text-[#059669] dark:bg-[#14532D] dark:text-[#A7F3D0]': resource.type === 'link',
+                'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400': resource.type === 'video'
+              }">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                @if (resource.type === 'video') {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                } @else if (resource.type === 'file') {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                } @else {
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                }
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="font-medium text-[#0F172A] dark:text-[#F8FAFC] truncate">{{ resource.title }}</p>
+              <p class="text-xs student-muted truncate">{{ resource.url }}</p>
+            </div>
+          </a>
           }
         </div>
         }
       </div>
+      }
+    </div>
+    } @else {
+    <div class="student-card student-empty text-center py-8">
+      <p class="student-muted">No lessons available.</p>
+    </div>
+    }
+    } @else {
+    <app-loader label="Loading lessons..." size="sm"></app-loader>
+    }
+  </div>
 
-      <!-- Legend -->
-      <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-        <div class="flex items-center gap-2 text-sm">
-          <div class="w-4 h-4 rounded bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-500"></div>
-          <span class="text-slate-600 dark:text-slate-400">Class Day</span>
+  <!-- Assignments -->
+  <div class="space-y-3">
+    <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">Assignments</h2>
+      <span class="student-pill indigo">Due Dates</span>
+    </div>
+
+    @if (assignments$ | async; as assignments) {
+    @if (assignments.length > 0) {
+    <div class="space-y-3">
+      @for (assignment of assignments; track assignment.id ?? assignment.title) {
+      <div class="student-card p-4 flex items-center justify-between">
+        <div class="space-y-1">
+          <p class="font-semibold text-[#0F172A] dark:text-[#F8FAFC]">{{ assignment.title }}</p>
+          <p class="text-sm student-muted">Max Score: {{ assignment.max_score || assignment.maxScore || 'N/A' }}</p>
+          <p class="text-xs student-muted">Group: {{ assignment.group_id || '—' }} • Center: {{ assignment.center_id || '—' }}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-sm font-semibold text-[#0D9488] dark:text-[#34D399]">
+            {{ (assignment.scheduled_at || assignment.dueDate) | date:'medium' }}
+          </p>
         </div>
       </div>
+      }
+    </div>
+    } @else {
+    <div class="student-card student-empty text-center py-8">
+      <p class="student-muted">No assignments for this group.</p>
     </div>
     }
-  </div>
-
-  <!-- Lessons List -->
-  <div class="space-y-4">
-    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Lessons & Resources</h2>
-
-    @for (lesson of classDetails.lessons; track lesson.id) {
-    <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700 overflow-hidden">
-      <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/30">
-        <h3 class="font-semibold text-lg text-slate-900 dark:text-white">{{ lesson.title }}</h3>
-        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ lesson.description }}</p>
-      </div>
-
-      <div class="p-4 space-y-3">
-        @if (lesson.resources.length > 0) {
-        @for (resource of lesson.resources; track resource.id) {
-        @if (resource.type === 'video') {
-        <a [routerLink]="['/dashboard/video']" [queryParams]="{url: resource.url, title: resource.title}"
-          class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-600">
-          <div
-            class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </div>
-          <div>
-            <h4 class="font-medium text-slate-900 dark:text-white">{{ resource.title }}</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Watch Video</p>
-          </div>
-        </a>
-        } @else {
-        <a [href]="resource.url" target="_blank"
-          class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-600">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" [ngClass]="{
-                      'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400': resource.type === 'file',
-                      'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400': resource.type === 'link'
-                    }">
-            @if (resource.type === 'file') {
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            } @else {
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-            </svg>
-            }
-          </div>
-          <div>
-            <h4 class="font-medium text-slate-900 dark:text-white">{{ resource.title }}</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400 capitalize">{{ resource.type }}</p>
-          </div>
-        </a>
-        }
-        }
-        } @else {
-        <p class="text-sm text-slate-500 dark:text-slate-400 italic px-2">No resources available for this lesson.</p>
-        }
-      </div>
-    </div>
-    } @empty {
-    <div class="text-center py-12 bg-white dark:bg-slate-800 rounded-xl border border-slate-100 dark:border-slate-700">
-      <p class="text-slate-500 dark:text-slate-400">No lessons added to this class yet.</p>
-    </div>
+    } @else {
+    <app-loader label="Loading assignments..." size="sm"></app-loader>
     }
   </div>
+  } @else {
+    <app-loader label="Loading class details..." size="lg"></app-loader>
+  }
 </div>

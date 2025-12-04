@@ -11,6 +11,10 @@ import { AttendanceRecord } from '../models/attendance.model';
 export class StudentService {
   private api = inject(ApiService);
 
+  getHomeDashboard(): Observable<any> {
+    return this.api.get('/dashboard/student/home');
+  }
+
   getDashboardSummary(): Observable<any> {
     // Placeholder: Replace with actual API call
     // return this.api.get('/student/summary');
@@ -32,13 +36,7 @@ export class StudentService {
   }
 
   getAssignments(): Observable<Assignment[]> {
-    // Placeholder
-    // return this.api.get<Assignment[]>('/student/assignments');
-    return of([
-      { id: 1, title: 'Algebra Homework', dueDate: '2023-12-05', status: 'pending' },
-      { id: 2, title: 'Biology Report', dueDate: '2023-12-10', status: 'submitted' },
-      { id: 3, title: 'History Essay', dueDate: '2023-11-28', status: 'graded', grade: 90 }
-    ]);
+    return this.api.get<Assignment[]>('/dashboard/student/assessments');
   }
 
   getAttendance(): Observable<AttendanceRecord[]> {
@@ -67,34 +65,7 @@ export class StudentService {
   }
 
   getClassDetails(id: number): Observable<any> {
-    // Placeholder - Get class details with next class time
-    return of({
-      id: id,
-      name: 'Mathematics',
-      teacherName: 'Mr. Smith',
-      subject: 'Math',
-      description: 'Advanced Algebra and Calculus concepts.',
-      nextClassTime: '2023-12-05 09:00 AM',
-      lessons: [
-        {
-          id: 1,
-          title: 'Introduction to Algebra',
-          description: 'Basic concepts of variables and equations.',
-          resources: [
-            { id: 1, type: 'video', title: 'Algebra Basics', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
-            { id: 2, type: 'video', title: 'Variables Explained', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }
-          ]
-        },
-        {
-          id: 2,
-          title: 'Linear Equations',
-          description: 'Solving linear equations in one variable.',
-          resources: [
-            { id: 3, type: 'video', title: 'Solving Linear Equations', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' }
-          ]
-        }
-      ]
-    });
+    return this.api.get<any>(`/dashboard/student/groups/${id}`);
   }
 
   getUpcomingClasses(): Observable<any[]> {
@@ -129,5 +100,9 @@ export class StudentService {
       { day: 'Wednesday', time: '09:00 AM - 10:30 AM', location: 'Room 101' },
       { day: 'Friday', time: '09:00 AM - 10:30 AM', location: 'Room 101' }
     ]);
+  }
+
+  getGroups(): Observable<any[]> {
+    return this.api.get<any[]>('/dashboard/student/groups');
   }
 }

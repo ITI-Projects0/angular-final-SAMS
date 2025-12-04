@@ -1,0 +1,118 @@
+
+.student-shell {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+  min-height: 100vh;
+  background-color: var(--student-bg);
+  transition: background-color 180ms ease;
+}
+
+.student-card {
+  background-color: var(--student-surface);
+  border: 1.25px solid var(--student-border);
+  border-radius: 1rem;
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.student-card.lift:hover {
+  transform: translateY(-2px);
+  border-color: var(--student-teal);
+  box-shadow: 0 16px 30px rgba(13, 148, 136, 0.2);
+}
+
+.student-elevated {
+  background-color: var(--student-elevated);
+}
+
+.student-title {
+  color: var(--student-text);
+}
+
+.student-muted {
+  color: var(--student-muted);
+}
+
+.student-muted-2 {
+  color: var(--student-muted-2);
+}
+
+.student-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.student-pill.teal {
+  background: color-mix(in srgb, var(--student-teal) 15%, transparent);
+  color: var(--student-teal-strong);
+  border: 1px solid color-mix(in srgb, var(--student-teal) 40%, transparent);
+}
+
+.student-pill.indigo {
+  background: color-mix(in srgb, var(--student-indigo) 15%, transparent);
+  color: var(--student-indigo-strong);
+  border: 1px solid color-mix(in srgb, var(--student-indigo) 40%, transparent);
+}
+
+.student-pill.muted {
+  background: color-mix(in srgb, var(--student-muted-2) 18%, transparent);
+  color: var(--student-text);
+  border: 1px solid color-mix(in srgb, var(--student-muted-2) 26%, transparent);
+}
+
+.student-table th,
+.student-table td {
+  color: var(--student-text);
+}
+
+.student-table .muted {
+  color: var(--student-muted);
+}
+
+.student-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  border: 1px solid transparent;
+}
+
+.student-badge.success {
+  background: color-mix(in srgb, var(--student-success) 16%, transparent);
+  color: var(--student-success);
+  border-color: color-mix(in srgb, var(--student-success) 36%, transparent);
+}
+
+.student-badge.warning {
+  background: color-mix(in srgb, var(--student-warning) 18%, transparent);
+  color: var(--student-warning);
+  border-color: color-mix(in srgb, var(--student-warning) 36%, transparent);
+}
+
+.student-badge.info {
+  background: color-mix(in srgb, var(--student-info) 18%, transparent);
+  color: var(--student-indigo-strong);
+  border-color: color-mix(in srgb, var(--student-info) 36%, transparent);
+}
+
+.student-badge.neutral {
+  background: color-mix(in srgb, var(--student-muted-2) 18%, transparent);
+  color: var(--student-text);
+  border-color: color-mix(in srgb, var(--student-muted-2) 30%, transparent);
+}
+
+.student-empty {
+  border: 1px dashed var(--student-border);
+  background: color-mix(in srgb, var(--student-elevated) 75%, transparent);
+}

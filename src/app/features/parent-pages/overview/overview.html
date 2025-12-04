@@ -1,124 +1,174 @@
-<div class="p-6 space-y-6">
-    <header>
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Parent Dashboard</h1>
-        <p class="text-slate-500 dark:text-slate-400">Monitor your children's academic progress.</p>
-    </header>
-
-    <!-- Children Statistics Summary -->
-    @if (childrenSummary$ | async; as children) {
-    @if (children.length > 0) {
-    <div class="grid gap-4 md:grid-cols-3">
-        <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Children</p>
-                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ children.length }}</h3>
-                </div>
-            </div>
+<div class="max-w-6xl mx-auto p-4 lg:p-6 space-y-6 min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] transition-colors">
+  @if (childrenSummary$ | async; as children) {
+  <div
+    class="rounded-3xl overflow-hidden bg-gradient-to-r from-indigo-600 via-sky-600 to-emerald-500 dark:from-[#0f1729] dark:via-[#0b1223] dark:to-[#0f1729] shadow-lg">
+    <div class="p-6 lg:p-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <div class="space-y-2">
+        <p class="text-sm uppercase tracking-wide text-white/80">Overview</p>
+        <h1 class="text-3xl font-bold text-white">Parent Dashboard</h1>
+        <p class="text-white/80">Stay aligned with classes, attendance, and updates for your children.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 dark:bg-white/5 text-white text-sm font-semibold shadow-sm ring-1 ring-white/30 dark:ring-white/10 backdrop-blur">
+          <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+          <span>{{ children.length }} Children</span>
         </div>
-        <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Classes</p>
-                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ getTotalClasses(children) }}</h3>
-                </div>
-            </div>
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 dark:bg-white/5 text-white text-sm font-semibold shadow-sm ring-1 ring-white/30 dark:ring-white/10 backdrop-blur">
+          <span class="h-2 w-2 rounded-full bg-amber-200"></span>
+          <span>{{ getTotalClasses(children) }} Classes</span>
         </div>
-        <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
-            <div class="flex items-center gap-4">
-                <div class="p-3 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Avg Attendance</p>
-                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ getAvgAttendance(children) }}%</h3>
-                </div>
-            </div>
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 dark:bg-white/5 text-white text-sm font-semibold shadow-sm ring-1 ring-white/30 dark:ring-white/10 backdrop-blur">
+          <span class="h-2 w-2 rounded-full bg-sky-200"></span>
+          <span>{{ getAvgAttendance(children) }}% Attendance</span>
         </div>
+      </div>
     </div>
-    }
-    }
+  </div>
 
-    <!-- Upcoming Classes for Children -->
+  @if (children.length > 0) {
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
     <div
-        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-slate-100 dark:border-slate-700">
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Upcoming Classes (Today & Tomorrow)</h2>
+      class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
+      <div class="flex items-center gap-3">
+        <div
+          class="p-3 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 shadow-inner">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
         </div>
-        <div class="p-4">
-            @if (upcomingClasses$ | async; as classes) {
-            @if (classes.length > 0) {
-            <div class="space-y-3">
-                @for (cls of classes; track cls.id) {
-                <div class="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/30">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-sm">
-                            {{ cls.childName.charAt(0) }}
-                        </div>
-                        <div>
-                            <p class="font-medium text-slate-900 dark:text-white">{{ cls.className }}</p>
-                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ cls.childName }} • {{
-                                cls.teacherName }} • {{ cls.location }}</p>
-                        </div>
-                    </div>
-                    <span class="text-sm font-medium text-indigo-600 dark:text-indigo-400">
-                        {{ cls.scheduledAt | date:'shortTime' }}
-                    </span>
-                </div>
-                }
-            </div>
-            } @else {
-            <p class="text-sm text-slate-500 dark:text-slate-400 text-center py-4">No classes scheduled for today or
-                tomorrow</p>
-            }
-            }
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Children</p>
+          <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ children.length }}</h3>
+          <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Linked to your account</p>
         </div>
+      </div>
     </div>
-
-    <!-- Notifications -->
     <div
-        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-        <div class="p-4 border-b border-slate-100 dark:border-slate-700">
-            <h2 class="text-lg font-bold text-slate-900 dark:text-white">Recent Notifications</h2>
+      class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
+      <div class="flex items-center gap-3">
+        <div
+          class="p-3 rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300 shadow-inner">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
         </div>
-        <div class="divide-y divide-slate-100 dark:divide-slate-700">
-            @if (notifications$ | async; as notifications) {
-            @if (notifications.length > 0) {
-            @for (notif of notifications; track notif.id) {
-            <div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors"
-                [class.bg-blue-50]="!notif.read" [class.dark:bg-blue-900/10]="!notif.read">
-                <div class="flex items-start gap-3">
-                    <div class="w-2 h-2 rounded-full mt-2" [class.bg-blue-500]="!notif.read"
-                        [class.bg-slate-300]="notif.read"></div>
-                    <div class="flex-1">
-                        <p class="font-medium text-slate-900 dark:text-white">{{ notif.title }}</p>
-                        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">{{ notif.message }}</p>
-                        <p class="text-xs text-slate-500 dark:text-slate-500 mt-2">{{ notif.timestamp | date:'short' }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-            }
-            } @else {
-            <p class="text-sm text-slate-500 dark:text-slate-400 text-center py-8">No notifications</p>
-            }
-            }
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Classes</p>
+          <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ getTotalClasses(children) }}</h3>
+          <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Across all children</p>
         </div>
+      </div>
     </div>
+    <div
+      class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
+      <div class="flex items-center gap-3">
+        <div
+          class="p-3 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300 shadow-inner">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Attendance</p>
+          <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ getAvgAttendance(children) }}%</h3>
+          <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Average attendance rate</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  } @else {
+  <div
+    class="p-6 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm text-center text-[#475569] dark:text-[#CBD5E1]">
+    No children are linked to your account yet.
+  </div>
+  }
+  }
+
+  <div
+    class="bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm overflow-hidden backdrop-blur">
+    <div class="flex items-center justify-between gap-3 p-4 border-b border-[#F1F5F9] dark:border-[#334155]">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Schedule</p>
+        <h2 class="text-lg font-bold text-[#0F172A] dark:text-[#F8FAFC]">Upcoming Classes (next 48 hours)</h2>
+      </div>
+      <span
+        class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold dark:bg-indigo-900/40 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-800">
+        Live view
+      </span>
+    </div>
+    <div class="p-4">
+      @if (upcomingClasses$ | async; as classes) {
+      @if (classes.length > 0) {
+      <div class="divide-y divide-[#F1F5F9] dark:divide-[#334155]">
+        @for (cls of classes; track cls.id) {
+        <div class="py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex items-start gap-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-700 dark:text-indigo-200 font-semibold">
+              {{ cls.childName.charAt(0) }}
+            </div>
+            <div class="space-y-1">
+              <p class="font-semibold text-[#0F172A] dark:text-[#F8FAFC]">{{ cls.className }}</p>
+              <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">{{ cls.childName }} • {{ cls.teacherName }} • {{
+                cls.location }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <span
+              class="px-3 py-1 rounded-full bg-[#F1F5F9] text-[#0F172A] text-xs font-semibold dark:bg-[#334155] dark:text-[#F8FAFC] border border-[#E2E8F0] dark:border-[#1E293B]">
+              {{ cls.scheduledAt | date:'MMM d' }}
+            </span>
+            <span
+              class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold dark:bg-indigo-900/40 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-800">
+              {{ cls.scheduledAt | date:'shortTime' }}
+            </span>
+          </div>
+        </div>
+        }
+      </div>
+      } @else {
+      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] text-center py-4">No classes scheduled for today or
+        tomorrow</p>
+      }
+      }
+    </div>
+  </div>
+
+  <div
+    class="bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm overflow-hidden backdrop-blur">
+    <div class="p-4 border-b border-[#F1F5F9] dark:border-[#334155]">
+      <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Activity</p>
+      <h2 class="text-lg font-bold text-[#0F172A] dark:text-[#F8FAFC]">Recent Notifications</h2>
+    </div>
+    <div class="divide-y divide-[#F1F5F9] dark:divide-[#334155]">
+      @if (notifications$ | async; as notifications) {
+      @if (notifications.length > 0) {
+      @for (notif of notifications; track notif.id) {
+      <div class="p-4 flex flex-col gap-2 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors"
+        [class.bg-blue-50]="!notif.read" [class.dark:bg-blue-900/10]="!notif.read">
+        <div class="flex items-start gap-3">
+          <div class="mt-1 h-2 w-2 rounded-full"
+            [class.bg-blue-500]="!notif.read" [class.bg-slate-300]="notif.read"></div>
+          <div class="flex-1 space-y-1">
+            <div class="flex items-start justify-between gap-2">
+              <p class="font-medium text-[#0F172A] dark:text-[#F8FAFC]">{{ notif.title }}</p>
+              <span class="text-xs text-[#64748B] dark:text-[#CBD5E1]">{{ notif.timestamp | date:'short' }}</span>
+            </div>
+            <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{{ notif.message }}</p>
+          </div>
+        </div>
+      </div>
+      }
+      } @else {
+      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] text-center py-6">No notifications</p>
+      }
+      }
+    </div>
+  </div>
 </div>

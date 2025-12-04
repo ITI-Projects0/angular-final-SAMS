@@ -1,0 +1,13 @@
+@import "../student-theme.css";
+
+.student-card {
+  border-width: 1.5px;
+  border-color: color-mix(in srgb, var(--student-indigo) 32%, var(--student-border));
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  background-color: var(--student-surface);
+}
+
+.student-card:hover {
+  border-color: var(--student-teal);
+  box-shadow: 0 16px 36px rgba(20, 184, 166, 0.14);
+}

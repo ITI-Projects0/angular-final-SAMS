@@ -1,0 +1,16 @@
+/* Footer Enhancements */
+footer a {
+  transition: all 0.2s ease;
+}
+
+footer a:hover {
+  transform: translateX(2px);
+}
+
+/* Smooth scroll to top */
+footer a[href="#top"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+

@@ -10,5 +10,5 @@ import { ModalHostComponent } from './shared/ui/modal-host/modal-host';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('final-angular-SAMS');
+  protected readonly title = signal('ClassSphere');
 }

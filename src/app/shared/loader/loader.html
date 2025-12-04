@@ -1,0 +1,6 @@
+<div class="flex flex-col items-center justify-center gap-3 py-10 w-full">
+  <div class="loader-spin" [ngStyle]="{ width: sizePx + 'px', height: sizePx + 'px' }" aria-label="Loading"></div>
+  @if (label) {
+  <span class="text-sm text-gray-500 dark:text-gray-400">{{ label }}</span>
+  }
+</div>
