@@ -1,10 +1,10 @@
 <!-- Card -->
-<div class="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100 
+<div class="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100
               p-8 shadow-2xl relative z-10 flex flex-col justify-center items-center
-              w-full min-h-screen md:w-[45vw] md:min-h-[90vh] 
+              w-full min-h-screen md:w-[45vw] md:min-h-[90vh]
               md:rounded-3xl rounded-none
               md:absolute md:top-[5vh] md:right-[2.5vw]
-              transition-all duration-[700ms]">
+              transition-all duration-700">
 
     <div class="w-full max-w-xl mx-auto">
 
@@ -20,14 +20,14 @@
             </button>
 
             <div class="flex items-center my-6">
-                <hr class="flex-grow border-neutral-300 dark:border-neutral-600">
+                <hr class="grow border-neutral-300 dark:border-neutral-600">
                 <span class="px-3 text-neutral-500 dark:text-neutral-400">Or</span>
-                <hr class="flex-grow border-neutral-300 dark:border-neutral-600">
+                <hr class="grow border-neutral-300 dark:border-neutral-600">
             </div>
 
             <!-- Email -->
             <label class="text-sm font-medium mb-1 block">Email Address</label>
-            <input formControlName="email"
+            <input formControlName="email" autocomplete="username"
                 class="w-full bg-neutral-100 dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-lg py-3 px-4 border-2 border-transparent focus:border-orange-400 outline-none mb-1" />
             <div class="text-red-500 text-xs mt-1"
                 *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
@@ -38,7 +38,7 @@
 
             <!-- Password -->
             <label class="text-sm font-medium mt-3 mb-1 block">Password</label>
-            <input type="password" formControlName="password"
+            <input type="password" formControlName="password" autocomplete="current-password"
                 class="w-full bg-neutral-100 dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-lg py-3 px-4 border-2 border-transparent focus:border-orange-400 outline-none mb-1" />
             <div class="text-red-500 text-xs mt-1"
                 *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">

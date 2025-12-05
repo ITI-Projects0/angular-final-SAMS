@@ -43,7 +43,7 @@ export class Header implements OnInit {
 
     if (roles.includes('parent')) {
       this.menuItems = [
-        { label: 'Overview', route: '/dashboard', icon: 'home' },
+        { label: 'Overview', route: '/dashboard', icon: 'home', exact: true },
         { label: 'Children', route: '/dashboard/children', icon: 'users' },
         { label: 'Attendance', route: '/dashboard/attendance', icon: 'calendar' },
         // { label: 'Profile', route: '/dashboard/parent-profile', icon: 'user' }
@@ -51,7 +51,7 @@ export class Header implements OnInit {
     } else {
       // Student menu
       this.menuItems = [
-        { label: 'Overview', route: '/dashboard', icon: 'home' },
+        { label: 'Overview', route: '/dashboard', icon: 'home', exact: true },
         { label: 'Classes', route: '/dashboard/classes', icon: 'book' },
         { label: 'Assignments', route: '/dashboard/assignments', icon: 'file-text' },
         { label: 'Attendance', route: '/dashboard/attendance', icon: 'calendar' },

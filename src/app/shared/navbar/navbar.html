@@ -36,8 +36,11 @@
       <div
         class="relative inline-flex items-center gap-2 rounded-full user-menu px-2 py-1 shadow-sm cursor-pointer hover:-translate-y-0.5 transition duration-150"
         (click)="dropdown = !dropdown" (document:click)="dropdown = false" (click)="$event.stopPropagation()">
-        <img src="https://via.placeholder.com/80/4b5563/ffffff?text=JD" alt="avatar"
-          class="w-9 h-9 rounded-full object-cover">
+        <span class="w-9 h-9 rounded-full bg-slate-600 text-white flex items-center justify-center">
+          <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor" aria-hidden="true">
+            <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4 0-6 2-6 3v1h12v-1c0-1-2-3-6-3Z"/>
+          </svg>
+        </span>
         <div class="hidden sm:flex flex-col leading-tight">
           <span class="text-sm font-semibold">John Doe</span>
           <span class="text-xs muted">Staff</span>
@@ -49,8 +52,11 @@
           <div
             class="absolute right-0 top-12 w-52 rounded-2xl border user-dropdown shadow-2xl overflow-hidden animate-fade">
             <div class="px-4 py-3 flex items-center gap-3 border-b user-dropdown-header">
-              <img src="https://via.placeholder.com/80/4b5563/ffffff?text=JD" alt="avatar"
-                class="w-10 h-10 rounded-full object-cover">
+              <span class="w-10 h-10 rounded-full bg-slate-600 text-white flex items-center justify-center">
+                <svg viewBox="0 0 24 24" class="w-6 h-6" fill="currentColor" aria-hidden="true">
+                  <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4 0-6 2-6 3v1h12v-1c0-1-2-3-6-3Z"/>
+                </svg>
+              </span>
               <div>
                 <p class="text-sm font-semibold">John Doe</p>
                 <p class="text-xs muted">john@example.com</p>
