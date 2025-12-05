@@ -17,20 +17,26 @@ export class NotificationBellComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   isDropdownOpen = false;
-  unreadCount = 0;
-  notifications: Notification[] = [];
+  unreadCount = this.notificationService.getCurrentUnreadCount();
+  notifications: Notification[] = this.notificationService.getCurrentNotifications();
 
   ngOnInit(): void {
     this.notificationService.unreadCount$
       .pipe(takeUntil(this.destroy$))
       .subscribe(count => {
-        this.unreadCount = count;
+        setTimeout(() => {
+          if (this.destroy$.closed) return;
+          this.unreadCount = count;
+        });
       });
 
     this.notificationService.notifications$
       .pipe(takeUntil(this.destroy$))
       .subscribe(notifications => {
-        this.notifications = notifications;
+        setTimeout(() => {
+          if (this.destroy$.closed) return;
+          this.notifications = notifications;
+        });
       });
   }
 

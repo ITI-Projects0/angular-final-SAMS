@@ -36,6 +36,14 @@ export class NotificationService {
   public notifications$ = this.notificationsSubject.asObservable();
   public unreadCount$ = this.unreadCountSubject.asObservable();
 
+  getCurrentNotifications(): Notification[] {
+    return this.notificationsSubject.getValue();
+  }
+
+  getCurrentUnreadCount(): number {
+    return this.unreadCountSubject.getValue();
+  }
+
   constructor() {}
 
   initialize(): void {

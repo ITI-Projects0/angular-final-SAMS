@@ -24,14 +24,13 @@ export class StudentOverview {
     }
 
     home$ = this.studentService.getHomeDashboard().pipe(
-        tap((res) => console.log('Student home dashboard', res)),
+        tap((res) => res),
         shareReplay(1)
     );
 
     private pickSummary(res: any) {
         const root = res?.data ?? res ?? {};
         const summary = root.summary ?? root;
-        console.log(summary);
 
         return {
             classesCount: Number(summary.classesCount ?? summary.classes ?? summary.enrolledClasses ?? summary.enrolled_courses ?? 0),
