@@ -2,10 +2,11 @@ import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
+import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  imports: [NotificationBellComponent],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

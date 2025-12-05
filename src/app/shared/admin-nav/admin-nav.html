@@ -1,19 +1,48 @@
-<div class="bg-white text-slate-900 border-b border-slate-200 shadow-md dark:bg-[#0f1729] dark:text-slate-100 dark:border-slate-800">
+<div
+  class="bg-white text-slate-900 border-b border-slate-200 shadow-md dark:bg-[#0f1729] dark:text-slate-100 dark:border-slate-800"
+>
   <div class="w-full px-6 py-3 flex items-center justify-between gap-4">
     <div class="flex items-center gap-3 flex-1">
-      <button (click)="toggleSidebar.emit()" aria-label="Toggle sidebar"
-        class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 shadow-sm hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 lg:hidden">
-        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h12M4 17h16"/></svg>
+      <button
+        (click)="toggleSidebar.emit()"
+        aria-label="Toggle sidebar"
+        class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 shadow-sm hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700 lg:hidden"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path d="M4 7h16M4 12h12M4 17h16" />
+        </svg>
       </button>
       <div class="flex items-center gap-2 font-bold text-slate-900 dark:text-slate-100">
-        <span class="inline-flex w-2.5 h-2.5 rounded-full bg-fuchsia-500 shadow-[0_0_0_6px_rgba(217,70,239,0.2)]"></span>
+        <span
+          class="inline-flex w-2.5 h-2.5 rounded-full bg-fuchsia-500 shadow-[0_0_0_6px_rgba(217,70,239,0.2)]"
+        ></span>
         <span class="text-lg">SAMS Admin</span>
       </div>
     </div>
 
     <div class="flex items-center gap-2">
-      <button class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 shadow-sm hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700" aria-label="Refresh">
-        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <app-notification-bell></app-notification-bell>
+
+      <button
+        class="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 shadow-sm hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700"
+        aria-label="Refresh"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <path d="M21 2v6h-6" />
           <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
           <path d="M3 22v-6h6" />
@@ -21,31 +50,80 @@
         </svg>
       </button>
 
-      <div class="hidden sm:inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-sm text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-200">
+      <div
+        class="hidden sm:inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1 text-sm text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-200"
+      >
         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
         Admin
       </div>
 
-      <button class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-sm text-slate-800 shadow-sm hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-100" (click)="theme.toggle()">
-        <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.132 0 .263 0 .392.01A7.5 7.5 0 1 0 20.99 11.608 9 9 0 0 1 12 3Z"/></svg>
+      <button
+        class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-1.5 text-sm text-slate-800 shadow-sm hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800/90 dark:text-slate-100"
+        (click)="theme.toggle()"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 3c.132 0 .263 0 .392.01A7.5 7.5 0 1 0 20.99 11.608 9 9 0 0 1 12 3Z" />
+        </svg>
         <span>{{ (theme.theme$ | async) === 'dark' ? 'Light mode' : 'Dark mode' }}</span>
       </button>
 
-      <div class="relative inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2 py-1 shadow-sm cursor-pointer hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800/90" (click)="dropdown = !dropdown" (document:click)="dropdown = false" (click)="$event.stopPropagation()">
-        <img src="https://via.placeholder.com/80/4b5563/ffffff?text=JD" alt="avatar" class="w-9 h-9 rounded-full object-cover">
-        <svg viewBox="0 0 24 24" class="w-4 h-4 text-slate-500 dark:text-slate-300 transition-transform duration-150" [class.rotate-180]="dropdown" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      <div
+        class="relative inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2 py-1 shadow-sm cursor-pointer hover:-translate-y-0.5 transition duration-150 dark:border-slate-700 dark:bg-slate-800/90"
+        (click)="dropdown = !dropdown"
+        (document:click)="dropdown = false"
+        (click)="$event.stopPropagation()"
+      >
+        <img
+          src="https://via.placeholder.com/80/4b5563/ffffff?text=JD"
+          alt="avatar"
+          class="w-9 h-9 rounded-full object-cover"
+        />
+        <svg
+          viewBox="0 0 24 24"
+          class="w-4 h-4 text-slate-500 dark:text-slate-300 transition-transform duration-150"
+          [class.rotate-180]="dropdown"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
         @if(dropdown) {
-          <div class="absolute right-0 top-12 w-52 rounded-2xl border border-slate-200 bg-white/95 shadow-2xl overflow-hidden animate-fade dark:border-slate-700 dark:bg-slate-900/95">
-            <div class="px-4 py-3 flex items-center gap-3 border-b border-slate-200 dark:border-slate-800">
-              <img src="https://via.placeholder.com/80/4b5563/ffffff?text=JD" alt="avatar" class="w-10 h-10 rounded-full object-cover">
-              <div>
-                <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">John Doe</p>
-                <p class="text-xs text-slate-500 dark:text-slate-400">admin@example.com</p>
-              </div>
+        <div
+          class="absolute right-0 top-12 w-52 rounded-2xl border border-slate-200 bg-white/95 shadow-2xl overflow-hidden animate-fade dark:border-slate-700 dark:bg-slate-900/95"
+        >
+          <div
+            class="px-4 py-3 flex items-center gap-3 border-b border-slate-200 dark:border-slate-800"
+          >
+            <img
+              src="https://via.placeholder.com/80/4b5563/ffffff?text=JD"
+              alt="avatar"
+              class="w-10 h-10 rounded-full object-cover"
+            />
+            <div>
+              <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">John Doe</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">admin@example.com</p>
             </div>
-            <a class="block px-4 py-2.5 text-sm text-slate-800 hover:bg-slate-100 transition dark:text-slate-100 dark:hover:bg-slate-800">Settings</a>
-            <a class="block px-4 py-2.5 text-sm text-rose-500 hover:bg-rose-50 transition dark:text-rose-400 dark:hover:bg-rose-900/20">Logout</a>
           </div>
+          <a
+            class="block px-4 py-2.5 text-sm text-slate-800 hover:bg-slate-100 transition dark:text-slate-100 dark:hover:bg-slate-800"
+            >Settings</a
+          >
+          <a
+            class="block px-4 py-2.5 text-sm text-rose-500 hover:bg-rose-50 transition dark:text-rose-400 dark:hover:bg-rose-900/20"
+            >Logout</a
+          >
+        </div>
         }
       </div>
     </div>

@@ -36,6 +36,13 @@ export const routes: Routes = [
   ...StaffRoutes,
   ...AdminRoutes,
 
+  // Test Notifications (Development Only)
+  {
+    path: 'test-notifications',
+    loadComponent: () => import('./test-notifications/test-notifications.component').then(m => m.TestNotificationsComponent),
+    canActivate: [authGuard],
+  },
+
   // Student & Parent Pages
   {
     path: 'dashboard',
