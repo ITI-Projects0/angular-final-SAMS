@@ -1,0 +1,158 @@
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import Pusher from 'pusher-js';
+import Echo from 'laravel-echo';
+import { ToastrService } from 'ngx-toastr';
+import { ApiService } from './api.service';
+import { TokenStorageService } from '../auth/token-storage.service';
+
+export interface Notification {
+  id: string;
+  type: string;
+  data: {
+    type: string;
+    title: string;
+    message: string;
+    icon: string;
+    created_at: string;
+    [key: string]: any;
+  };
+  read_at: string | null;
+  created_at: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class NotificationService {
+  private apiService = inject(ApiService);
+  private tokenStorage = inject(TokenStorageService);
+  private toastr = inject(ToastrService);
+
+  private echo: Echo<any> | null = null;
+  private notificationsSubject = new BehaviorSubject<Notification[]>([]);
+  private unreadCountSubject = new BehaviorSubject<number>(0);
+
+  public notifications$ = this.notificationsSubject.asObservable();
+  public unreadCount$ = this.unreadCountSubject.asObservable();
+
+  constructor() {}
+
+  initialize(): void {
+    const user = this.tokenStorage.getUser();
+    const token = this.tokenStorage.getToken();
+
+    if (!user || !token) {
+      console.warn('Cannot initialize notifications: User not authenticated');
+      return;
+    }
+
+    // Set Pusher on window
+    (window as any).Pusher = Pusher;
+
+    // Initialize Laravel Echo
+    this.echo = new Echo({
+      broadcaster: 'pusher',
+      key: 'f3a80187efd8663a3273',
+      cluster: 'mt1',
+      forceTLS: true,
+      encrypted: true,
+      authEndpoint: 'http://127.0.0.1:8000/broadcasting/auth',
+      auth: {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      },
+    });
+
+    // Subscribe to private user channel
+    this.subscribeToUserChannel(user.id);
+
+    // Load initial data
+    this.loadLatestNotifications();
+    this.loadUnreadCount();
+  }
+
+  private subscribeToUserChannel(userId: number): void {
+    if (!this.echo) return;
+
+    this.echo.private(`user.${userId}`)
+      .listen('.notification.created', (data: any) => {
+        console.log('New notification received:', data);
+        this.handleNewNotification(data);
+      })
+      .error((error: any) => {
+        console.error('Echo subscription error:', error);
+      });
+
+    console.log(`Subscribed to user.${userId} channel`);
+  }
+
+  private handleNewNotification(data: any): void {
+    // Show toast
+    this.showToast(data);
+
+    // Reload notifications and count
+    this.loadLatestNotifications();
+    this.loadUnreadCount();
+  }
+
+  private showToast(data: any): void {
+    const title = data.title || 'New Notification';
+    const message = data.message || '';
+
+    this.toastr.info(message, title, {
+      timeOut: 5000,
+      progressBar: true,
+      closeButton: true,
+      positionClass: 'toast-top-right',
+      enableHtml: true,
+    });
+  }
+
+  loadLatestNotifications(): void {
+    this.apiService.get<any>('/notifications/latest').subscribe({
+      next: (response) => {
+        this.notificationsSubject.next(response.data || []);
+      },
+      error: (error) => {
+        console.error('Error loading notifications:', error);
+      }
+    });
+  }
+
+  loadUnreadCount(): void {
+    this.apiService.get<any>('/notifications/unread-count').subscribe({
+      next: (response) => {
+        this.unreadCountSubject.next(response.count || 0);
+      },
+      error: (error) => {
+        console.error('Error loading unread count:', error);
+      }
+    });
+  }
+
+  markAsRead(notificationId: string): Observable<any> {
+    return this.apiService.post(`/notifications/${notificationId}/mark-read`);
+  }
+
+  markAllAsRead(): Observable<any> {
+    return this.apiService.post('/notifications/mark-all-read');
+  }
+
+  deleteNotification(notificationId: string): Observable<any> {
+    return this.apiService.delete(`/notifications/${notificationId}`);
+  }
+
+  disconnect(): void {
+    if (this.echo) {
+      this.echo.disconnect();
+      this.echo = null;
+    }
+
+    this.notificationsSubject.next([]);
+    this.unreadCountSubject.next(0);
+  }
+}

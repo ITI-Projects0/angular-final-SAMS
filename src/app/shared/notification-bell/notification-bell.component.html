@@ -1,0 +1,150 @@
+<div class="relative">
+  <!-- Bell Button -->
+  <button
+    (click)="toggleDropdown()"
+    class="relative p-2.5 rounded-xl transition-all duration-300 hover:bg-slate-100 dark:hover:bg-white/10"
+    [ngClass]="isDark ? 'text-slate-400' : 'text-slate-500'"
+    type="button"
+  >
+    <!-- Bell Icon -->
+    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+      />
+    </svg>
+
+    <!-- Badge -->
+    @if (unreadCount > 0) {
+    <span
+      class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-950 animate-pulse"
+    >
+      {{ unreadCount > 99 ? '99+' : unreadCount }}
+    </span>
+    }
+  </button>
+
+  <!-- Dropdown -->
+  @if (isDropdownOpen) {
+  <div
+    class="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] rounded-2xl shadow-2xl border z-50 animate-fade-in"
+    [ngClass]="isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'"
+  >
+    <!-- Header -->
+    <div
+      class="flex items-center justify-between px-5 py-4 border-b"
+      [ngClass]="isDark ? 'border-slate-800' : 'border-slate-200'"
+    >
+      <h3 class="text-lg font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
+        Notifications
+      </h3>
+      @if (unreadCount > 0) {
+      <button
+        (click)="markAllAsRead()"
+        class="text-xs font-medium px-3 py-1.5 rounded-lg transition-colors"
+        [ngClass]="
+          isDark ? 'text-indigo-400 hover:bg-indigo-500/10' : 'text-indigo-600 hover:bg-indigo-50'
+        "
+      >
+        Mark all as read
+      </button>
+      }
+    </div>
+
+    <!-- Notifications List -->
+    <div class="max-h-[32rem] overflow-y-auto custom-scrollbar">
+      @if (notifications.length === 0) {
+      <div class="flex flex-col items-center justify-center py-12 px-4">
+        <svg
+          class="w-16 h-16 mb-4"
+          [ngClass]="isDark ? 'text-slate-700' : 'text-slate-300'"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+          />
+        </svg>
+        <p class="text-sm font-medium" [ngClass]="isDark ? 'text-slate-400' : 'text-slate-500'">
+          No notifications
+        </p>
+      </div>
+      } @else { @for (notification of notifications; track notification.id) {
+      <div
+        class="px-5 py-4 border-b transition-colors cursor-pointer"
+        [ngClass]="{
+          'bg-indigo-50/50 dark:bg-indigo-500/5': !notification.read_at,
+          'hover:bg-slate-50 dark:hover:bg-slate-800/50': true,
+          'border-slate-200 dark:border-slate-800': true
+        }"
+        (click)="markAsRead(notification, $event)"
+      >
+        <div class="flex gap-3">
+          <!-- Icon -->
+          <div
+            class="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+            [ngClass]="
+              !notification.read_at
+                ? 'bg-indigo-100 dark:bg-indigo-500/20'
+                : 'bg-slate-100 dark:bg-slate-800'
+            "
+          >
+            <svg
+              class="w-5 h-5"
+              [ngClass]="
+                !notification.read_at
+                  ? 'text-indigo-600 dark:text-indigo-400'
+                  : 'text-slate-500 dark:text-slate-400'
+              "
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                [attr.d]="getNotificationIcon(notification.data.icon)"
+              />
+            </svg>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-2 mb-1">
+              <h4
+                class="text-sm font-semibold truncate"
+                [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
+              >
+                {{ notification.data.title }}
+              </h4>
+              @if (!notification.read_at) {
+              <span class="flex-shrink-0 w-2 h-2 rounded-full bg-indigo-500"></span>
+              }
+            </div>
+            <p
+              class="text-sm leading-relaxed mb-2"
+              [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
+            >
+              {{ notification.data.message }}
+            </p>
+            <span class="text-xs" [ngClass]="isDark ? 'text-slate-500' : 'text-slate-400'">
+              {{ getTimeAgo(notification.data.created_at) }}
+            </span>
+          </div>
+        </div>
+      </div>
+      } }
+    </div>
+  </div>
+
+  <!-- Backdrop -->
+  <div class="fixed inset-0 z-40" (click)="closeDropdown()"></div>
+  }
+</div>

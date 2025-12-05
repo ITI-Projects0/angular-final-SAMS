@@ -4,11 +4,12 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 import { ThemeService } from '../../core/services/theme.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { TokenStorageService } from '../../core/auth/token-storage.service';
+import { NotificationBellComponent } from '../notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NotificationBellComponent],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
