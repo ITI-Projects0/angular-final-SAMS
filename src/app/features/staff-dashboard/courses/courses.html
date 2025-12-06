@@ -48,7 +48,9 @@
 <div class="overlay" [class.open]="panelOpen" (click)="closeInfo()"></div>
 <div class="side-panel glass" [class.open]="panelOpen" (click)="$event.stopPropagation()">
   <div class="panel-header">
-    <h3>{{ panelMode === 'create' ? 'Create group' : 'Course info' }}</h3>
+    <h3>
+      {{ panelMode === 'create' ? 'Create group' : panelMode === 'edit' ? 'Edit group' : 'Course info' }}
+    </h3>
     <button class="close-btn" (click)="closeInfo()">X</button>
   </div>
   <div class="panel-body" *ngIf="panelMode === 'info' && selectedGroup">
@@ -62,26 +64,39 @@
 
     <div class="panel-actions">
       <a class="btn-primary" [routerLink]="['/dashboard/staff/groups', selectedGroup.id]">Go to group</a>
+      <button type="button" class="btn-secondary" *ngIf="canCreateGroup" (click)="openEdit()">Edit</button>
+      <button type="button" class="btn-danger" *ngIf="canCreateGroup" (click)="deleteGroup()" [disabled]="processing">
+        Delete
+      </button>
     </div>
   </div>
 
-  <div class="panel-body" *ngIf="panelMode === 'create'">
-    <div class="field">
-      <label>Name</label>
-      <input type="text" [(ngModel)]="groupForm.name" placeholder="Group name" />
+  <div class="panel-body" *ngIf="panelMode === 'create' || panelMode === 'edit'">
+    <div class="form-header">
+      <p class="field-hint">
+        All fields with * are required. Update schedule days/time anytime after creating the group.
+      </p>
     </div>
+
     <div class="field">
-      <label>Subject</label>
-      <input type="text" [(ngModel)]="groupForm.subject" placeholder="Subject" />
+      <label><span class="required">*</span>Name</label>
+      <input class="input-control" type="text" [(ngModel)]="groupForm.name" placeholder="Group name" />
     </div>
+
+    <div class="field">
+      <label><span class="required">*</span>Subject</label>
+      <input class="input-control" type="text" [(ngModel)]="groupForm.subject" placeholder="Subject" />
+    </div>
+
     <div class="field">
       <label>Description</label>
-      <textarea rows="3" [(ngModel)]="groupForm.description" placeholder="Optional description"></textarea>
+      <textarea class="input-control" rows="3" [(ngModel)]="groupForm.description" placeholder="Optional description"></textarea>
     </div>
+
     <div class="field">
-      <label>Schedule days</label>
-      <div class="checkbox-grid">
-        <label *ngFor="let day of dayOptions">
+      <label><span class="required">*</span>Schedule days</label>
+      <div class="day-grid">
+        <label *ngFor="let day of dayOptions" class="day-pill" [class.checked]="groupForm.scheduleDays.includes(day)">
           <input
             type="checkbox"
             [checked]="groupForm.scheduleDays.includes(day)"
@@ -90,17 +105,30 @@
           <span>{{ day }}</span>
         </label>
       </div>
+      <p class="field-hint">Selected: {{ groupForm.scheduleDays.length || 0 }}</p>
+      <p class="error-text" *ngIf="!groupForm.scheduleDays.length">Pick at least one day.</p>
     </div>
-    <div class="field">
-      <label>Schedule time</label>
-      <input type="time" [(ngModel)]="groupForm.schedule_time" />
+
+    <div class="field two-col">
+      <div>
+        <label>Schedule time</label>
+        <input class="input-control" type="time" [(ngModel)]="groupForm.schedule_time" />
+      </div>
+      <div>
+        <label>Sessions count</label>
+        <input class="input-control" type="number" min="1" max="100" [(ngModel)]="groupForm.sessions_count" />
+      </div>
     </div>
-    <div class="field">
-      <label>Sessions count</label>
-      <input type="number" min="1" max="100" [(ngModel)]="groupForm.sessions_count" />
-    </div>
-    <div class="panel-actions">
-      <button class="btn-primary" type="button" (click)="submitGroup()" [disabled]="processing">Create</button>
+
+    <div class="panel-actions sticky-footer">
+      <span class="error-text" *ngIf="saveError">{{ saveError }}</span>
+      <button
+        class="btn-primary"
+        type="button"
+        (click)="submitGroup()"
+        [disabled]="processing || !groupForm.name || !groupForm.subject || !groupForm.scheduleDays.length">
+        {{ panelMode === 'edit' ? 'Save changes' : 'Create' }}
+      </button>
     </div>
   </div>
 </div>
