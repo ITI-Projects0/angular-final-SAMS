@@ -19,16 +19,18 @@
         <th>Name</th>
         <th>Email</th>
         <th>Phone</th>
+        <th>Children</th>
         <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let p of filteredParents">
-        <td>{{ p.name }}</td>
-        <td>{{ p.email }}</td>
+        <td class="strong">{{ p.name }}</td>
+        <td class="muted">{{ p.email }}</td>
         <td>{{ p.phone || '-' }}</td>
-        <td>{{ p.status }}</td>
+        <td><span class="pill pill-ghost">{{ p.childCount }} kids</span></td>
+        <td><span class="pill" [ngClass]="p.status === 'active' ? 'pill-success' : 'pill-muted'">{{ p.status }}</span></td>
         <td>
           <button class="btn-simple" (click)="openInfo(p)">Info</button>
         </td>
@@ -49,6 +51,23 @@
     <p><strong>Phone:</strong> {{ selectedParent.phone || '-' }}</p>
     <p><strong>Status:</strong> {{ selectedParent.status }}</p>
     <p><strong>User ID:</strong> {{ selectedParent.id }}</p>
+    <div *ngIf="selectedParent.children?.length">
+      <p><strong>Children:</strong></p>
+      <div class="chips vertical">
+        <div class="chip" *ngFor="let child of selectedParent.children">
+          <div class="chip-title">{{ child.name }}</div>
+          <div class="chip-meta">{{ child.email }}</div>
+          <div *ngIf="child.courses?.length" class="child-courses">
+            <div class="chip-subtitle">Courses</div>
+            <ul>
+              <li *ngFor="let c of child.courses">
+                {{ c.name }} <span *ngIf="c.center">({{ c.center }})</span> — students: {{ c.studentsCount }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- <p><strong>Role tags:</strong> {{ selectedParent.raw?.roles?.map((r: any) => r?.name || r).join(', ') || selectedParent.raw?.role || 'parent' }}</p> -->
   </div>
 </div>

@@ -72,6 +72,37 @@
 .btn-primary.full { width: 100%; text-align: center; }
 
 .muted { color: var(--muted); font-size: 0.95rem; }
+.strong { font-weight: 700; color: var(--text); }
+.stack { display: flex; flex-direction: column; gap: 2px; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  font-size: 0.9rem;
+}
+.pill-success { background: #ecfdf3; color: #15803d; border-color: #bbf7d0; }
+.pill-muted { background: #f3f4f6; color: #4b5563; }
+.pill-ghost { background: transparent; color: var(--text); border-style: dashed; }
+
+.chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.6rem;
+}
+.chip {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 0.75rem;
+  background: var(--glass);
+}
+.chip-title { font-weight: 700; }
+.chip-meta { font-size: 0.9rem; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); display: inline-block; }
 
 .loading-overlay {
   display: flex;

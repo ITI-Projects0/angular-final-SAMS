@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-admin-students',
@@ -25,7 +26,11 @@ export class Students implements OnInit {
 
   private loadStudents() {
     this.loading = true;
-    this.api.get<any>('/users').subscribe({
+    const params = new HttpParams()
+      .set('role', 'student')
+      .set('per_page', 200);
+
+    this.api.get<any>('/users', params).subscribe({
       next: (res) => {
         const payload = res?.data ?? res;
         const items = payload?.data ?? payload ?? [];
@@ -42,6 +47,13 @@ export class Students implements OnInit {
             email: u.email,
             center: u.center?.name || '',
             status: u.status || 'active',
+            courseCount: (u.groups || []).length,
+            courses: (u.groups || []).map((g: any) => ({
+              id: g.id,
+              name: g.name,
+              center: g.center?.name || '',
+              studentsCount: g.students_count ?? g.studentsCount ?? 0,
+            })),
             raw: u,
           }));
         this.cdr.detectChanges();

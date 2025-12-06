@@ -111,6 +111,22 @@
 .btn-primary.full { width: 100%; text-align: center; }
 
 .muted { color: var(--muted); font-size: 0.95rem; }
+.strong { font-weight: 700; color: var(--text); }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  font-size: 0.9rem;
+}
+.pill-success { background: #ecfdf3; color: #15803d; border-color: #bbf7d0; }
+.pill-muted { background: #f3f4f6; color: #4b5563; }
+.pill-ghost { background: transparent; color: var(--text); border-style: dashed; }
+.chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
+.chip { padding: 0.6rem 0.75rem; border: 1px solid var(--glass-border); border-radius: 0.7rem; background: var(--glass); }
 
 .loading-overlay {
   display: flex;

@@ -75,5 +75,18 @@
     <p><strong>Phone:</strong> {{ selectedCenter.phone || '-' }}</p>
     <p><strong>Status:</strong> {{ selectedCenter.paid ? 'Paid' : 'Unpaid' }}</p>
     <p><strong>Center ID:</strong> {{ selectedCenter.id }}</p>
+    <div *ngIf="selectedCenter.courses?.length">
+      <p><strong>Courses:</strong></p>
+      <div class="chips">
+        <div class="chip" *ngFor="let c of selectedCenter.courses">
+          <div class="chip-title">{{ c.name }}</div>
+          <div class="chip-meta">
+            <span *ngIf="c.teacher">Teacher: {{ c.teacher }}</span>
+            <span class="dot"></span>
+            <span>{{ c.studentsCount }} students</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

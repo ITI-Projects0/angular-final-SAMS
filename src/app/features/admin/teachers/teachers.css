@@ -34,6 +34,24 @@
 .meta { margin-top: 0.6rem; color: var(--muted); font-size: 0.95rem; }
 .actions { margin-top: 0.8rem; display: flex; gap: 0.5rem; }
 .btn-simple { background: var(--glass); border: 1px solid var(--glass-border); padding: 0.4rem 0.85rem; border-radius: 999px; cursor: pointer; color: var(--text); }
+.chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin: 0.25rem 0; }
+.chip { padding: 0.6rem 0.75rem; border: 1px solid var(--glass-border); border-radius: 0.7rem; background: var(--glass); }
+.chip-title { font-weight: 700; }
+.chip-meta { font-size: 0.9rem; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); display: inline-block; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  font-size: 0.9rem;
+}
+.pill-muted { background: #f3f4f6; color: #4b5563; }
+.pill-success { background: #ecfdf3; color: #15803d; border-color: #bbf7d0; }
+.pill-ghost { background: transparent; color: var(--text); border-style: dashed; }
 
 .loading-overlay {
   display: flex;

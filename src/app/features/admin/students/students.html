@@ -16,19 +16,24 @@
   <table class="list-table glass">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Email</th>
+        <th>Student</th>
         <th>Center</th>
         <th>Status</th>
+        <th>Courses</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let s of filteredStudents">
-        <td>{{ s.name }}</td>
-        <td>{{ s.email }}</td>
-        <td>{{ s.center }}</td>
-        <td>{{ s.status }}</td>
+        <td>
+          <div class="stack">
+            <span class="strong">{{ s.name }}</span>
+            <span class="muted">{{ s.email }}</span>
+          </div>
+        </td>
+        <td><span class="pill">{{ s.center || '-' }}</span></td>
+        <td><span class="pill" [ngClass]="s.status === 'active' ? 'pill-success' : 'pill-muted'">{{ s.status }}</span></td>
+        <td><span class="pill pill-ghost">{{ s.courseCount }} courses</span></td>
         <td>
           <button class="btn-simple" (click)="openInfo(s)">Info</button>
         </td>
@@ -50,5 +55,18 @@
     <p><strong>Status:</strong> {{ selectedStudent.status }}</p>
     <!-- <p><strong>Role tags:</strong> {{ selectedStudent.raw?.roles?.map((r: any) => r?.name || r).join(', ') || selectedStudent.raw?.role || 'student' }}</p> -->
     <p><strong>User ID:</strong> {{ selectedStudent.id }}</p>
+    <div *ngIf="selectedStudent.courses?.length">
+      <p><strong>Courses:</strong></p>
+      <div class="chips">
+        <div class="chip" *ngFor="let c of selectedStudent.courses">
+          <div class="chip-title">{{ c.name }}</div>
+          <div class="chip-meta">
+            <span *ngIf="c.center">{{ c.center }}</span>
+            <span class="dot"></span>
+            <span>{{ c.studentsCount }} students</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

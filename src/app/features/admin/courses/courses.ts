@@ -35,6 +35,7 @@ export class Courses implements OnInit {
           center: g.center?.name || '',
           teacher: g.teacher?.name || '',
           status: g.is_active ? 'Active' : 'Inactive',
+          studentsCount: g.students_count ?? g.studentsCount ?? g.students?.length ?? 0,
           raw: g,
         }));
         this.cdr.detectChanges();

@@ -41,6 +41,12 @@ export class Centers implements OnInit {
           city: c.subdomain || '',
           phone: c.owner?.phone || '',
           paid: !!c.is_active,
+          courses: (c.groups || []).map((g: any) => ({
+            id: g.id,
+            name: g.name,
+            teacher: g.teacher?.name || '',
+            studentsCount: g.students_count ?? g.studentsCount ?? 0,
+          })),
           raw: c,
         }));
         this.cdr.detectChanges();

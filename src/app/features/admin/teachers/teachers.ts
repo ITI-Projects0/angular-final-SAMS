@@ -36,6 +36,13 @@ export class Teachers implements OnInit {
           center: t.taught_groups?.[0]?.center?.name || t.center?.name || '',
           courses: t.taught_groups_count ?? t.taughtGroups_count ?? t.taught_groups?.length ?? 0,
           phone: t.phone || '',
+          status: t.status || 'active',
+          courseList: (t.taught_groups || []).map((g: any) => ({
+            id: g.id,
+            name: g.name,
+            studentsCount: g.students_count ?? g.studentsCount ?? 0,
+            center: g.center?.name || ''
+          })),
           raw: t,
         }));
         this.cdr.detectChanges();

@@ -15,14 +15,15 @@
 
   <table class="list-table glass">
     <thead>
-      <tr><th>Course title</th><th>Center</th><th>Teacher</th><th>Status</th><th>Actions</th></tr>
+      <tr><th>Course title</th><th>Center</th><th>Teacher</th><th>Status</th><th>Students</th><th>Actions</th></tr>
     </thead>
     <tbody>
       <tr *ngFor="let c of filteredCourses">
-        <td>{{ c.title }}</td>
-        <td>{{ c.center }}</td>
+        <td class="strong">{{ c.title }}</td>
+        <td><span class="pill">{{ c.center || '-' }}</span></td>
         <td>{{ c.teacher }}</td>
-        <td>{{ c.status }}</td>
+        <td><span class="pill" [ngClass]="c.status === 'Active' ? 'pill-success' : 'pill-muted'">{{ c.status }}</span></td>
+        <td><span class="pill pill-ghost">{{ c.studentsCount }} students</span></td>
         <td>
           <button class="btn-simple" (click)="openInfo(c)">Info</button>
         </td>
@@ -38,11 +39,16 @@
     <button class="close-btn" (click)="closeInfo()">X</button>
   </div>
   <div class="panel-body" *ngIf="selectedCourse">
-    <p><strong>Title:</strong> {{ selectedCourse.title }}</p>
-    <p><strong>Center:</strong> {{ selectedCourse.center || '-' }}</p>
-    <p><strong>Teacher:</strong> {{ selectedCourse.teacher || '-' }}</p>
-    <p><strong>Status:</strong> {{ selectedCourse.status }}</p>
-    <p><strong>Group ID:</strong> {{ selectedCourse.id }}</p>
-    <p><strong>Approval required:</strong> {{ selectedCourse.raw?.is_approval_required ? 'Yes' : 'No' }}</p>
+    <p class="strong">{{ selectedCourse.title }}</p>
+    <div class="chips">
+      <div class="chip">Center: {{ selectedCourse.center || '-' }}</div>
+      <div class="chip">Teacher: {{ selectedCourse.teacher || '-' }}</div>
+      <div class="chip">Students: {{ selectedCourse.studentsCount }}</div>
+      <div class="chip" [ngClass]="selectedCourse.status === 'Active' ? 'pill-success' : 'pill-muted'">
+        Status: {{ selectedCourse.status }}
+      </div>
+      <div class="chip">Group ID: {{ selectedCourse.id }}</div>
+      <div class="chip">Approval required: {{ selectedCourse.raw?.is_approval_required ? 'Yes' : 'No' }}</div>
+    </div>
   </div>
 </div>

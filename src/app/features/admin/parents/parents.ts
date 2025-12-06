@@ -26,7 +26,9 @@ export class Parents implements OnInit {
 
   private loadParents() {
     this.loading = true;
-    const params = new HttpParams().set('role', 'parent');
+    const params = new HttpParams()
+      .set('role', 'parent')
+      .set('per_page', 200);
     this.api.get<any>('/users', params).subscribe({
       next: (res) => {
         const payload = res?.data ?? res;
@@ -37,6 +39,18 @@ export class Parents implements OnInit {
           email: p.email,
           phone: p.phone || '',
           status: p.status || 'active',
+          childCount: (p.children || []).length,
+          children: (p.children || []).map((c: any) => ({
+            id: c.id,
+            name: c.name,
+            email: c.email,
+            courses: (c.groups || []).map((g: any) => ({
+              id: g.id,
+              name: g.name,
+              center: g.center?.name || '',
+              studentsCount: g.students_count ?? g.studentsCount ?? 0,
+            })),
+          })),
           raw: p,
         }));
         this.cdr.detectChanges();
