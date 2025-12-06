@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Subscription, forkJoin, of } from 'rxjs';
+import { Subscription, combineLatest, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { TeacherService } from '../../../../core/services/teacher.service';
 import { TokenStorageService } from '../../../../core/auth/token-storage.service';
@@ -47,6 +47,7 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
   private routeSub?: Subscription;
   private groupId!: number;
   private roles: string[] = [];
+  private attendanceDateFilter: string | null = null;
   panelOpen = false;
   panelMode: 'lesson' | 'attendance' | null = null;
   processing = false;
@@ -56,15 +57,18 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.roles = this.tokenStorage.getUser()?.roles ?? [];
-    this.routeSub = this.route.paramMap.subscribe((params) => {
-      const id = Number(params.get('id'));
-      if (!id) {
-        this.errorMessage = 'Invalid group id.';
-        return;
+    this.routeSub = combineLatest([this.route.paramMap, this.route.queryParamMap]).subscribe(
+      ([params, queryParams]) => {
+        const id = Number(params.get('id'));
+        if (!id) {
+          this.errorMessage = 'Invalid group id.';
+          return;
+        }
+        this.groupId = id;
+        this.attendanceDateFilter = queryParams.get('date');
+        this.loadGroupData();
       }
-      this.groupId = id;
-      this.loadGroupData();
-    });
+    );
   }
 
   ngOnDestroy(): void {
@@ -218,7 +222,9 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
 
     forkJoin({
       lessons: this.staffService.getGroupLessons(this.groupId).pipe(catchError(() => of([]))),
-      attendance: this.staffService.getGroupAttendance(this.groupId).pipe(catchError(() => of([])))
+      attendance: this.staffService
+        .getGroupAttendance(this.groupId, this.attendanceDateFilter || undefined)
+        .pipe(catchError(() => of([])))
     }).subscribe({
       next: ({ lessons, attendance }) => {
         const lessonPayload = lessons?.data ?? lessons;

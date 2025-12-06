@@ -2,6 +2,7 @@ import { Component, Input, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { BRAND_NAME } from '../../core/config/brand';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,6 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class Sidebar {
   @Input() collapsed = false;
+  brandName = BRAND_NAME;
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);

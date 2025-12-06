@@ -2,8 +2,8 @@
   <header class="group-header">
     <div>
       <p class="eyebrow">Class overview</p>
-      <h1>{{ group?.name }}</h1>
-      <p class="muted">{{ group?.description || 'No description provided.' }}</p>
+      <h1>{{ group.name }}</h1>
+      <p class="muted">{{ group.description || 'No description provided.' }}</p>
     </div>
     <div class="header-actions" *ngIf="canManageGroup">
       <button class="btn-primary" type="button" (click)="openLessonForm()">Add Lesson</button>
@@ -14,15 +14,15 @@
     <div class="meta-grid">
       <div>
         <p class="label">Subject</p>
-        <span>{{ group?.subject || 'General' }}</span>
+        <span>{{ group.subject || 'General' }}</span>
       </div>
       <div>
         <p class="label">Teacher</p>
-        <span>{{ group?.teacher?.name || 'Unassigned' }}</span>
+        <span>{{ group.teacher?.name || 'Unassigned' }}</span>
       </div>
       <div>
         <p class="label">Center</p>
-        <span>{{ group?.center?.name || 'N/A' }}</span>
+        <span>{{ group.center?.name || 'N/A' }}</span>
       </div>
       <div>
         <p class="label">Schedule</p>

@@ -10,13 +10,13 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
 
     return next(req).pipe(
         catchError(err => {
-            if (err.status === 401 || err.status === 403) {
-                // Auto logout if 401/403 response returned from api
+            if (err.status === 401) {
+                // Token is invalid/expired, clear storage and force login
                 tokenStorage.signOut();
-                // location.reload();
                 router.navigate(['/login']);
             }
 
+            // For 403 (forbidden) we keep the user logged in and just propagate the error
             const error = err.error?.message || err.statusText;
             return throwError(() => error);
         })

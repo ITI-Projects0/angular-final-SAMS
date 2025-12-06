@@ -63,16 +63,9 @@ export class NotificationService {
       broadcaster: 'pusher',
       key: 'f3a80187efd8663a3273',
       cluster: 'mt1',
-      forceTLS: true,
-      encrypted: true,
-      authEndpoint: 'http://127.0.0.1:8000/broadcasting/auth',
-      auth: {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-      },
+      forceTLS: false,
+      encrypted: false,
+      authorizer: this.createAuthorizer(token),
     });
 
     // Subscribe to private user channel
@@ -162,5 +155,48 @@ export class NotificationService {
 
     this.notificationsSubject.next([]);
     this.unreadCountSubject.next(0);
+  }
+
+  private createAuthorizer(token: string) {
+    const authUrl = 'http://localhost:8000/broadcasting/auth';
+
+    return (channel: any, options: any) => ({
+      authorize: (socketId: string, callback: (error: Error | null, data: any) => void) => {
+        const body = new URLSearchParams({
+          socket_id: socketId,
+          channel_name: channel.name
+        }).toString();
+
+        fetch(authUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+          },
+          body
+        })
+          .then(async (response) => {
+            let data: any = null;
+            try {
+              data = await response.json();
+            } catch {
+              // Keep null to trigger failure path
+            }
+
+            if (!response.ok || !data?.auth) {
+              console.error('Echo auth failed', { status: response.status, body: data });
+              callback(new Error('Auth failed'), null);
+              return;
+            }
+
+            callback(null, data);
+          })
+          .catch((error) => {
+            console.error('Echo auth fetch error', error);
+            callback(error, null);
+          });
+      }
+    });
   }
 }
