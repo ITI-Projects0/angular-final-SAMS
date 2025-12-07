@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TeacherService } from '../../../core/services/teacher.service';
 import { TokenStorageService } from '../../../core/auth/token-storage.service';
+import { CenterAiPanelComponent } from '../../ai-center-panel/center-ai-panel.component';
 
 interface CenterSummaryStats {
   teachers_count: number;
@@ -18,7 +19,7 @@ interface CenterSummaryStats {
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CenterAiPanelComponent],
   templateUrl: './overview.html',
   styleUrl: './overview.css'
 })

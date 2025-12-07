@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ParentService } from '../../../core/services/parent.service';
 import { Observable } from 'rxjs';
+import { ParentAiPanelComponent } from '../../ai-parent-panel/parent-ai-panel.component';
 
 @Component({
   selector: 'app-child-details',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ParentAiPanelComponent],
   templateUrl: './child-details.html',
   styleUrl: './child-details.css'
 })

@@ -6,11 +6,12 @@ import { StudentService } from '../../../core/services/student.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { map, shareReplay, tap } from 'rxjs';
 import { LoaderComponent } from '../../../shared/loader/loader';
+import { StudentAiLabComponent } from '../../ai-student-lab/student-ai-lab.component';
 
 @Component({
     selector: 'app-student-overview',
     standalone: true,
-    imports: [CommonModule, ParentOverview, LoaderComponent],
+    imports: [CommonModule, ParentOverview, LoaderComponent, StudentAiLabComponent],
     templateUrl: './overview.html',
     styleUrl: './overview.css'
 })
