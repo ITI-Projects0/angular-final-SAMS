@@ -1,0 +1,13 @@
+<section class="ai-insights">
+  <div class="header">
+    <div>
+      <p class="title">AI Insights</p>
+      <p class="subtitle">Smart summary for attendance and grades</p>
+    </div>
+    <button class="refresh" (click)="loadInsights()" [disabled]="loading">Refresh</button>
+  </div>
+
+  <div *ngIf="loading" class="muted">Loading...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <pre *ngIf="!loading && !error" class="insights">{{ insights }}</pre>
+</section>

@@ -120,7 +120,7 @@
         <p class="uppercase tracking-[0.18em] text-xs text-slate-500 dark:text-slate-400">Recent activity</p>
         <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Latest activity</h2>
       </div>
-      <button
+      <button routerLink="/dashboard/admin/centers"
         class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-800 shadow-sm hover:-translate-y-0.5 transition dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">View
         centers</button>
     </div>
@@ -134,4 +134,9 @@
       </li>
     </ul>
   </section>
+
+  <div class="grid md:grid-cols-2 gap-4">
+    <app-ai-chat-widget></app-ai-chat-widget>
+    <app-ai-insights-card></app-ai-insights-card>
+  </div>
 </section>

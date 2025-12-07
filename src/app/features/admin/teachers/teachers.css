@@ -16,6 +16,8 @@
 .toolbar { display: flex; justify-content: space-between; align-items: center; margin: 0.75rem 0; gap: 0.75rem; }
 .search { padding: 0.5rem 0.75rem; border-radius: 0.6rem; border: 1px solid var(--glass-border); width: 260px; background: var(--glass); color: var(--text); }
 .btn-primary { background: linear-gradient(135deg, var(--primary), #7c3aed); color: #fff; border-radius: 999px; padding: 0.5rem 1rem; border: 1px solid transparent; box-shadow: 0 10px 25px rgba(124, 58, 237, 0.25); }
+.toolbar-actions { display: inline-flex; align-items: center; gap: 0.5rem; }
+.select { padding: 0.45rem 0.65rem; border-radius: 0.6rem; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text); }
 
 .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
 
@@ -28,10 +30,17 @@
   backdrop-filter: blur(10px);
 }
 
-.card-head { display: flex; gap: 0.8rem; align-items: center; }
+.card-head { display: flex; gap: 0.8rem; align-items: flex-start; }
 .avatar { width: 44px; height: 44px; border-radius: 999px; background: #eef2ff; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #1e3a8a; }
+.head-info { flex: 1; min-width: 0; }
 .name { font-weight: 700; }
 .meta { margin-top: 0.6rem; color: var(--muted); font-size: 0.95rem; }
+.meta-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.35rem; }
+.status-pill { margin-left: auto; white-space: nowrap; }
+.course-chips { margin-top: 0.7rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.6rem; }
+.course-chip { padding: 0.6rem 0.75rem; border: 1px solid var(--glass-border); border-radius: 0.7rem; background: var(--glass); box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
+.course-chip .chip-title { font-weight: 700; margin-bottom: 2px; }
+.course-chip .chip-meta { font-size: 0.9rem; }
 .actions { margin-top: 0.8rem; display: flex; gap: 0.5rem; }
 .btn-simple { background: var(--glass); border: 1px solid var(--glass-border); padding: 0.4rem 0.9rem; border-radius: 999px; cursor: pointer; color: var(--text); box-shadow: 0 4px 14px rgba(0,0,0,0.08); transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
 .btn-simple:hover { transform: translateY(-1px); background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.35); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
@@ -54,6 +63,12 @@
 .pill-muted { background: #f3f4f6; color: #4b5563; }
 .pill-success { background: #ecfdf3; color: #15803d; border-color: #bbf7d0; }
 .pill-ghost { background: transparent; color: var(--text); border-style: dashed; }
+.students-pill { background: #eff6ff; color: #0f172a; border-color: #bfdbfe; border-style: solid; }
+
+.pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; gap: 0.75rem; background: var(--glass); border: 1px solid var(--glass-border); padding: 0.65rem 0.9rem; border-radius: 0.75rem; }
+.page-controls { display: inline-flex; align-items: center; gap: 0.6rem; }
+.page-indicator { font-weight: 700; }
+.small { font-size: 0.9rem; }
 
 .loading-overlay {
   display: flex;
@@ -91,4 +106,5 @@
   .search { width: 100%; }
   .cards-grid { grid-template-columns: 1fr; }
   .side-panel { width: 100%; }
+  .pagination { flex-direction: column; align-items: flex-start; }
 }

@@ -7,7 +7,7 @@
   </header>
 
   <div class="toolbar">
-    <input placeholder="Search teachers..." class="search" [(ngModel)]="searchTerm" />
+    <input placeholder="Search teachers..." class="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)" />
     <div class="toolbar-actions" *ngIf="isCenterAdmin">
       <div class="segment">
         <button type="button" [class.active]="activeRole === 'teacher'" (click)="setRoleFilter('teacher')">Teachers</button>
@@ -27,26 +27,56 @@
     <span>Loading teachers...</span>
   </div>
 
-  <div class="cards-grid">
-    <div class="teacher-card glass" *ngFor="let t of filteredTeachers">
-      <div class="card-head">
-        <div class="avatar">{{ t.name ? t.name[0] : '?' }}</div>
-        <div>
-          <div class="name">{{ t.name }}</div>
-          <div class="muted">{{ t.email }}</div>
+  <ng-container *ngIf="filteredTeachers.length; else noResults">
+    <div class="cards-grid">
+      <div class="teacher-card glass" *ngFor="let t of filteredTeachers">
+        <div class="card-head">
+          <div class="avatar">{{ t.name ? t.name[0] : '?' }}</div>
+          <div>
+            <div class="name">{{ t.name }}</div>
+            <div class="muted">{{ t.email }}</div>
+          </div>
+        </div>
+        <dl class="meta">
+          <div class="meta-row">
+            <dt>Center</dt>
+            <dd>{{ t.center || '-' }}</dd>
+          </div>
+          <div class="meta-row">
+            <dt>Courses</dt>
+            <dd>{{ t.courses }}</dd>
+          </div>
+          <div class="meta-row">
+            <dt>Phone</dt>
+            <dd>{{ t.phone || '-' }}</dd>
+          </div>
+        </dl>
+        <div class="actions">
+          <button class="btn-simple" (click)="openInfo(t)">Info</button>
+          <button class="btn-simple" *ngIf="isCenterAdmin" (click)="openEdit(t)">Edit</button>
         </div>
       </div>
-      <div class="meta">
-        <span>Center: {{ t.center || '-' }}</span>
-        <span>Courses: {{ t.courses }}</span>
-        <span>Phone: {{ t.phone || '-' }}</span>
+    </div>
+  </ng-container>
+
+  <div class="pagination-bar" *ngIf="filteredTeachers.length">
+    <div class="page-info">
+      <div class="dots">
+        <span class="dot" *ngFor="let i of [].constructor(totalPages); let idx = index" [class.active]="idx + 1 === page"></span>
       </div>
-      <div class="actions">
-        <button class="btn-simple" (click)="openInfo(t)">Info</button>
-        <button class="btn-simple" *ngIf="isCenterAdmin" (click)="openEdit(t)">Edit</button>
-      </div>
+      <span class="muted">{{ pageStart }}–{{ pageEnd }} of {{ totalItems }}</span>
+    </div>
+    <div class="page-controls">
+      <button type="button" class="btn-pill" [disabled]="page <= 1" (click)="goToPage(page - 1)">‹ Prev</button>
+      <button type="button" class="btn-pill" [disabled]="page >= totalPages" (click)="goToPage(page + 1)">Next ›</button>
     </div>
   </div>
+
+  <ng-template #noResults>
+    <div class="empty-state glass">
+      <p>No staff found.</p>
+    </div>
+  </ng-template>
 </section>
 
 <div class="overlay" [class.open]="panelOpen" (click)="closeInfo()"></div>
@@ -62,6 +92,7 @@
     <p><strong>Courses taught:</strong> {{ selectedTeacher.courses }}</p>
     <p><strong>Phone:</strong> {{ selectedTeacher.phone || '-' }}</p>
     <p><strong>User ID:</strong> {{ selectedTeacher.id }}</p>
+    <p class="error-text" *ngIf="saveError">{{ saveError }}</p>
     <div class="panel-actions" *ngIf="isCenterAdmin">
       <button class="btn-primary" type="button" (click)="openEdit(selectedTeacher)">Edit</button>
       <button class="btn-danger" type="button" (click)="deleteSelected()" [disabled]="processing">Delete</button>
@@ -69,20 +100,33 @@
   </div>
 
   <div class="panel-body" *ngIf="panelMode !== 'info'">
+    <p class="field-hint">Fields marked with * are required.</p>
+    <p class="error-banner" *ngIf="saveError">{{ saveError }}</p>
     <div class="field">
-      <label>Name</label>
-      <input type="text" [(ngModel)]="form.name" placeholder="Full name" />
+      <label><span class="required">*</span>Name</label>
+      <input list="staff-name-suggestions" class="input-control" type="text" [(ngModel)]="form.name" placeholder="Full name" />
+      <datalist id="staff-name-suggestions">
+        <option *ngFor="let name of staffNames" [value]="name"></option>
+      </datalist>
     </div>
     <div class="field">
-      <label>Email</label>
-      <input type="email" [(ngModel)]="form.email" placeholder="Email address" />
+      <label><span class="required">*</span>Email</label>
+      <input class="input-control" type="email" [(ngModel)]="form.email" placeholder="Email address" />
     </div>
     <div class="field">
       <label>Phone</label>
-      <input type="text" [(ngModel)]="form.phone" placeholder="Optional phone" />
+      <input class="input-control" type="text" [(ngModel)]="form.phone" placeholder="Optional phone" />
     </div>
-    <div class="panel-actions">
-      <button class="btn-primary" type="button" (click)="submitForm()" [disabled]="processing">
+    <div class="field" *ngIf="panelMode === 'create'">
+      <label>Role</label>
+      <div class="segment">
+        <button type="button" [class.active]="form.role === 'teacher'" (click)="form.role = 'teacher'">Teacher</button>
+        <button type="button" [class.active]="form.role === 'assistant'" (click)="form.role = 'assistant'">Assistant</button>
+      </div>
+    </div>
+    <p class="error-text" *ngIf="saveError">{{ saveError }}</p>
+    <div class="panel-actions sticky-footer">
+      <button class="btn-primary" type="button" (click)="submitForm()" [disabled]="processing || !canSubmitForm">
         {{ panelMode === 'create' ? 'Create' : 'Save changes' }}
       </button>
       <button

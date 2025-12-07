@@ -3,8 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { TeacherService } from '../../../../core/services/teacher.service';
 import { TokenStorageService } from '../../../../core/auth/token-storage.service';
+import { FeedbackService } from '../../../../core/services/feedback.service';
 
 @Component({
   selector: 'app-staff-students',
@@ -17,7 +19,8 @@ export class Students implements OnInit {
   constructor(
     private staffService: TeacherService,
     private tokenStorage: TokenStorageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private feedback: FeedbackService
   ) { }
 
   students: any[] = [];
@@ -29,6 +32,11 @@ export class Students implements OnInit {
   studentForm = { name: '', email: '', phone: '', groupId: '' };
   parentForm = { name: '', email: '', phone: '', studentId: '' };
   processing = false;
+  saveError = '';
+  page = 1;
+  perPage = 6;
+  totalPages = 1;
+  totalItems = 0;
   private roles: string[] = [];
   availableGroups: any[] = [];
   centerGroupsUnavailable = false;
@@ -47,11 +55,16 @@ export class Students implements OnInit {
     this.loading = true;
 
     if (this.isCenterAdmin) {
-      this.staffService.getMembers().subscribe({
+      this.staffService.getMembers({ role: 'student', page: this.page, per_page: this.perPage, search: this.searchTerm || undefined }).subscribe({
         next: (res) => {
           const payload = res?.data ?? res;
           const collection = payload?.students ?? [];
           const items = this.unwrapCollection(collection);
+          const meta = collection?.meta ?? {};
+          this.perPage = meta.per_page ?? this.perPage;
+          this.totalItems = meta.total ?? items.length;
+          this.totalPages = meta.last_page ?? 1;
+          this.page = meta.current_page ?? this.page;
           this.students = items.map((student: any) => ({
             id: student.id,
             name: student.name,
@@ -126,6 +139,9 @@ export class Students implements OnInit {
             });
 
             this.students = Array.from(aggregated.values());
+            this.totalItems = this.students.length;
+            this.totalPages = Math.max(1, Math.ceil(this.totalItems / this.perPage));
+            this.page = Math.min(this.page, this.totalPages);
             this.finishLoading();
           },
           error: () => this.finishLoading()
@@ -152,6 +168,10 @@ export class Students implements OnInit {
   }
 
   get filteredStudents(): any[] {
+    if (this.isCenterAdmin) {
+      // Backend handles search/pagination for center admins
+      return this.students;
+    }
     const q = this.searchTerm.toLowerCase().trim();
     if (!q) {
       return this.students;
@@ -164,6 +184,25 @@ export class Students implements OnInit {
     );
   }
 
+  get paginatedStudents(): any[] {
+    // Center admin receives paginated data from backend; show as-is
+    if (this.isCenterAdmin) {
+      return this.filteredStudents;
+    }
+    const start = (this.page - 1) * this.perPage;
+    return this.filteredStudents.slice(start, start + this.perPage);
+  }
+
+  get pageStart(): number {
+    if (!this.totalItems) return 0;
+    return (this.page - 1) * this.perPage + 1;
+  }
+
+  get pageEnd(): number {
+    if (!this.totalItems) return 0;
+    return Math.min(this.page * this.perPage, this.totalItems);
+  }
+
   openInfo(student: any): void {
     this.selectedStudent = student;
     this.panelMode = 'info';
@@ -174,6 +213,48 @@ export class Students implements OnInit {
     this.panelOpen = false;
     this.selectedStudent = null;
     this.panelMode = 'info';
+  }
+
+  onSearchChange(value: string): void {
+    this.searchTerm = value;
+    this.page = 1;
+    if (this.isCenterAdmin) {
+      this.loadStudents();
+    } else {
+      this.totalItems = this.filteredStudents.length;
+      this.totalPages = Math.max(1, Math.ceil(this.totalItems / this.perPage));
+      this.cdr.detectChanges();
+    }
+  }
+
+  goToPage(nextPage: number): void {
+    if (nextPage < 1 || nextPage > this.totalPages) return;
+    this.page = nextPage;
+    this.loadStudents();
+  }
+
+  private extractErrorMessage(err: any, fallback: string): string {
+    if (!err) return fallback;
+    if (typeof err === 'string') return err;
+    if (typeof err?.error === 'string') return err.error;
+    const errorsObj = err?.error?.errors;
+    if (typeof errorsObj === 'string') return errorsObj;
+    if (errorsObj && typeof errorsObj === 'object') {
+      const collected: string[] = [];
+      Object.values(errorsObj).forEach((val: any) => {
+        if (Array.isArray(val)) {
+          collected.push(...val.map((v) => String(v)));
+        } else if (val) {
+          collected.push(String(val));
+        }
+      });
+      if (collected.length) {
+        return collected.join(' ');
+      }
+    }
+    if (err?.error?.message) return err.error.message;
+    if (err?.message) return err.message;
+    return fallback;
   }
 
   private finishLoading(): void {
@@ -259,6 +340,7 @@ export class Students implements OnInit {
     if (this.processing || !this.studentForm.name || !this.studentForm.email) {
       return;
     }
+    this.saveError = '';
     const payload: any = {
       name: this.studentForm.name,
       email: this.studentForm.email,
@@ -282,9 +364,21 @@ export class Students implements OnInit {
       next: () => {
         this.closeInfo();
         this.loadStudents();
+        this.feedback.showToast({
+          title: this.panelMode === 'edit-student' ? 'Student updated' : 'Student created',
+          message: `${this.studentForm.name} saved successfully.`,
+          tone: 'success'
+        });
       },
-      error: () => {
+      error: (err) => {
         this.processing = false;
+        this.closeInfo();
+        this.saveError = this.extractErrorMessage(err, 'Unable to save student.');
+        this.feedback.showToast({
+          title: 'Save failed',
+          message: this.saveError,
+          tone: 'error'
+        });
         this.cdr.detectChanges();
       },
       complete: () => {
@@ -298,6 +392,7 @@ export class Students implements OnInit {
     if (this.processing || !this.parentForm.name || !this.parentForm.email || !this.parentForm.studentId) {
       return;
     }
+    this.saveError = '';
     const payload = {
       name: this.parentForm.name,
       email: this.parentForm.email,
@@ -312,9 +407,21 @@ export class Students implements OnInit {
     request$.subscribe({
       next: () => {
         this.closeInfo();
+        this.feedback.showToast({
+          title: 'Parent created',
+          message: `${this.parentForm.name} added successfully.`,
+          tone: 'success'
+        });
       },
-      error: () => {
+      error: (err) => {
         this.processing = false;
+        this.closeInfo();
+        this.saveError = this.extractErrorMessage(err, 'Unable to save parent.');
+        this.feedback.showToast({
+          title: 'Save failed',
+          message: this.saveError,
+          tone: 'error'
+        });
         this.cdr.detectChanges();
       },
       complete: () => {
@@ -328,20 +435,49 @@ export class Students implements OnInit {
     if (!this.isCenterAdmin || !this.selectedStudent || this.processing) {
       return;
     }
-    this.processing = true;
-    this.staffService.deleteManagementUser(this.selectedStudent.id).subscribe({
-      next: () => {
+    const target = this.selectedStudent;
+    this.closeInfo();
+    this.feedback.openModal({
+      icon: 'warning',
+      title: 'Delete student?',
+      message: `This will remove ${target.name}.`,
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+      onPrimary: () => {
+        this.feedback.closeModal();
+        if (!target) return;
+        // target remains available even after closing the panel
         this.closeInfo();
-        this.loadStudents();
+        this.processing = true;
+
+        this.staffService.deleteManagementUser(target.id)
+          .pipe(
+            finalize(() => {
+              this.processing = false;
+              this.cdr.detectChanges();
+            })
+          )
+          .subscribe({
+            next: () => {
+              this.loadStudents();
+              this.feedback.showToast({
+                title: 'Student deleted',
+                message: `${target.name} has been removed.`,
+                tone: 'success'
+              });
+            },
+            error: (err) => {
+              this.saveError = this.extractErrorMessage(err, 'Unable to delete student.');
+              this.feedback.showToast({
+                title: 'Delete failed',
+                message: this.saveError,
+                tone: 'error'
+              });
+              this.cdr.detectChanges();
+            }
+          });
       },
-      error: () => {
-        this.processing = false;
-        this.cdr.detectChanges();
-      },
-      complete: () => {
-        this.processing = false;
-        this.cdr.detectChanges();
-      }
+      onSecondary: () => this.feedback.closeModal()
     });
   }
 }

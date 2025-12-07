@@ -5,7 +5,16 @@
   </header>
 
   <div class="toolbar">
-    <input placeholder="Search parents..." class="search" [(ngModel)]="searchTerm" />
+    <input placeholder="Search parents..." class="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" />
+    <div class="toolbar-actions">
+      <label class="muted">Per page</label>
+      <select class="select" [(ngModel)]="perPage" (ngModelChange)="changePerPage($event)">
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="15">15</option>
+        <option [ngValue]="25">25</option>
+        <option [ngValue]="50">50</option>
+      </select>
+    </div>
   </div>
 
   <div class="loading-overlay" *ngIf="loading">
@@ -30,13 +39,23 @@
         <td class="muted">{{ p.email }}</td>
         <td>{{ p.phone || '-' }}</td>
         <td><span class="pill pill-ghost">{{ p.childCount }} kids</span></td>
-        <td><span class="pill" [ngClass]="p.status === 'active' ? 'pill-success' : 'pill-muted'">{{ p.status }}</span></td>
+        <td><span class="pill" [ngClass]="p.status === 'active' ? 'pill-success' : 'pill-muted'">{{ p.status }}</span>
+        </td>
         <td>
           <button class="btn-simple" (click)="openInfo(p)">Info</button>
         </td>
       </tr>
     </tbody>
   </table>
+
+  <div class="pagination" *ngIf="lastPage > 1 || total">
+    <div class="muted small">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
+    <div class="page-controls">
+      <button class="btn-simple" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
+      <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
+      <button class="btn-simple" [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
+    </div>
+  </div>
 </section>
 
 <div class="overlay" [class.open]="infoOpen" (click)="closeInfo()"></div>
@@ -61,7 +80,7 @@
             <div class="chip-subtitle">Courses</div>
             <ul>
               <li *ngFor="let c of child.courses">
-                {{ c.name }} <span *ngIf="c.center">({{ c.center }})</span> — students: {{ c.studentsCount }}
+                {{ c.name }} <span *ngIf="c.center">({{ c.center }})</span>
               </li>
             </ul>
           </div>

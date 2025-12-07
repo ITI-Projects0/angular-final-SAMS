@@ -31,11 +31,20 @@ export class StudentOverview {
     private pickSummary(res: any) {
         const root = res?.data ?? res ?? {};
         const summary = root.summary ?? root;
+        const attendanceRaw = Number(summary.attendanceRate ?? summary.attendance_rate ?? summary.attendance ?? summary.attendanceRatePercentage ?? 0);
 
+        const formatPercent = (value: number): string => {
+            const safe = isFinite(value) ? value : 0;
+            const rounded = Math.round(safe * 10) / 10;
+            return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+        };
+
+        const attendanceDisplay = formatPercent(attendanceRaw);
         return {
             classesCount: Number(summary.classesCount ?? summary.classes ?? summary.enrolledClasses ?? summary.enrolled_courses ?? 0),
             assignmentsCount: Number(summary.assignmentsCount ?? summary.pendingAssignments ?? summary.assignments?.length ?? 0),
-            attendanceRate: Number(summary.attendanceRate ?? summary.attendance_rate ?? summary.attendance ?? summary.attendanceRatePercentage ?? 0),
+            attendanceRate: attendanceRaw,
+            attendanceDisplay
         };
     }
 

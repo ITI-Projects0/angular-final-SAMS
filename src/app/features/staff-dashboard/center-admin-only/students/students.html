@@ -5,7 +5,7 @@
   </header>
 
   <div class="toolbar">
-    <input placeholder="Search students..." class="search" [(ngModel)]="searchTerm" />
+    <input placeholder="Search students..." class="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)" />
     <div class="toolbar-actions" *ngIf="canAddMembers">
       <button class="btn-primary" type="button" (click)="openCreateStudent()">Add Student</button>
       <button class="btn-secondary" type="button" (click)="openCreateParent()">Add Parent</button>
@@ -29,7 +29,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let s of filteredStudents">
+      <tr *ngFor="let s of paginatedStudents">
         <td>
           <div class="font-semibold">{{ s.name }}</div>
           <small class="muted">{{ s.phone }}</small>
@@ -49,6 +49,19 @@
       </tr>
     </tbody>
   </table>
+
+  <div class="pagination-bar" *ngIf="filteredStudents.length">
+    <div class="page-info">
+      <div class="dots">
+        <span class="dot" *ngFor="let i of [].constructor(totalPages); let idx = index" [class.active]="idx + 1 === page"></span>
+      </div>
+      <span class="muted">{{ pageStart }}–{{ pageEnd }} of {{ totalItems }}</span>
+    </div>
+    <div class="page-controls">
+      <button type="button" class="btn-pill" [disabled]="page <= 1" (click)="goToPage(page - 1)">‹ Prev</button>
+      <button type="button" class="btn-pill" [disabled]="page >= totalPages" (click)="goToPage(page + 1)">Next ›</button>
+    </div>
+  </div>
 </section>
 
 <div class="overlay" [class.open]="panelOpen" (click)="closeInfo()"></div>
@@ -72,26 +85,27 @@
   </div>
 
   <div class="panel-body" *ngIf="panelMode === 'create-student' || panelMode === 'edit-student'">
+    <p class="field-hint">Fields marked with * are required.</p>
     <div class="field">
-      <label>Name</label>
-      <input type="text" [(ngModel)]="studentForm.name" placeholder="Full name" />
+      <label><span class="required">*</span>Name</label>
+      <input class="input-control" type="text" [(ngModel)]="studentForm.name" placeholder="Full name" />
     </div>
     <div class="field">
-      <label>Email</label>
-      <input type="email" [(ngModel)]="studentForm.email" placeholder="Email address" />
+      <label><span class="required">*</span>Email</label>
+      <input class="input-control" type="email" [(ngModel)]="studentForm.email" placeholder="Email address" />
     </div>
     <div class="field">
       <label>Phone</label>
-      <input type="text" [(ngModel)]="studentForm.phone" placeholder="Optional phone" />
+      <input class="input-control" type="text" [(ngModel)]="studentForm.phone" placeholder="Optional phone" />
     </div>
     <div class="field" *ngIf="panelMode === 'create-student'">
       <label>Group</label>
-      <select [(ngModel)]="studentForm.groupId">
+      <select class="input-control" [(ngModel)]="studentForm.groupId">
         <option *ngFor="let group of availableGroups" [value]="group.id">{{ group.name }}</option>
       </select>
     </div>
-    <div class="panel-actions">
-      <button class="btn-primary" type="button" (click)="submitStudent()" [disabled]="processing">
+    <div class="panel-actions sticky-footer">
+      <button class="btn-primary" type="button" (click)="submitStudent()" [disabled]="processing || !studentForm.name || !studentForm.email">
         {{ panelMode === 'create-student' ? 'Create' : 'Save changes' }}
       </button>
       <button
@@ -107,26 +121,27 @@
   </div>
 
   <div class="panel-body" *ngIf="panelMode === 'create-parent'">
+    <p class="field-hint">Fields marked with * are required.</p>
     <div class="field">
-      <label>Name</label>
-      <input type="text" [(ngModel)]="parentForm.name" placeholder="Full name" />
+      <label><span class="required">*</span>Name</label>
+      <input class="input-control" type="text" [(ngModel)]="parentForm.name" placeholder="Full name" />
     </div>
     <div class="field">
-      <label>Email</label>
-      <input type="email" [(ngModel)]="parentForm.email" placeholder="Email address" />
+      <label><span class="required">*</span>Email</label>
+      <input class="input-control" type="email" [(ngModel)]="parentForm.email" placeholder="Email address" />
     </div>
     <div class="field">
       <label>Phone</label>
-      <input type="text" [(ngModel)]="parentForm.phone" placeholder="Optional phone" />
+      <input class="input-control" type="text" [(ngModel)]="parentForm.phone" placeholder="Optional phone" />
     </div>
     <div class="field">
-      <label>Linked student</label>
-      <select [(ngModel)]="parentForm.studentId">
+      <label><span class="required">*</span>Linked student</label>
+      <select class="input-control" [(ngModel)]="parentForm.studentId">
         <option *ngFor="let student of students" [value]="student.id">{{ student.name }}</option>
       </select>
     </div>
-    <div class="panel-actions">
-      <button class="btn-primary" type="button" (click)="submitParent()" [disabled]="processing">Create</button>
+    <div class="panel-actions sticky-footer">
+      <button class="btn-primary" type="button" (click)="submitParent()" [disabled]="processing || !parentForm.name || !parentForm.email || !parentForm.studentId">Create</button>
     </div>
   </div>
 </div>

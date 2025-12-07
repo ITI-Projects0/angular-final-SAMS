@@ -16,15 +16,20 @@
 
   <table class="list-table glass">
     <thead>
-      <tr><th>Name</th><th>City</th><th>Phone</th><th>Status</th><th>Actions</th></tr>
+      <tr>
+        <th>Name</th>
+        <th>City</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
       <tr *ngFor="let c of filteredCenters">
         <td>{{ c.name }}</td>
         <td>{{ c.city }}</td>
-        <td>{{ c.phone }}</td>
         <td>
-          <span [class.paid]="c.paid">{{ c.paid ? 'Paid' : 'Unpaid' }}</span>
+          <span
+            [class.paid]="c.paid">{{ c.paid ? 'Paid' : 'Unpaid' }}</span>
         </td>
         <td>
           <button class="btn-simple" (click)="openInfo(c)">Info</button>
@@ -59,7 +64,8 @@
       <option [ngValue]="false">Unpaid</option>
     </select>
 
-    <button type="submit" class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add center' }}</button>
+    <button type="submit"
+      class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add center' }}</button>
   </form>
 </div>
 
@@ -73,7 +79,8 @@
     <p><strong>Name:</strong> {{ selectedCenter.name }}</p>
     <p><strong>Subdomain:</strong> {{ selectedCenter.city || '-' }}</p>
     <p><strong>Phone:</strong> {{ selectedCenter.phone || '-' }}</p>
-    <p><strong>Status:</strong> {{ selectedCenter.paid ? 'Paid' : 'Unpaid' }}</p>
+    <p><strong>Status:</strong>
+      {{ selectedCenter.paid ? 'Paid' : 'Unpaid' }}</p>
     <p><strong>Center ID:</strong> {{ selectedCenter.id }}</p>
     <div *ngIf="selectedCenter.courses?.length">
       <p><strong>Courses:</strong></p>

@@ -4,6 +4,8 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TeacherService } from '../../../../core/services/teacher.service';
 import { TokenStorageService } from '../../../../core/auth/token-storage.service';
+import { FeedbackService } from '../../../../core/services/feedback.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-staff-teachers',
@@ -16,7 +18,8 @@ export class Teachers implements OnInit {
   constructor(
     private staffService: TeacherService,
     private tokenStorage: TokenStorageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private feedback: FeedbackService
   ) { }
 
   teachers: any[] = [];
@@ -28,9 +31,15 @@ export class Teachers implements OnInit {
   panelMode: 'info' | 'create' | 'edit' = 'info';
   form = { name: '', email: '', phone: '', role: 'teacher' as 'teacher' | 'assistant' };
   processing = false;
+  saveError = '';
+  page = 1;
+  perPage = 6;
+  totalPages = 1;
+  totalItems = 0;
   private roles: string[] = [];
   private centerAccessUnavailable = false;
   activeRole: 'teacher' | 'assistant' = 'teacher';
+  public staffNames: string[] = [];
 
   ngOnInit(): void {
     this.roles = this.tokenStorage.getUser()?.roles ?? [];
@@ -51,16 +60,28 @@ export class Teachers implements OnInit {
     return 'Staff info';
   }
 
+  get canSubmitForm(): boolean {
+    const name = this.form.name?.trim();
+    const email = this.form.email?.trim();
+    return !!name && !!email;
+  }
+
   private loadTeachers() {
     this.loading = true;
 
     if (this.isCenterAdmin && !this.centerAccessUnavailable) {
-      this.staffService.getMembers({ role: this.activeRole }).subscribe({
+      this.staffService.getMembers({ role: this.activeRole, page: this.page, search: this.searchTerm || undefined }).subscribe({
         next: (res) => {
           const payload = res?.data ?? res;
           const teachers = this.unwrapCollection(
             this.activeRole === 'teacher' ? payload?.teachers ?? payload : payload?.assistants ?? payload
           );
+          const collection = this.activeRole === 'teacher' ? payload?.teachers : payload?.assistants;
+          this.totalPages = collection?.meta?.last_page ?? 1;
+          this.perPage = collection?.meta?.per_page ?? this.perPage;
+          this.totalItems = collection?.meta?.total ?? teachers.length;
+          this.page = collection?.meta?.current_page ?? this.page;
+
           this.teachers = teachers.map((t: any) => ({
             id: t.id,
             name: t.name,
@@ -78,6 +99,11 @@ export class Teachers implements OnInit {
             this.loadDirectoryTeachers();
           } else {
             this.finishLoading();
+            this.feedback.showToast({
+              title: 'Load failed',
+              message: 'Unable to load center staff.',
+              tone: 'error'
+            });
           }
         }
       });
@@ -101,9 +127,17 @@ export class Teachers implements OnInit {
           phone: t.phone || '',
           raw: t,
         }));
+        this.staffNames = this.teachers.map((t) => t.name).filter(Boolean);
         this.finishLoading();
       },
-      error: () => this.finishLoading()
+      error: () => {
+        this.finishLoading();
+        this.feedback.showToast({
+          title: 'Load failed',
+          message: 'Unable to load staff directory.',
+          tone: 'error'
+        });
+      }
     });
   }
 
@@ -132,6 +166,16 @@ export class Teachers implements OnInit {
     );
   }
 
+  get pageStart(): number {
+    if (!this.totalItems) return 0;
+    return (this.page - 1) * this.perPage + 1;
+  }
+
+  get pageEnd(): number {
+    if (!this.totalItems) return 0;
+    return Math.min(this.page * this.perPage, this.totalItems);
+  }
+
   openInfo(teacher: any) {
     this.selectedTeacher = teacher;
     this.panelMode = 'info';
@@ -142,6 +186,8 @@ export class Teachers implements OnInit {
     this.panelOpen = false;
     this.selectedTeacher = null;
     this.panelMode = 'info';
+    this.processing = false;
+    this.saveError = '';
   }
 
   setRoleFilter(role: 'teacher' | 'assistant'): void {
@@ -149,6 +195,7 @@ export class Teachers implements OnInit {
       return;
     }
     this.activeRole = role;
+    this.page = 1;
     this.loadTeachers();
   }
 
@@ -158,6 +205,47 @@ export class Teachers implements OnInit {
     this.selectedTeacher = null;
     this.panelMode = 'create';
     this.panelOpen = true;
+    this.saveError = '';
+  }
+
+  private extractErrorMessage(err: any, fallback: string): string {
+    if (!err) return fallback;
+
+    if (typeof err === 'string') {
+      return err;
+    }
+
+    if (typeof err?.error === 'string') {
+      return err.error;
+    }
+
+    const errorsObj = err?.error?.errors;
+    if (typeof errorsObj === 'string') {
+      return errorsObj;
+    }
+    if (errorsObj && typeof errorsObj === 'object') {
+      const collected: string[] = [];
+      Object.values(errorsObj).forEach((val: any) => {
+        if (Array.isArray(val)) {
+          collected.push(...val.map((v) => String(v)));
+        } else if (val) {
+          collected.push(String(val));
+        }
+      });
+      if (collected.length) {
+        return collected.join(' ');
+      }
+    }
+
+    if (err?.error?.message) {
+      return err.error.message;
+    }
+
+    if (err?.message) {
+      return err.message;
+    }
+
+    return fallback;
   }
 
   openEdit(teacher: any): void {
@@ -171,21 +259,37 @@ export class Teachers implements OnInit {
     };
     this.panelMode = 'edit';
     this.panelOpen = true;
+    this.saveError = '';
+  }
+
+  onSearchChange(value: string): void {
+    this.searchTerm = value;
+    this.page = 1;
+    this.loadTeachers();
+  }
+
+  goToPage(nextPage: number): void {
+    if (nextPage < 1 || nextPage > this.totalPages) return;
+    this.page = nextPage;
+    this.loadTeachers();
   }
 
   submitForm(): void {
     if (!this.isCenterAdmin || this.processing) {
       return;
     }
-
-    if (!this.form.name || !this.form.email) {
+    const name = this.form.name?.trim();
+    const email = this.form.email?.trim();
+    if (!name || !email) {
+      this.saveError = 'Name and email are required.';
       return;
     }
 
     this.processing = true;
+    this.saveError = '';
     const payload: any = {
-      name: this.form.name,
-      email: this.form.email,
+      name,
+      email,
       phone: this.form.phone,
       role: this.form.role
     };
@@ -194,45 +298,84 @@ export class Teachers implements OnInit {
       this.panelMode === 'create'
         ? this.staffService.createManagementUser(payload)
         : this.staffService.updateManagementUser(this.selectedTeacher.id, {
-          name: this.form.name,
-          email: this.form.email,
+          name,
+          email,
           phone: this.form.phone
         });
 
-    request$.subscribe({
-      next: () => {
-        this.closeInfo();
-        this.loadTeachers();
-      },
-      error: () => {
-        this.processing = false;
-        this.cdr.detectChanges();
-      },
-      complete: () => {
-        this.processing = false;
-        this.cdr.detectChanges();
-      }
-    });
+    request$
+      .pipe(
+        finalize(() => {
+          this.processing = false;
+          this.cdr.detectChanges();
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.closeInfo();
+          this.loadTeachers();
+          this.feedback.showToast({
+            title: this.panelMode === 'create' ? 'Staff created' : 'Staff updated',
+            message: `${this.form.name} saved successfully.`,
+            tone: 'success'
+          });
+        },
+        error: (err) => {
+          this.closeInfo();
+          this.saveError = this.extractErrorMessage(err, 'Unable to save staff member.');
+          this.feedback.showToast({
+            title: 'Save failed',
+            message: this.saveError,
+            tone: 'error'
+          });
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   deleteSelected(): void {
     if (!this.isCenterAdmin || !this.selectedTeacher || this.processing) {
       return;
     }
-    this.processing = true;
-    this.staffService.deleteManagementUser(this.selectedTeacher.id).subscribe({
-      next: () => {
-        this.closeInfo();
-        this.loadTeachers();
+    const target = this.selectedTeacher;
+    this.closeInfo();
+    this.feedback.openModal({
+      icon: 'warning',
+      title: 'Delete staff?',
+      message: `This will remove ${target.name} from your center.`,
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+      onPrimary: () => {
+        this.processing = true;
+        this.staffService.deleteManagementUser(target.id)
+          .pipe(
+            finalize(() => {
+              this.processing = false;
+              this.cdr.detectChanges();
+            })
+          )
+          .subscribe({
+            next: () => {
+              this.closeInfo();
+              this.loadTeachers();
+              this.feedback.showToast({
+                title: 'Staff deleted',
+                message: `${target.name} has been removed.`,
+                tone: 'success'
+              });
+            },
+            error: (err) => {
+              this.saveError = this.extractErrorMessage(err, 'Unable to delete staff.');
+              this.feedback.showToast({
+                title: 'Delete failed',
+                message: this.saveError,
+                tone: 'error'
+              });
+              this.cdr.detectChanges();
+            }
+          });
       },
-      error: () => {
-        this.processing = false;
-        this.cdr.detectChanges();
-      },
-      complete: () => {
-        this.processing = false;
-        this.cdr.detectChanges();
-      }
+      onSecondary: () => this.feedback.closeModal()
     });
   }
 

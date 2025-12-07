@@ -17,6 +17,10 @@ export class Students implements OnInit {
   loading = false;
 
   searchTerm = '';
+  page = 1;
+  perPage = 15;
+  total = 0;
+  lastPage = 1;
   infoOpen = false;
   selectedStudent: any = null;
 
@@ -24,11 +28,13 @@ export class Students implements OnInit {
     this.loadStudents();
   }
 
-  private loadStudents() {
+  private loadStudents(page = this.page) {
     this.loading = true;
     const params = new HttpParams()
       .set('role', 'student')
-      .set('per_page', 200);
+      .set('per_page', this.perPage)
+      .set('page', page)
+      .set('search', this.searchTerm.trim());
 
     this.api.get<any>('/users', params).subscribe({
       next: (res) => {
@@ -41,21 +47,34 @@ export class Students implements OnInit {
               : false;
             return hasRole || u.role === 'student';
           })
-          .map((u: any) => ({
-            id: u.id,
-            name: u.name,
-            email: u.email,
-            center: u.center?.name || '',
-            status: u.status || 'active',
-            courseCount: (u.groups || []).length,
-            courses: (u.groups || []).map((g: any) => ({
-              id: g.id,
-              name: g.name,
-              center: g.center?.name || '',
-              studentsCount: g.students_count ?? g.studentsCount ?? 0,
-            })),
-            raw: u,
-          }));
+          .map((u: any) => {
+            const groups = Array.isArray(u.groups?.data)
+              ? u.groups.data
+              : Array.isArray(u.groups)
+                ? u.groups
+                : [];
+
+            return {
+              id: u.id,
+              name: u.name,
+              email: u.email,
+              center: u.center?.name || '',
+              status: u.status || 'active',
+              courseCount: u.groups_count ?? u.groupsCount ?? groups.length,
+              courses: groups.map((g: any) => ({
+                id: g.id,
+                name: g.name,
+                center: g.center?.name || '',
+                studentsCount: g.students_count ?? g.studentsCount ?? 0,
+              })),
+              raw: u,
+            };
+          });
+        const pagination = res?.meta?.pagination ?? payload?.meta ?? {};
+        this.page = pagination.current_page ?? page;
+        this.perPage = pagination.per_page ?? this.perPage;
+        this.total = pagination.total ?? this.students.length;
+        this.lastPage = pagination.last_page ?? this.lastPage ?? 1;
         this.cdr.detectChanges();
       },
       error: () => { this.loading = false; this.cdr.detectChanges(); },
@@ -64,14 +83,7 @@ export class Students implements OnInit {
   }
 
   get filteredStudents() {
-    const q = this.searchTerm.toLowerCase().trim();
-    if (!q) return this.students;
-    return this.students.filter(s =>
-      (s.name || '').toLowerCase().includes(q) ||
-      (s.email || '').toLowerCase().includes(q) ||
-      (s.center || '').toLowerCase().includes(q) ||
-      (s.status || '').toLowerCase().includes(q)
-    );
+    return this.students;
   }
 
   openInfo(student: any) {
@@ -82,5 +94,30 @@ export class Students implements OnInit {
   closeInfo() {
     this.infoOpen = false;
     this.selectedStudent = null;
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.lastPage) return;
+    this.page = page;
+    this.loadStudents(page);
+  }
+
+  changePerPage(value: number) {
+    this.perPage = value;
+    this.page = 1;
+    this.loadStudents(1);
+  }
+
+  onSearchChange() {
+    this.page = 1;
+    this.loadStudents(1);
+  }
+
+  get rangeStart(): number {
+    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
+  }
+
+  get rangeEnd(): number {
+    return Math.min(this.rangeStart + this.students.length - 1, this.total);
   }
 }

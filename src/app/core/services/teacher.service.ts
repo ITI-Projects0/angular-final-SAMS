@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { ApiService } from './api.service';
 })
 export class TeacherService {
   private readonly api = inject(ApiService);
+  private readonly jsonHeaders = new HttpHeaders({ 'Accept': 'application/json' });
 
   // ========================================
   // Stats
@@ -134,11 +135,11 @@ export class TeacherService {
   }
 
   createManagementUser(data: any): Observable<any> {
-    return this.api.post('/center-admin/management/users', data);
+    return this.api.post('/center-admin/management/users', data, { headers: this.jsonHeaders });
   }
 
   updateManagementUser(userId: number, data: any): Observable<any> {
-    return this.api.put(`/center-admin/management/users/${userId}`, data);
+    return this.api.put(`/center-admin/management/users/${userId}`, data, { headers: this.jsonHeaders });
   }
 
   deleteManagementUser(userId: number): Observable<any> {
