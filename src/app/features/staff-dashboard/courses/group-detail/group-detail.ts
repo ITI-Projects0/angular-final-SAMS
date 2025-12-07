@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription, combineLatest, forkJoin, of } from 'rxjs';
@@ -24,14 +24,16 @@ interface StaffGroup {
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './group-detail.html',
-  styleUrl: './group-detail.css'
+  styleUrl: './group-detail.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StaffGroupDetail implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private staffService: TeacherService,
-    private tokenStorage: TokenStorageService
-  ) {}
+    private tokenStorage: TokenStorageService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   group: StaffGroup | null = null;
   students: any[] = [];
@@ -188,11 +190,15 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
       next: (res) => {
         const payload = res?.data ?? res;
         this.group = payload;
+        this.loadingGroup = false;
+        this.cdr.detectChanges(); // Force update
       },
-      error: () => {
+      error: (err) => {
+        console.error('Failed to load group:', err);
         this.errorMessage = 'Unable to load group information.';
-      },
-      complete: () => (this.loadingGroup = false)
+        this.loadingGroup = false;
+        this.cdr.detectChanges(); // Force update
+      }
     });
   }
 
@@ -201,18 +207,30 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
     this.staffService.getGroupStudents(this.groupId).subscribe({
       next: (res) => {
         const payload = res?.data ?? res;
-        this.students = this.unwrapCollection(payload).map((student: any) => ({
+        // The API returns { approved: { data: [...] }, pending: [] }
+        let studentsList = payload.approved || payload.data?.approved || [];
+
+        // Handle pagination structure
+        if (studentsList.data && Array.isArray(studentsList.data)) {
+          studentsList = studentsList.data;
+        }
+
+        this.students = (Array.isArray(studentsList) ? studentsList : []).map((student: any) => ({
           id: student.id,
           name: student.name,
           email: student.email,
           status: student.pivot?.status ?? 'approved',
           joined_at: student.pivot?.joined_at
         }));
+        this.loadingStudents = false;
+        this.cdr.detectChanges(); // Force update
       },
-      error: () => {
+      error: (err) => {
+        console.error('Failed to load students:', err);
         this.students = [];
-      },
-      complete: () => (this.loadingStudents = false)
+        this.loadingStudents = false;
+        this.cdr.detectChanges(); // Force update
+      }
     });
   }
 
@@ -221,10 +239,16 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
     this.loadingAttendance = true;
 
     forkJoin({
-      lessons: this.staffService.getGroupLessons(this.groupId).pipe(catchError(() => of([]))),
+      lessons: this.staffService.getGroupLessons(this.groupId).pipe(catchError((err) => {
+        console.error('Failed to load lessons:', err);
+        return of([]);
+      })),
       attendance: this.staffService
         .getGroupAttendance(this.groupId, this.attendanceDateFilter || undefined)
-        .pipe(catchError(() => of([])))
+        .pipe(catchError((err) => {
+          console.error('Failed to load attendance:', err);
+          return of([]);
+        }))
     }).subscribe({
       next: ({ lessons, attendance }) => {
         const lessonPayload = lessons?.data ?? lessons;
@@ -242,10 +266,16 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
               new Date(b.date ?? b.created_at).getTime() - new Date(a.date ?? a.created_at).getTime()
           )
           .slice(0, 8);
-      },
-      complete: () => {
+
         this.loadingLessons = false;
         this.loadingAttendance = false;
+        this.cdr.detectChanges(); // Force update
+      },
+      error: (err) => {
+        console.error('Failed to load lessons/attendance:', err);
+        this.loadingLessons = false;
+        this.loadingAttendance = false;
+        this.cdr.detectChanges(); // Force update
       }
     });
   }

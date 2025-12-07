@@ -32,7 +32,7 @@ export class StaffGroups implements OnInit {
     private tokenStorage: TokenStorageService,
     private cdr: ChangeDetectorRef,
     private feedback: FeedbackService
-  ) {}
+  ) { }
 
   loading = false;
   searchTerm = '';
@@ -208,17 +208,39 @@ export class StaffGroups implements OnInit {
     if (!this.canCreateGroup || this.processing || !this.groupForm.name || !this.groupForm.subject) {
       return;
     }
-    if (!this.groupForm.scheduleDays.length) {
+
+    // Only validate schedule days for create mode
+    if (this.panelMode === 'create' && !this.groupForm.scheduleDays.length) {
       return;
     }
+
     this.processing = true;
     this.saveError = '';
     const user = this.tokenStorage.getUser() as any;
     const centerId = this.selectedGroup?.raw?.center_id ?? user?.center_id ?? user?.center?.id ?? null;
     const teacherId = this.selectedGroup?.raw?.teacher_id ?? user?.id ?? null;
-    const scheduleDays = (this.groupForm.scheduleDays || []).map((d) => (d || '').toString().trim()).filter(Boolean);
-    const sessionsCount = Number(this.groupForm.sessions_count) || 0;
-    const scheduleTime = this.groupForm.schedule_time || null;
+
+    // Base payload
+    let payload: any = {
+      name: this.groupForm.name,
+      subject: this.groupForm.subject,
+      description: this.groupForm.description
+    };
+
+    if (this.panelMode === 'create') {
+      const scheduleDays = (this.groupForm.scheduleDays || []).map((d) => (d || '').toString().trim()).filter(Boolean);
+      const sessionsCount = Number(this.groupForm.sessions_count) || 0;
+      const scheduleTime = this.groupForm.schedule_time || null;
+
+      payload = {
+        ...payload,
+        schedule_days: scheduleDays,
+        schedule_time: scheduleTime,
+        sessions_count: sessionsCount,
+        center_id: centerId,
+        teacher_id: teacherId
+      };
+    }
 
     if (!centerId || !teacherId) {
       this.processing = false;
@@ -227,18 +249,6 @@ export class StaffGroups implements OnInit {
         : 'Teacher id is required to save the group.';
       return;
     }
-
-    const payload: any = {
-      name: this.groupForm.name,
-      subject: this.groupForm.subject,
-      description: this.groupForm.description,
-      schedule_days: scheduleDays,
-      schedule_time: scheduleTime,
-      sessions_count: sessionsCount
-    };
-
-    payload.center_id = centerId;
-    payload.teacher_id = teacherId;
 
     const request$ =
       this.panelMode === 'edit' && this.selectedGroup
