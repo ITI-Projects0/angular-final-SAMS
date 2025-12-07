@@ -43,16 +43,29 @@ export class StudentService {
   getAttendance(): Observable<AttendanceRecord[]> {
     return this.api.get<any>('/dashboard/student/attendance').pipe(
       map((res) => {
-        const root = res?.data ?? res ?? {};
+        // Accept shapes like { data: { data: [...] } } or { data: [...] } or direct arrays
+        const root = res?.data?.data ?? res?.data ?? res ?? {};
         const collection = Array.isArray(root)
           ? root
           : Array.isArray(root.data)
             ? root.data
             : Array.isArray(root.items)
               ? root.items
-              : [];
+              : Array.isArray(root.attendance)
+                ? root.attendance
+                : Array.isArray(root.records)
+                  ? root.records
+                  : [];
+
+        const normalizeDate = (value: any) => {
+          if (!value) return null;
+          const parsed = new Date(value);
+          return isNaN(parsed.getTime()) ? String(value) : parsed.toISOString();
+        };
+
         return collection.map((record: any) => ({
-          date: record.date ?? record.attended_at ?? record.recorded_at ?? record.created_at ?? record.day ?? null,
+          id: record.id ?? record._id ?? record.uuid ?? record.key ?? undefined,
+          date: normalizeDate(record.date ?? record.attended_at ?? record.recorded_at ?? record.created_at ?? record.day),
           subject: record.subject ?? record.subject_name ?? record.course ?? record.group?.name ?? record.group_name ?? '—',
           status: String(record.status ?? record.attendance ?? record.state ?? 'unknown').toLowerCase()
         }));

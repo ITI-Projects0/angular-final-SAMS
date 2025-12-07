@@ -7,64 +7,95 @@
     <h1 class="text-3xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">Attendance</h1>
     <p class="student-muted">Track your attendance record.</p>
   </header>
-
-  <!-- Filters -->
-  <div
-    class="student-card p-4 grid gap-4 md:grid-cols-2">
-    <div>
-      <label class="block text-sm font-medium text-[#0F172A] dark:text-[#F8FAFC] mb-1">Date</label>
-      <input type="date" [(ngModel)]="selectedDate" (change)="onFilterChange()"
-        class="p-2 w-full rounded-lg border-[var(--student-border)] bg-[#FFFFFF] dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] focus:ring-[#14B8A6] focus:border-[#14B8A6]">
+  @if (attendance$ | async) {
+    <div class="hero-banner">
+      <div>
+        <p class="text-xs uppercase font-semibold tracking-wide text-white/70">Keep the streak</p>
+        <p class="text-lg font-bold text-white">Stay above 90% and unlock badges</p>
+      </div>
+      <div class="legend">
+        <span class="legend-chip present">Present</span>
+        <span class="legend-chip absent">Absent</span>
+        <span class="legend-chip late">Late</span>
+        <span class="legend-chip excused">Excused</span>
+      </div>
     </div>
-    <div>
-      <label class="block text-sm font-medium text-[#0F172A] dark:text-[#F8FAFC] mb-1">Subject</label>
-      <select [(ngModel)]="selectedSubject" (change)="onFilterChange()"
-        class="p-2 w-full rounded-lg border-[var(--student-border)] bg-[#FFFFFF] dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] focus:ring-[#14B8A6] focus:border-[#14B8A6]">
-        <option value="">All Subjects</option>
-        @for (subject of subjects; track subject) {
-        <option [value]="subject">{{ subject }}</option>
-        }
-      </select>
-    </div>
-  </div>
 
-  <div
-    class="student-card overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-sm">
-        <thead class="bg-[var(--student-elevated)] text-[#475569] dark:text-[#CBD5E1] font-medium">
-          <tr>
-            <th class="px-6 py-4">Date</th>
-            <th class="px-6 py-4">Subject</th>
-            <th class="px-6 py-4">Status</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-[var(--student-border)]">
-          @for (record of attendance$ | async; track record.date) {
-          <tr class="hover:bg-[var(--student-elevated)] transition-colors">
-            <td class="px-6 py-4 text-[#0F172A] dark:text-[#F8FAFC] font-medium">{{ record.date | date:'mediumDate' }}
-            </td>
-            <td class="px-6 py-4 text-[#475569] dark:text-[#CBD5E1]">{{ record.subject }}</td>
-            <td class="px-6 py-4">
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
-                                'bg-[#D1FAE5] text-[#059669] border border-[#A7F3D0]': record.status === 'present',
-                                'bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]': record.status === 'absent',
-                                'bg-[#FEF3C7] text-[#D97706] border border-[#FCD34D]': record.status === 'late'
-                              }">
-                {{ record.status | titlecase }}
-              </span>
-            </td>
-          </tr>
-          } @empty {
-          <tr>
-            <td colspan="2" class="px-6 py-12 text-center student-muted">
-              No attendance records found.
-            </td>
-          </tr>
+    <!-- Filters -->
+    <div
+      class="student-card p-4 grid gap-4 md:grid-cols-2">
+      <div>
+        <label class="block text-sm font-medium text-[#0F172A] dark:text-[#F8FAFC] mb-1">Date</label>
+        <input type="date" [(ngModel)]="selectedDate" (change)="onFilterChange()"
+          class="filter-input">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-[#0F172A] dark:text-[#F8FAFC] mb-1">Subject</label>
+        <select [(ngModel)]="selectedSubject" (change)="onFilterChange()"
+          class="filter-input">
+          <option value="">All Subjects</option>
+          @for (subject of subjects; track subject) {
+          <option [value]="subject">{{ subject }}</option>
           }
-        </tbody>
-      </table>
+        </select>
+      </div>
     </div>
-  </div>
+
+    <div class="stats-row">
+      <div class="stat-chip"><span>Total</span><strong>{{ stats.total }}</strong></div>
+      <div class="stat-chip present"><span>Present</span><strong>{{ stats.present }}</strong></div>
+      <div class="stat-chip absent"><span>Absent</span><strong>{{ stats.absent }}</strong></div>
+      <div class="stat-chip late"><span>Late</span><strong>{{ stats.late }}</strong></div>
+      <div class="stat-chip excused"><span>Excused</span><strong>{{ stats.excused }}</strong></div>
+    </div>
+
+    <div
+      class="student-card overflow-hidden table-wrapper">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+          <thead class="table-head">
+            <tr>
+              <th class="px-6 py-4">Date</th>
+              <th class="px-6 py-4">Subject</th>
+              <th class="px-6 py-4">Status</th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            @for (record of paginatedRecords; track record.id || record.date || record.subject) {
+            <tr class="table-row">
+              <td class="px-6 py-4 text-[#0F172A] dark:text-[#F8FAFC] font-medium">
+                <span class="date-pill">{{ record.date | date:'EEE, MMM d, y' }}</span>
+              </td>
+              <td class="px-6 py-4 text-[#475569] dark:text-[#CBD5E1]">{{ record.subject }}</td>
+              <td class="px-6 py-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" [ngClass]="{
+                                  'bg-[#D1FAE5] text-[#059669] border border-[#A7F3D0]': record.status === 'present',
+                                  'bg-[#FEE2E2] text-[#DC2626] border border-[#FECACA]': record.status === 'absent',
+                                  'bg-[#FEF3C7] text-[#D97706] border border-[#FCD34D]': record.status === 'late',
+                                  'bg-[#E0F2FE] text-[#1D4ED8] border border-[#BFDBFE]': record.status === 'excused'
+                                }">
+                  {{ record.status | titlecase }}
+                </span>
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="2" class="px-6 py-12 text-center student-muted">
+                No attendance records found.
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination" *ngIf="totalItems > perPage">
+        <button class="page-btn" type="button" [disabled]="page <= 1" (click)="goToPage(page - 1)">Prev</button>
+        <span class="page-info">Page {{ page }} / {{ totalPages }}</span>
+        <button class="page-btn" type="button" [disabled]="page >= totalPages" (click)="goToPage(page + 1)">Next</button>
+      </div>
+    </div>
+  } @else {
+    <app-loader label="Loading attendance..." size="lg"></app-loader>
+  }
 </div>
 }
