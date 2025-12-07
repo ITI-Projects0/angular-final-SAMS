@@ -64,14 +64,28 @@ export class About {
 
   readonly team = [
     {
-      name: 'Salma Fares',
-      role: 'Co-founder & Educator-in-Chief',
-      bio: 'Former school leader who wanted better visibility for teachers and parents.',
+      name: 'Bassel Essam',
+      role: 'Developer',
+      bio: 'A versatile developer proficient in frontend and backend technologies, actively contributing to open-source projects and continuously expanding technical skillsets to deliver robust web solutions.',
+      image: 'assets/team/photo.png',
     },
     {
-      name: 'Omar Nassar',
-      role: 'Co-founder & Product',
-      bio: 'Built SAMS to automate the boring parts of academy management without losing the human touch.',
+      name: 'Ahmed Alaa',
+      role: 'Developer',
+      bio: 'A proactive developer committed to delivering scalable and maintainable solutions. Collaborates effectively across teams, embraces new technologies, and balances innovation with reliability in every project..',
+      image: 'assets/team/photo.png',
+    },
+    {
+      name: 'Abdulrahman Abas',
+      role: 'Developer',
+      bio: 'Tech enthusiast with expertise in AI, Networking, and Full-Stack Web Development. Strong ability to work effectively in a team environment while building scalable web applications and integrating AI solutions to solve real-world problems.',
+      image: 'assets/team/photo.png',
+    },
+    {
+      name: 'Aballah Elsaied',
+      role: 'Developer',
+      bio: 'works closely with designers, front-end developers, and project managers to bring our eCommerce vision to life. They write clean, efficient PHP code, connect databases, and ensure everything runs seamlessly behind the scenes.',
+      image: 'assets/team/photo.png',
     }
   ];
 

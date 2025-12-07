@@ -40,10 +40,13 @@
           >
             We build calm, automated academies where teachers get time back.
           </h1>
-          <p class="text-lg leading-relaxed" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
-            SAMS is the student academy management system created by educators who were tired of chaotic
-            spreadsheets, endless follow-ups, and tools that forgot the classroom reality. We keep things
-            simple, reliable, and human.
+          <p
+            class="text-lg leading-relaxed"
+            [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
+          >
+            SAMS is the student academy management system created by educators who were tired of
+            chaotic spreadsheets, endless follow-ups, and tools that forgot the classroom reality.
+            We keep things simple, reliable, and human.
           </p>
 
           <div class="flex flex-wrap items-center gap-4">
@@ -58,7 +61,12 @@
             >
               Start free
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </a>
             <a
@@ -81,8 +89,12 @@
               class="rounded-2xl p-4 sm:p-5 ring-1"
               [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-white ring-slate-200'"
             >
-              <p class="text-2xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">{{ stat.value }}</p>
-              <p class="mt-1 text-sm" [ngClass]="isDark ? 'text-slate-400' : 'text-slate-600'">{{ stat.label }}</p>
+              <p class="text-2xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
+                {{ stat.value }}
+              </p>
+              <p class="mt-1 text-sm" [ngClass]="isDark ? 'text-slate-400' : 'text-slate-600'">
+                {{ stat.label }}
+              </p>
             </article>
           </div>
         </div>
@@ -92,7 +104,9 @@
             class="relative overflow-hidden rounded-3xl p-6 shadow-xl ring-1"
             [ngClass]="isDark ? 'bg-slate-900/60 ring-slate-800' : 'bg-white ring-slate-200'"
           >
-            <div class="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 blur-3xl"></div>
+            <div
+              class="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 blur-3xl"
+            ></div>
             <div class="space-y-4 relative">
               <p class="text-sm font-semibold uppercase tracking-wide text-cyan-500">Why SAMS</p>
               <h3 class="text-2xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
@@ -104,18 +118,27 @@
                     class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-xs font-bold text-white shadow-md"
                     >&#10003;</span
                   >
-                  <p class="text-sm leading-relaxed" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
+                  <p
+                    class="text-sm leading-relaxed"
+                    [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
+                  >
                     {{ item }}
                   </p>
                 </li>
               </ul>
-              <div class="mt-4 rounded-2xl p-4 ring-1"
-                [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-slate-50 ring-slate-200'">
-                <p class="text-sm font-semibold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
+              <div
+                class="mt-4 rounded-2xl p-4 ring-1"
+                [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-slate-50 ring-slate-200'"
+              >
+                <p
+                  class="text-sm font-semibold"
+                  [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
+                >
                   Built for busy teams
                 </p>
                 <p class="mt-1 text-sm" [ngClass]="isDark ? 'text-slate-400' : 'text-slate-600'">
-                  We obsess over small details—load times, clear roles, and calm notifications—so your staff can stay focused on learners.
+                  We obsess over small details—load times, clear roles, and calm notifications—so
+                  your staff can stay focused on learners.
                 </p>
               </div>
             </div>
@@ -125,12 +148,22 @@
     </section>
 
     <section class="mx-auto max-w-7xl px-6 pb-16">
-      <div class="rounded-3xl p-8 ring-1" [ngClass]="isDark ? 'bg-slate-900/60 ring-slate-800' : 'bg-white ring-slate-200'">
+      <div
+        class="rounded-3xl p-8 ring-1"
+        [ngClass]="isDark ? 'bg-slate-900/60 ring-slate-800' : 'bg-white ring-slate-200'"
+      >
         <div class="grid gap-8 md:grid-cols-3 md:gap-10">
           <div class="space-y-3 md:col-span-1">
-            <p class="text-sm font-semibold uppercase tracking-wide text-cyan-500">Our Principles</p>
-            <h2 class="text-2xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">What keeps us honest</h2>
-            <p class="text-sm leading-relaxed" [ngClass]="isDark ? 'text-slate-400' : 'text-slate-600'">
+            <p class="text-sm font-semibold uppercase tracking-wide text-cyan-500">
+              Our Principles
+            </p>
+            <h2 class="text-2xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
+              What keeps us honest
+            </h2>
+            <p
+              class="text-sm leading-relaxed"
+              [ngClass]="isDark ? 'text-slate-400' : 'text-slate-600'"
+            >
               Clear principles guide every release and every support ticket we answer.
             </p>
           </div>
@@ -140,9 +173,20 @@
               class="relative overflow-hidden rounded-2xl p-6 shadow-sm ring-1"
               [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-slate-50 ring-slate-200'"
             >
-              <div class="absolute right-4 top-4 h-12 w-12 rounded-full bg-gradient-to-br opacity-20" [ngClass]="value.accent"></div>
-              <h3 class="text-lg font-semibold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">{{ value.title }}</h3>
-              <p class="mt-2 text-sm leading-relaxed" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
+              <div
+                class="absolute right-4 top-4 h-12 w-12 rounded-full bg-gradient-to-br opacity-20"
+                [ngClass]="value.accent"
+              ></div>
+              <h3
+                class="text-lg font-semibold"
+                [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
+              >
+                {{ value.title }}
+              </h3>
+              <p
+                class="mt-2 text-sm leading-relaxed"
+                [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
+              >
                 {{ value.copy }}
               </p>
             </article>
@@ -155,9 +199,16 @@
       <div class="grid gap-8 md:grid-cols-2 md:items-center">
         <div>
           <p class="text-sm font-semibold uppercase tracking-wide text-cyan-500">Our Story</p>
-          <h2 class="mt-2 text-3xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">From paper to predictable</h2>
-          <p class="mt-3 text-base leading-relaxed" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
-            We started with one goal: remove the chaos around attendance, grading, and communication. Each milestone below pushed us closer to a calmer rhythm for every academy.
+          <h2 class="mt-2 text-3xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
+            From paper to predictable
+          </h2>
+          <p
+            class="mt-3 text-base leading-relaxed"
+            [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
+          >
+            We started with one goal: remove the chaos around attendance, grading, and
+            communication. Each milestone below pushed us closer to a calmer rhythm for every
+            academy.
           </p>
         </div>
         <div class="space-y-4">
@@ -180,7 +231,10 @@
             <h3 class="text-lg font-semibold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
               {{ milestone.headline }}
             </h3>
-            <p class="mt-2 text-sm leading-relaxed" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
+            <p
+              class="mt-2 text-sm leading-relaxed"
+              [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
+            >
               {{ milestone.detail }}
             </p>
           </article>
@@ -189,13 +243,22 @@
     </section>
 
     <section class="mx-auto max-w-7xl px-6 pb-16">
-      <div class="rounded-3xl p-8 ring-1" [ngClass]="isDark ? 'bg-slate-900/60 ring-slate-800' : 'bg-white ring-slate-200'">
+      <div
+        class="rounded-3xl p-8 ring-1"
+        [ngClass]="isDark ? 'bg-slate-900/60 ring-slate-800' : 'bg-white ring-slate-200'"
+      >
         <div class="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div class="max-w-xl space-y-3">
             <p class="text-sm font-semibold uppercase tracking-wide text-cyan-500">Leadership</p>
-            <h2 class="text-3xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">People behind SAMS</h2>
-            <p class="text-sm leading-relaxed" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
-              We pair classroom experience with product rigor. The result: software that actually listens.
+            <h2 class="text-3xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
+              People behind SAMS
+            </h2>
+            <p
+              class="text-sm leading-relaxed"
+              [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
+            >
+              We pair classroom experience with product rigor. The result: software that actually
+              listens.
             </p>
           </div>
           <div class="grid gap-4 sm:grid-cols-2 md:max-w-xl">
@@ -205,15 +268,38 @@
               [ngClass]="isDark ? 'bg-slate-900/60 ring-slate-800' : 'bg-slate-50 ring-slate-200'"
             >
               <div class="flex items-center justify-between">
-                <div class="h-12 w-12 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white flex items-center justify-center font-bold">
-                  {{ member.name.charAt(0) }}
+                <div
+                  class="h-12 w-12 rounded-full overflow-hidden flex items-center justify-center"
+                >
+                  <img
+                    *ngIf="member.image; else initials"
+                    [src]="member.image"
+                    [alt]="member.name"
+                    class="h-full w-full object-cover"
+                  />
+                  <ng-template #initials>
+                    <div
+                      class="h-full w-full bg-gradient-to-br from-cyan-500 to-blue-600 text-white flex items-center justify-center font-bold"
+                    >
+                      {{ member.name.charAt(0) }}
+                    </div>
+                  </ng-template>
                 </div>
-                <span class="text-xs font-semibold uppercase tracking-wide text-cyan-500">{{ member.role }}</span>
+                <span class="text-xs font-semibold uppercase tracking-wide text-cyan-500">{{
+                  member.role
+                }}</span>
               </div>
-              <p class="mt-4 text-base font-semibold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
+
+              <p
+                class="mt-4 text-base font-semibold"
+                [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
+              >
                 {{ member.name }}
               </p>
-              <p class="mt-2 text-sm leading-relaxed" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
+              <p
+                class="mt-2 text-sm leading-relaxed"
+                [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
+              >
                 {{ member.bio }}
               </p>
             </article>
@@ -238,19 +324,39 @@
             <h2 class="text-2xl font-bold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
               Want to see SAMS in action?
             </h2>
-            <p class="text-sm leading-relaxed" [ngClass]="isDark ? 'text-slate-200' : 'text-slate-700'">
-              Tell us about your academy. We will share a tailored setup checklist and a guided walkthrough.
+            <p
+              class="text-sm leading-relaxed"
+              [ngClass]="isDark ? 'text-slate-200' : 'text-slate-700'"
+            >
+              Tell us about your academy. We will share a tailored setup checklist and a guided
+              walkthrough.
             </p>
             <div class="mt-3 grid gap-3 sm:grid-cols-2">
-              <div class="rounded-2xl px-4 py-3 ring-1"
-                [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-white ring-slate-200'">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Email</p>
-                <p class="text-sm font-medium" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">team@sams.app</p>
+              <div
+                class="rounded-2xl px-4 py-3 ring-1"
+                [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-white ring-slate-200'"
+              >
+                <p
+                  class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+                >
+                  Email
+                </p>
+                <p class="text-sm font-medium" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
+                  team@sams.app
+                </p>
               </div>
-              <div class="rounded-2xl px-4 py-3 ring-1"
-                [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-white ring-slate-200'">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Support hours</p>
-                <p class="text-sm font-medium" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">Daily, 9am - 9pm</p>
+              <div
+                class="rounded-2xl px-4 py-3 ring-1"
+                [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-white ring-slate-200'"
+              >
+                <p
+                  class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"
+                >
+                  Support hours
+                </p>
+                <p class="text-sm font-medium" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
+                  Daily, 9am - 9pm
+                </p>
               </div>
             </div>
           </div>
@@ -262,7 +368,12 @@
             >
               Book a walkthrough
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
               </svg>
             </a>
             <a
