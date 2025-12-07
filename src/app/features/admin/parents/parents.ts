@@ -33,26 +33,42 @@ export class Parents implements OnInit {
       next: (res) => {
         const payload = res?.data ?? res;
         const items = payload?.data ?? payload ?? [];
-        this.parents = items.map((p: any) => ({
-          id: p.id,
-          name: p.name,
-          email: p.email,
-          phone: p.phone || '',
-          status: p.status || 'active',
-          childCount: (p.children || []).length,
-          children: (p.children || []).map((c: any) => ({
-            id: c.id,
-            name: c.name,
-            email: c.email,
-            courses: (c.groups || []).map((g: any) => ({
-              id: g.id,
-              name: g.name,
-              center: g.center?.name || '',
-              studentsCount: g.students_count ?? g.studentsCount ?? 0,
-            })),
-          })),
-          raw: p,
-        }));
+        this.parents = items.map((p: any) => {
+          const children = Array.isArray(p.children?.data)
+            ? p.children.data
+            : Array.isArray(p.children)
+              ? p.children
+              : [];
+
+          return {
+            id: p.id,
+            name: p.name,
+            email: p.email,
+            phone: p.phone || '',
+            status: p.status || 'active',
+            childCount: p.children_count ?? p.childrenCount ?? children.length,
+            children: children.map((c: any) => {
+              const courses = Array.isArray(c.groups?.data)
+                ? c.groups.data
+                : Array.isArray(c.groups)
+                  ? c.groups
+                  : [];
+
+              return {
+                id: c.id,
+                name: c.name,
+                email: c.email,
+                courses: courses.map((g: any) => ({
+                  id: g.id,
+                  name: g.name,
+                  center: g.center?.name || '',
+                  studentsCount: g.students_count ?? g.studentsCount ?? 0,
+                })),
+              };
+            }),
+            raw: p,
+          };
+        });
         this.cdr.detectChanges();
       },
       error: () => { this.loading = false; this.cdr.detectChanges(); },

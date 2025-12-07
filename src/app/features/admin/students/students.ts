@@ -41,21 +41,29 @@ export class Students implements OnInit {
               : false;
             return hasRole || u.role === 'student';
           })
-          .map((u: any) => ({
-            id: u.id,
-            name: u.name,
-            email: u.email,
-            center: u.center?.name || '',
-            status: u.status || 'active',
-            courseCount: (u.groups || []).length,
-            courses: (u.groups || []).map((g: any) => ({
-              id: g.id,
-              name: g.name,
-              center: g.center?.name || '',
-              studentsCount: g.students_count ?? g.studentsCount ?? 0,
-            })),
-            raw: u,
-          }));
+          .map((u: any) => {
+            const groups = Array.isArray(u.groups?.data)
+              ? u.groups.data
+              : Array.isArray(u.groups)
+                ? u.groups
+                : [];
+
+            return {
+              id: u.id,
+              name: u.name,
+              email: u.email,
+              center: u.center?.name || '',
+              status: u.status || 'active',
+              courseCount: u.groups_count ?? u.groupsCount ?? groups.length,
+              courses: groups.map((g: any) => ({
+                id: g.id,
+                name: g.name,
+                center: g.center?.name || '',
+                studentsCount: g.students_count ?? g.studentsCount ?? 0,
+              })),
+              raw: u,
+            };
+          });
         this.cdr.detectChanges();
       },
       error: () => { this.loading = false; this.cdr.detectChanges(); },

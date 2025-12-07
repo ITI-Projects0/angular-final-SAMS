@@ -61,7 +61,7 @@
             <div class="chip-subtitle">Courses</div>
             <ul>
               <li *ngFor="let c of child.courses">
-                {{ c.name }} <span *ngIf="c.center">({{ c.center }})</span> — students: {{ c.studentsCount }}
+                {{ c.name }} <span *ngIf="c.center">({{ c.center }})</span> - {{ c.studentsCount }} students
               </li>
             </ul>
           </div>
