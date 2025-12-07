@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { Class } from '../models/class.model';
 import { Assignment } from '../models/assignment.model';
@@ -40,14 +41,24 @@ export class StudentService {
   }
 
   getAttendance(): Observable<AttendanceRecord[]> {
-    // Placeholder
-    // return this.api.get<AttendanceRecord[]>('/student/attendance');
-    return of([
-      { date: '2023-12-01', subject: 'Mathematics', status: 'present' },
-      { date: '2023-11-29', subject: 'Science', status: 'present' },
-      { date: '2023-11-27', subject: 'History', status: 'late' },
-      { date: '2023-11-24', subject: 'Mathematics', status: 'absent' }
-    ]);
+    return this.api.get<any>('/dashboard/student/attendance').pipe(
+      map((res) => {
+        const root = res?.data ?? res ?? {};
+        const collection = Array.isArray(root)
+          ? root
+          : Array.isArray(root.data)
+            ? root.data
+            : Array.isArray(root.items)
+              ? root.items
+              : [];
+        return collection.map((record: any) => ({
+          date: record.date ?? record.attended_at ?? record.recorded_at ?? record.created_at ?? record.day ?? null,
+          subject: record.subject ?? record.subject_name ?? record.course ?? record.group?.name ?? record.group_name ?? '—',
+          status: String(record.status ?? record.attendance ?? record.state ?? 'unknown').toLowerCase()
+        }));
+      }),
+      catchError(() => of([]))
+    );
   }
 
   getProfile(): Observable<any> {
