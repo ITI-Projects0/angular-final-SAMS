@@ -12,12 +12,12 @@ import { ApiService } from '../../../core/services/api.service';
 })
 export class Teachers implements OnInit {
   constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
-  teachers: any[] = [];
+  teachers: TeacherCard[] = [];
   loading = false;
 
   searchTerm = '';
   infoOpen = false;
-  selectedTeacher: any = null;
+  selectedTeacher: TeacherCard | null = null;
 
   ngOnInit(): void {
     this.loadTeachers();
@@ -29,22 +29,29 @@ export class Teachers implements OnInit {
       next: (res) => {
         const payload = res?.data ?? res;
         const items = payload?.data ?? payload ?? [];
-        this.teachers = items.map((t: any) => ({
-          id: t.id,
-          name: t.name,
-          email: t.email,
-          center: t.taught_groups?.[0]?.center?.name || t.center?.name || '',
-          courses: t.taught_groups_count ?? t.taughtGroups_count ?? t.taught_groups?.length ?? 0,
-          phone: t.phone || '',
-          status: t.status || 'active',
-          courseList: (t.taught_groups || []).map((g: any) => ({
-            id: g.id,
-            name: g.name,
-            studentsCount: g.students_count ?? g.studentsCount ?? 0,
+        this.teachers = items.map((t: any) => {
+          const groups = t.taught_groups ?? t.taughtGroups ?? [];
+          const courseList: TeacherCourse[] = groups.map((g: any) => ({
+            id: Number(g.id) || 0,
+            name: g.name || '-',
+            studentsCount: Number(g.students_count ?? g.studentsCount ?? g.students?.length ?? 0) || 0,
             center: g.center?.name || ''
-          })),
-          raw: t,
-        }));
+          }));
+          const totalStudents = courseList.reduce((sum: number, c: TeacherCourse) => sum + (Number(c.studentsCount) || 0), 0);
+
+          return {
+            id: t.id,
+            name: t.name,
+            email: t.email,
+            center: groups?.[0]?.center?.name || t.center?.name || '',
+            courses: t.taught_groups_count ?? t.taughtGroups_count ?? courseList.length ?? 0,
+            phone: t.phone || '',
+            status: t.status || 'active',
+            totalStudents,
+            courseList,
+            raw: t,
+          };
+        });
         this.cdr.detectChanges();
       },
       error: () => { this.loading = false; this.cdr.detectChanges(); },
@@ -52,7 +59,7 @@ export class Teachers implements OnInit {
     });
   }
 
-  get filteredTeachers() {
+  get filteredTeachers(): TeacherCard[] {
     const q = this.searchTerm.toLowerCase().trim();
     if (!q) return this.teachers;
     return this.teachers.filter(t =>
@@ -64,7 +71,7 @@ export class Teachers implements OnInit {
     );
   }
 
-  openInfo(teacher: any) {
+  openInfo(teacher: TeacherCard) {
     this.selectedTeacher = teacher;
     this.infoOpen = true;
   }
@@ -74,3 +81,23 @@ export class Teachers implements OnInit {
     this.selectedTeacher = null;
   }
 }
+
+type TeacherCourse = {
+  id: number;
+  name: string;
+  studentsCount: number;
+  center: string;
+};
+
+type TeacherCard = {
+  id: number;
+  name: string;
+  email: string;
+  center: string;
+  courses: number;
+  phone: string;
+  status: string;
+  totalStudents: number;
+  courseList: TeacherCourse[];
+  raw: any;
+};

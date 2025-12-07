@@ -30,7 +30,8 @@
         <td class="muted">{{ p.email }}</td>
         <td>{{ p.phone || '-' }}</td>
         <td><span class="pill pill-ghost">{{ p.childCount }} kids</span></td>
-        <td><span class="pill" [ngClass]="p.status === 'active' ? 'pill-success' : 'pill-muted'">{{ p.status }}</span></td>
+        <td><span class="pill" [ngClass]="p.status === 'active' ? 'pill-success' : 'pill-muted'">{{ p.status }}</span>
+        </td>
         <td>
           <button class="btn-simple" (click)="openInfo(p)">Info</button>
         </td>
@@ -61,7 +62,7 @@
             <div class="chip-subtitle">Courses</div>
             <ul>
               <li *ngFor="let c of child.courses">
-                {{ c.name }} <span *ngIf="c.center">({{ c.center }})</span> - {{ c.studentsCount }} students
+                {{ c.name }} <span *ngIf="c.center">({{ c.center }})</span>
               </li>
             </ul>
           </div>
