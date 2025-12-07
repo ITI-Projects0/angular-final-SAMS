@@ -1,0 +1,57 @@
+:host {
+  display: block;
+}
+
+.about-shell {
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.floating-orb {
+  filter: blur(110px);
+  animation: orbFloat 20s ease-in-out infinite alternate;
+}
+
+.floating-orb--secondary {
+  animation-duration: 24s;
+  animation-delay: 1s;
+}
+
+.floating-orb--tertiary {
+  animation-duration: 28s;
+  animation-delay: 2s;
+}
+
+@keyframes orbFloat {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(20px, -24px, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-18px, 20px, 0) scale(0.95);
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fade utility */
+.animate-fade {
+  opacity: 0;
+  animation: fadeSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

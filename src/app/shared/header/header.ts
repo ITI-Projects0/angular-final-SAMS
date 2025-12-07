@@ -30,8 +30,8 @@ export class Header implements OnInit {
   readonly appName = APP_CONFIG.name;
   readonly navLinks = [
     { label: 'Home', route: '/home', fragment: 'hero' },
-    { label: 'About Us', route: '/home', fragment: 'about' },
-    { label: 'Contact Us', route: '/home', fragment: 'contact' },
+    { label: 'About Us', route: '/about' },
+    { label: 'Contact Us', route: '/about', fragment: 'contact' },
   ];
 
   ngOnInit(): void {
