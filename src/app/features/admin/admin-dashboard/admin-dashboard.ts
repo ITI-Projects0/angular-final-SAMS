@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef,Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
+import { AiChatWidgetComponent } from '../../ai-chat-widget/ai-chat-widget.component';
+import { AiInsightsCardComponent } from '../../ai-insights-card';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, AiChatWidgetComponent, AiInsightsCardComponent],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
 })

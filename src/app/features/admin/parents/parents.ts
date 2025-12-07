@@ -17,6 +17,10 @@ export class Parents implements OnInit {
   parents: any[] = [];
   loading = false;
   searchTerm = '';
+  page = 1;
+  perPage = 15;
+  total = 0;
+  lastPage = 1;
   infoOpen = false;
   selectedParent: any = null;
 
@@ -24,11 +28,13 @@ export class Parents implements OnInit {
     this.loadParents();
   }
 
-  private loadParents() {
+  private loadParents(page = this.page) {
     this.loading = true;
     const params = new HttpParams()
       .set('role', 'parent')
-      .set('per_page', 200);
+      .set('per_page', this.perPage)
+      .set('page', page)
+      .set('search', this.searchTerm.trim());
     this.api.get<any>('/users', params).subscribe({
       next: (res) => {
         const payload = res?.data ?? res;
@@ -69,6 +75,11 @@ export class Parents implements OnInit {
             raw: p,
           };
         });
+        const pagination = res?.meta?.pagination ?? payload?.meta ?? {};
+        this.page = pagination.current_page ?? page;
+        this.perPage = pagination.per_page ?? this.perPage;
+        this.total = pagination.total ?? this.parents.length;
+        this.lastPage = pagination.last_page ?? this.lastPage ?? 1;
         this.cdr.detectChanges();
       },
       error: () => { this.loading = false; this.cdr.detectChanges(); },
@@ -77,14 +88,7 @@ export class Parents implements OnInit {
   }
 
   get filteredParents() {
-    const q = this.searchTerm.toLowerCase().trim();
-    if (!q) return this.parents;
-    return this.parents.filter(p =>
-      (p.name || '').toLowerCase().includes(q) ||
-      (p.email || '').toLowerCase().includes(q) ||
-      (p.phone || '').toLowerCase().includes(q) ||
-      (p.status || '').toLowerCase().includes(q)
-    );
+    return this.parents;
   }
 
   openInfo(parent: any) {
@@ -95,5 +99,30 @@ export class Parents implements OnInit {
   closeInfo() {
     this.infoOpen = false;
     this.selectedParent = null;
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.lastPage) return;
+    this.page = page;
+    this.loadParents(page);
+  }
+
+  changePerPage(value: number) {
+    this.perPage = value;
+    this.page = 1;
+    this.loadParents(1);
+  }
+
+  onSearchChange() {
+    this.page = 1;
+    this.loadParents(1);
+  }
+
+  get rangeStart(): number {
+    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
+  }
+
+  get rangeEnd(): number {
+    return Math.min(this.rangeStart + this.parents.length - 1, this.total);
   }
 }

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpParams } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 
@@ -16,6 +17,10 @@ export class Teachers implements OnInit {
   loading = false;
 
   searchTerm = '';
+  page = 1;
+  perPage = 10;
+  total = 0;
+  lastPage = 1;
   infoOpen = false;
   selectedTeacher: TeacherCard | null = null;
 
@@ -23,9 +28,14 @@ export class Teachers implements OnInit {
     this.loadTeachers();
   }
 
-  private loadTeachers() {
+  private loadTeachers(page = this.page) {
     this.loading = true;
-    this.api.get<any>('/teachers').subscribe({
+    const params = new HttpParams()
+      .set('page', page)
+      .set('per_page', this.perPage)
+      .set('search', this.searchTerm.trim());
+
+    this.api.get<any>('/teachers', params).subscribe({
       next: (res) => {
         const payload = res?.data ?? res;
         const items = payload?.data ?? payload ?? [];
@@ -55,6 +65,12 @@ export class Teachers implements OnInit {
             raw: t,
           };
         });
+
+        const pagination = res?.meta?.pagination ?? res?.pagination ?? payload?.meta ?? {};
+        this.page = pagination.current_page ?? page;
+        this.perPage = pagination.per_page ?? this.perPage;
+        this.total = pagination.total ?? (payload?.total ?? this.teachers.length);
+        this.lastPage = pagination.last_page ?? payload?.last_page ?? this.lastPage ?? 1;
         this.cdr.detectChanges();
       },
       error: () => { this.loading = false; this.cdr.detectChanges(); },
@@ -63,15 +79,8 @@ export class Teachers implements OnInit {
   }
 
   get filteredTeachers(): TeacherCard[] {
-    const q = this.searchTerm.toLowerCase().trim();
-    if (!q) return this.teachers;
-    return this.teachers.filter(t =>
-      (t.name || '').toLowerCase().includes(q) ||
-      (t.email || '').toLowerCase().includes(q) ||
-      (t.center || '').toLowerCase().includes(q) ||
-      String(t.courses ?? '').toLowerCase().includes(q) ||
-      (t.phone || '').toLowerCase().includes(q)
-    );
+    // Server-side filtering applied; return list as-is.
+    return this.teachers;
   }
 
   openInfo(teacher: TeacherCard) {
@@ -82,6 +91,31 @@ export class Teachers implements OnInit {
   closeInfo() {
     this.infoOpen = false;
     this.selectedTeacher = null;
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.lastPage) return;
+    this.page = page;
+    this.loadTeachers(page);
+  }
+
+  changePerPage(value: number) {
+    this.perPage = value;
+    this.page = 1;
+    this.loadTeachers(1);
+  }
+
+  onSearchChange() {
+    this.page = 1;
+    this.loadTeachers(1);
+  }
+
+  get rangeStart(): number {
+    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
+  }
+
+  get rangeEnd(): number {
+    return Math.min(this.rangeStart + this.teachers.length - 1, this.total);
   }
 }
 

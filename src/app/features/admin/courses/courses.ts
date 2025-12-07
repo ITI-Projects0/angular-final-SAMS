@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
@@ -19,6 +20,10 @@ export class Courses implements OnInit {
 
   /** Search */
   searchTerm = '';
+  page = 1;
+  perPage = 15;
+  total = 0;
+  lastPage = 1;
 
   /** Info modal */
   infoOpen = false;
@@ -40,10 +45,15 @@ export class Courses implements OnInit {
   }
 
   /** ================= LOAD COURSES ================= */
-  private loadCourses() {
+  private loadCourses(page = this.page) {
     this.loading = true;
 
-    this.api.get<any>('/groups').subscribe({
+    const params = new HttpParams()
+      .set('page', page)
+      .set('per_page', this.perPage)
+      .set('search', this.searchTerm.trim());
+
+    this.api.get<any>('/groups', params).subscribe({
       next: (res) => {
         const payload = res?.data ?? res;
         const items = payload?.data ?? payload ?? [];
@@ -58,6 +68,11 @@ export class Courses implements OnInit {
           raw: g,
         }));
 
+        const pagination = res?.meta?.pagination ?? payload?.meta ?? {};
+        this.page = pagination.current_page ?? page;
+        this.perPage = pagination.per_page ?? this.perPage;
+        this.total = pagination.total ?? this.courses.length;
+        this.lastPage = pagination.last_page ?? this.lastPage ?? 1;
         this.cdr.detectChanges();
       },
       error: () => {
@@ -73,15 +88,7 @@ export class Courses implements OnInit {
 
   /** ================= FILTER ================= */
   get filteredCourses() {
-    const q = this.searchTerm.toLowerCase().trim();
-    if (!q) return this.courses;
-
-    return this.courses.filter(c =>
-      (c.title || '').toLowerCase().includes(q) ||
-      (c.center || '').toLowerCase().includes(q) ||
-      (c.teacher || '').toLowerCase().includes(q) ||
-      (c.status || '').toLowerCase().includes(q)
-    );
+    return this.courses;
   }
 
   /** ================= INFO ================= */
@@ -93,6 +100,31 @@ export class Courses implements OnInit {
   closeInfo() {
     this.infoOpen = false;
     this.selectedCourse = null;
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.lastPage) return;
+    this.page = page;
+    this.loadCourses(page);
+  }
+
+  changePerPage(value: number) {
+    this.perPage = value;
+    this.page = 1;
+    this.loadCourses(1);
+  }
+
+  onSearchChange() {
+    this.page = 1;
+    this.loadCourses(1);
+  }
+
+  get rangeStart(): number {
+    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
+  }
+
+  get rangeEnd(): number {
+    return Math.min(this.rangeStart + this.courses.length - 1, this.total);
   }
 
   /** ================= FORM ================= */

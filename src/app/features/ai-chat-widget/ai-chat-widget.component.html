@@ -1,0 +1,23 @@
+<section class="ai-chat">
+  <div class="ai-chat__header">
+    <div>
+      <p class="title">AI Chat</p>
+      <p class="subtitle">Assistant for the platform</p>
+    </div>
+  </div>
+
+  <div class="ai-chat__messages">
+    <div *ngFor="let msg of messages" class="message" [class.is-ai]="msg.role === 'ai'">
+      <span class="badge" *ngIf="msg.role === 'ai'">AI</span>
+      <span class="content">{{ msg.content }}</span>
+    </div>
+    <div class="typing" *ngIf="loading">AI is thinking...</div>
+  </div>
+
+  <div class="ai-chat__input">
+    <input [(ngModel)]="input" (keyup.enter)="send()" placeholder="Type your question..." />
+    <button (click)="send()" [disabled]="loading || !input.trim()">Send</button>
+  </div>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+</section>
