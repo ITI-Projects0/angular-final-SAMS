@@ -17,16 +17,28 @@
     <div class="teacher-card glass" *ngFor="let t of filteredTeachers">
       <div class="card-head">
         <div class="avatar">{{ t.name ? t.name[0] : '?' }}</div>
-        <div>
+        <div class="head-info">
           <div class="name">{{ t.name }}</div>
           <div class="muted">{{ t.email }}</div>
+          <div class="meta-row">
+            <span class="pill">{{ t.center || '-' }}</span>
+            <span class="pill pill-ghost">{{ t.courses }} courses</span>
+            <span class="pill pill-ghost students-pill">{{ t.totalStudents }} students</span>
+          </div>
         </div>
+        <span class="pill status-pill"
+          [ngClass]="t.status === 'active' ? 'pill-success' : 'pill-muted'">{{ t.status }}</span>
       </div>
-      <div class="meta">
-        <span class="pill">{{ t.center || '-' }}</span>
-        <span class="pill pill-ghost">{{ t.courses }} courses</span>
-        <span class="pill" [ngClass]="t.status === 'active' ? 'pill-success' : 'pill-muted'">{{ t.status }}</span>
-      </div>
+      <!-- <div class="course-chips" *ngIf="t.courseList?.length">
+        <div class="course-chip" *ngFor="let c of t.courseList | slice:0:3">
+          <div class="chip-title">{{ c.name }}</div>
+          <div class="chip-meta">
+            <span *ngIf="c.center">{{ c.center }}</span>
+            <span class="dot"></span>
+            <span>{{ c.studentsCount }} students</span>
+          </div>
+        </div>
+      </div> -->
       <div class="actions">
         <button class="btn-simple" (click)="openInfo(t)">Info</button>
       </div>
@@ -50,10 +62,13 @@
       <div class="chip" [ngClass]="selectedTeacher.status === 'active' ? 'pill-success' : 'pill-muted'">
         Status: {{ selectedTeacher.status }}
       </div>
+      <div class="chip students-pill">
+        Total students: {{ selectedTeacher.totalStudents }}
+      </div>
     </div>
     <!-- <p><strong>Role tags:</strong> {{ selectedTeacher.raw?.roles?.map((r: any) => r?.name || r).join(', ') || selectedTeacher.raw?.role || 'teacher' }}</p> -->
     <p><strong>User ID:</strong> {{ selectedTeacher.id }}</p>
-    <div *ngIf="selectedTeacher.courseList?.length">
+    <div *ngIf="selectedTeacher.courseList.length">
       <p><strong>Courses:</strong></p>
       <div class="chips">
         <div class="chip" *ngFor="let c of selectedTeacher.courseList">
