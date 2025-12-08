@@ -15,7 +15,7 @@ export const routes: Routes = [
     children: [
       { path: 'home', loadComponent: () => import('./features/public/home/home').then(m => m.Home) },
       { path: 'about', loadComponent: () => import('./features/public/about/about').then(m => m.About) },
-      // Add more public pages here if needed
+      { path: 'contact', loadComponent: () => import('./features/public/contact/contact').then(m => m.Contact) },
     ]
   },
 

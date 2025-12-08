@@ -1,54 +1,65 @@
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { ApiService } from '../../../core/services/api.service';
+import { finalize, map } from 'rxjs/operators';
+
+interface Contact {
+  id: number;
+  name: string;
+  email: string;
+  subject: string | null;
+  message: string;
+  created_at: string;
+}
 
 @Component({
   selector: 'app-admin-contacts',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   templateUrl: './contacts.html',
   styleUrl: './contacts.css',
 })
-export class Contacts {
-  constructor() {}
-  contacts = [
-    { name: 'Mohamed Adel', email: 'mohamed@example.com', phone: '+20 123 456 7890', role: 'Teacher' },
-    { name: 'Mona El-Sayed', email: 'mona@example.com', phone: '+20 112 223 3344', role: 'Student' },
-    { name: 'Ayman Saleh', email: 'ayman@example.com', phone: '+966 55 000 0111', role: 'Center Admin' },
-  ];
+export class Contacts implements OnInit {
+  private readonly apiService = inject(ApiService);
 
-  isFormOpen = false;
-  isEditMode = false;
-  currentIndex: number | null = null;
-  formContact = { name: '', email: '', phone: '', role: '' };
+  contacts: Contact[] = [];
+  isLoading = true;
+  errorMessage = '';
 
-  openForm(contact?: typeof this.formContact) {
-    this.isFormOpen = true;
-    if (contact) {
-      this.isEditMode = true;
-      this.formContact = { ...contact };
-      this.currentIndex = this.contacts.indexOf(contact);
-    } else {
-      this.isEditMode = false;
-      this.currentIndex = null;
-      this.formContact = { name: '', email: '', phone: '', role: '' };
-    }
+  ngOnInit(): void {
+    this.loadContacts();
   }
 
-  save() {
-    if (this.isEditMode && this.currentIndex !== null) {
-      this.contacts[this.currentIndex] = { ...this.formContact };
-    } else {
-      this.contacts = [...this.contacts, { ...this.formContact }];
-    }
-    this.closeForm();
+  loadContacts(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.apiService
+      .get<{ data?: Contact[] } | Contact[]>('/admin/contacts')
+      .pipe(
+        // Normalize API responses that return either raw arrays or wrapped objects
+        map((response) => (Array.isArray(response) ? response : response.data ?? [])),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe({
+        next: (contacts) => {
+          this.contacts = contacts;
+        },
+        error: (error) => {
+          this.errorMessage = error.error?.message || 'Failed to load contacts';
+        },
+      });
   }
 
-  delete(contact: typeof this.formContact) {
-    this.contacts = this.contacts.filter(c => c !== contact);
-  }
-
-  closeForm() {
-    this.isFormOpen = false;
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }
