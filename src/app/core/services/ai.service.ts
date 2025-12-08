@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { catchError, of } from 'rxjs';
 
 type ChatPayload = { role: 'teacher' | 'parent'; message: string; user_id?: number };
 type InsightsParams = { class_id?: number; from?: string; to?: string };
@@ -50,14 +51,16 @@ export class AiService {
   // Parent AI helpers
   parentWeeklySummary(studentId: number): Observable<{ summary: string; data: any }> {
     const params = new HttpParams().set('student_id', String(studentId));
-    return this.http.get<{ summary: string; data: any }>(`${this.baseUrl}/parent/weekly-summary`, { params });
+    return this.http.get<{ summary: string; data: any }>(`${this.baseUrl}/parent/weekly-summary`, { params }).pipe(
+      catchError(() => of({ summary: '', data: null }))
+    );
   }
 
   parentExplain(studentId: number, text: string): Observable<{ summary: string }> {
     return this.http.post<{ summary: string }>(`${this.baseUrl}/parent/explain`, {
       student_id: studentId,
       text
-    });
+    }).pipe(catchError(() => of({ summary: '' })));
   }
 
   // Student AI helpers
