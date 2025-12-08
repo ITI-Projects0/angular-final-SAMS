@@ -16,24 +16,27 @@ export class TokenStorageService {
         this.clearStorage(this.getStorage('local'));
     }
 
-    seedToken(token: string, remember = false): void {
-        const target = this.getStorage(remember ? 'local' : 'session');
+    persistAuthResponse(user: User, remember: boolean, token?: string | null): void {
+        const primary = this.getStorage(remember ? 'local' : 'session');
         const secondary = this.getStorage(remember ? 'session' : 'local');
-        this.clearStorage(secondary);
-        target?.setItem(TOKEN_KEY, token);
-    }
 
-    persistAuthResponse(token: string, user: User, remember: boolean): void {
-        this.seedToken(token, remember);
-        const target = this.getStorage(remember ? 'local' : 'session');
-        target?.setItem(USER_KEY, JSON.stringify(user));
+        this.clearStorage(secondary);
+        if (!primary) {
+            return;
+        }
+
+        this.clearStorage(primary);
+        if (token) {
+            primary.setItem(TOKEN_KEY, token);
+        }
+        primary.setItem(USER_KEY, JSON.stringify(user));
     }
 
     public getToken(): string | null {
         const sessionToken = this.getStorage('session')?.getItem(TOKEN_KEY);
         if (sessionToken) {
             return sessionToken;
-    }
+        }
         return this.getStorage('local')?.getItem(TOKEN_KEY) ?? null;
     }
 
@@ -69,11 +72,11 @@ export class TokenStorageService {
 
     private getActiveStorage(): Storage | null {
         const session = this.getStorage('session');
-        if (session?.getItem(TOKEN_KEY)) {
+        if (session?.getItem(TOKEN_KEY) || session?.getItem(USER_KEY)) {
             return session;
         }
         const local = this.getStorage('local');
-        if (local?.getItem(TOKEN_KEY)) {
+        if (local?.getItem(TOKEN_KEY) || local?.getItem(USER_KEY)) {
             return local;
         }
         return session ?? local;

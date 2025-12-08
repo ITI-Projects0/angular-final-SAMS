@@ -1,10 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpHeaders } from '@angular/common/http';
 import { ApiService } from '../services/api.service';
 import { TokenStorageService } from './token-storage.service';
-import { tap, finalize, catchError } from 'rxjs/operators';
+import { tap, finalize, catchError, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
+import { User } from '../models/user.model';
+
+type AuthResponse = {
+    user: User;
+    token?: string | null;
+    roles?: string[];
+    approval_status?: string;
+    requires_approval?: boolean;
+    [key: string]: any;
+};
 
 @Injectable({
     providedIn: 'root'
@@ -16,16 +26,12 @@ export class AuthService {
         private tokenStorage: TokenStorageService
     ) { }
 
-    login(credentials: any, remember = false): Observable<any> {
-        return this.apiService.post<any>('/auth/login', credentials).pipe(
-            tap(data => {
-                this.tokenStorage.persistAuthResponse(data.token, data.user, remember);
-            })
-        );
+    login(credentials: any, remember = false, includeToken = false): Observable<AuthResponse> {
+        return this.runAuthRequest('/auth/login', credentials, remember, includeToken);
     }
 
-    register(user: any): Observable<any> {
-        return this.apiService.post('/auth/register', user);
+    register(user: any, remember = false, includeToken = false): Observable<AuthResponse> {
+        return this.runAuthRequest('/auth/register', user, remember, includeToken);
     }
 
     logout(): Observable<any> {
@@ -38,7 +44,7 @@ export class AuthService {
     }
 
     isLoggedIn(): boolean {
-        return !!this.tokenStorage.getToken();
+        return !!this.tokenStorage.getUser();
     }
 
     sendResetCode(email: string): Observable<any> {
@@ -54,30 +60,25 @@ export class AuthService {
     }
 
     loginWithGoogle(token: string, remember = false): Observable<any> {
-        this.tokenStorage.seedToken(token, remember);
-        // Manually attach header to ensure it's sent immediately after seeding
+        // Manually attach header so the user request succeeds before persisting the token
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
         return this.apiService.get<any>('/me', undefined, headers).pipe(
             tap(user => {
-                this.tokenStorage.persistAuthResponse(token, user, remember);
+                this.tokenStorage.persistAuthResponse(user, remember, token);
             })
         );
     }
 
-    exchangeToken(exchangeToken: string, remember = false): Observable<any> {
-        return this.apiService.post<any>('/auth/exchange-token', { exchange_token: exchangeToken }).pipe(
-            tap(data => {
-                this.tokenStorage.persistAuthResponse(data.token, data.user, remember);
-            })
-        );
+    exchangeToken(exchangeToken: string, remember = false, includeToken = false): Observable<AuthResponse> {
+        return this.runAuthRequest('/auth/exchange-token', { exchange_token: exchangeToken }, remember, includeToken);
     }
 
     // New method: verify email activation code
     verifyEmail(code: string, remember = false): Observable<any> {
         return this.apiService.post('/auth/verify-email', { code }).pipe(
             tap((data: any) => {
-                if (data?.token && data?.user) {
-                    this.tokenStorage.persistAuthResponse(data.token, data.user, remember);
+                if (data?.user) {
+                    this.tokenStorage.persistAuthResponse(data.user, remember, data.token);
                 }
             })
         );
@@ -104,8 +105,33 @@ export class AuthService {
     user(): Observable<any> {
         return this.apiService.get('/me');
     }
-
+  
     get currentUser(): any {
         return this.tokenStorage.getUser();
+    }
+
+    ensureCsrfCookie(): Observable<void> {
+        return this.apiService.getCsrfCookie();
+    }
+
+    private persistAuthPayload(data: AuthResponse, remember: boolean): void {
+        if (data?.user) {
+            this.tokenStorage.persistAuthResponse(data.user, remember, data.token);
+        }
+    }
+
+    private runAuthRequest(
+        path: string,
+        payload: Record<string, any>,
+        remember: boolean,
+        includeToken = false
+    ): Observable<AuthResponse> {
+        return this.ensureCsrfCookie().pipe(
+            switchMap(() => this.apiService.post<AuthResponse>(path, {
+                ...payload,
+                include_token: includeToken
+            })),
+            tap(data => this.persistAuthPayload(data, remember))
+        );
     }
 }

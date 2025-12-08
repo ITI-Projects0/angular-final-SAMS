@@ -12,8 +12,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             headers: req.headers.set('Authorization', `Bearer ${token}`)
         });
         return next(authReq);
-    } else {
-        console.log('AuthInterceptor: No token found');
     }
 
     return next(req);

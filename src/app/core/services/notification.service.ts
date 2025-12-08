@@ -50,7 +50,7 @@ export class NotificationService {
     const user = this.tokenStorage.getUser();
     const token = this.tokenStorage.getToken();
 
-    if (!user || !token) {
+    if (!user) {
       console.warn('Cannot initialize notifications: User not authenticated');
       return;
     }
@@ -157,7 +157,7 @@ export class NotificationService {
     this.unreadCountSubject.next(0);
   }
 
-  private createAuthorizer(token: string) {
+  private createAuthorizer(token?: string | null) {
     const authUrl = 'http://localhost:8000/broadcasting/auth';
 
     return (channel: any, options: any) => ({
@@ -167,13 +167,19 @@ export class NotificationService {
           channel_name: channel.name
         }).toString();
 
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        };
+
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
+
         fetch(authUrl, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json'
-          },
+          headers,
+          credentials: 'include',
           body
         })
           .then(async (response) => {
