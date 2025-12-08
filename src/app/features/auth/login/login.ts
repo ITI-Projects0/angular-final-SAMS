@@ -76,7 +76,7 @@ export class Login implements OnInit {
           title: 'Welcome back!',
           message: 'Signed in with Google successfully.'
         });
-        
+
         const roles = response.roles || response.user?.roles || [];
         const redirectUrl = this.authService.getDashboardUrl(roles);
         this.router.navigate([redirectUrl]);
@@ -152,6 +152,8 @@ export class Login implements OnInit {
       },
       error: (err) => {
         this.loadingService.hide();
+        console.log(err);
+
         this.feedback.showToast({
           tone: 'error',
           title: 'Unable to sign in',
@@ -164,7 +166,7 @@ export class Login implements OnInit {
 
 
   private extractMessage(err: any, fallback: string): string {
-    const message = err?.error?.message ?? err?.message;
+    const message = err?.error?.message ?? err?.message ?? err;
     if (!message) {
       return fallback;
     }

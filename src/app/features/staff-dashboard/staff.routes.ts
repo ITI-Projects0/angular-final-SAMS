@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../../core/auth/auth.guard';
 import { roleGuard } from '../../core/auth/role.guard';
+import { approvalGuard } from '../../core/auth/approval.guard';
 import { UnifiedDashboard } from '../../layouts/unified-dashboard/unified-dashboard';
 import { Overview } from './overview/overview';
 import { StaffGroups } from './courses/courses';
@@ -14,7 +15,7 @@ export const StaffRoutes: Routes = [
   {
     path: 'dashboard/staff',
     component: UnifiedDashboard,
-    canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard, approvalGuard, roleGuard],
     data: { roles: ['teacher', 'assistant', 'center_admin'], dashboardType: 'staff' },
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },

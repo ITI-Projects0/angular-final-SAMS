@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from '../services/api.service';
 import { TokenStorageService } from './token-storage.service';
-import { tap, finalize, catchError, switchMap } from 'rxjs/operators';
+import { tap, finalize, catchError, switchMap, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { User } from '../models/user.model';
@@ -76,7 +76,8 @@ export class AuthService {
     // New method: verify email activation code
     verifyEmail(code: string, remember = false): Observable<any> {
         return this.apiService.post('/auth/verify-email', { code }).pipe(
-            tap((data: any) => {
+            map(data => this.normalizeAuthResponse(data)),
+            tap((data: AuthResponse) => {
                 if (data?.user) {
                     this.tokenStorage.persistAuthResponse(data.user, remember, data.token);
                 }
@@ -131,7 +132,31 @@ export class AuthService {
                 ...payload,
                 include_token: includeToken
             })),
+            map(raw => this.normalizeAuthResponse(raw)),
             tap(data => this.persistAuthPayload(data, remember))
         );
+    }
+
+    private normalizeAuthResponse(raw: any): AuthResponse {
+        if (!raw) {
+            return raw;
+        }
+
+        const envelope = raw.data ?? {};
+        const user = raw.user ?? envelope.user;
+        const token = raw.token ?? envelope.token ?? null;
+        const roles = raw.roles ?? envelope.roles ?? user?.roles;
+        const approval_status = raw.approval_status ?? envelope.approval_status ?? user?.approval_status;
+        const requires_approval = raw.requires_approval ?? envelope.requires_approval;
+
+        return {
+            ...raw,
+            ...envelope,
+            user,
+            token,
+            roles,
+            approval_status,
+            requires_approval
+        };
     }
 }
