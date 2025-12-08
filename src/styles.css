@@ -34,6 +34,18 @@
   --student-warning: #f59e0b;
   --student-danger: #ef4444;
   --student-info: #3b82f6;
+
+  /* Dashboard specific - using existing palette */
+  --dashboard-sidebar-bg: var(--card-strong);
+  --dashboard-sidebar-border: var(--glass-border);
+  --dashboard-nav-bg: var(--card-strong);
+  --dashboard-content-bg: var(--bg);
+  --dashboard-link-text: var(--text);
+  --dashboard-link-muted: var(--muted);
+  --dashboard-link-hover-bg: var(--panel);
+  --dashboard-link-hover-border: rgba(59, 130, 246, 0.2);
+  --dashboard-link-active-bg: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  --dashboard-link-active-shadow: 0 8px 20px rgba(6, 182, 212, 0.35);
 }
 
 .dark {
@@ -53,7 +65,7 @@
   --shadow-strong: 0 25px 60px rgba(0, 0, 0, 0.35);
   --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.28);
 
-    --student-bg: #0f172a;
+  --student-bg: #0f172a;
   --student-surface: #1e293b;
   --student-elevated: #334155;
   --student-border: #475569;
@@ -71,6 +83,18 @@
   --student-warning: #d97706;
   --student-danger: #dc2626;
   --student-info: #2563eb;
+
+  /* Dashboard specific - dark mode */
+  --dashboard-sidebar-bg: #0f1729;
+  --dashboard-sidebar-border: var(--glass-border);
+  --dashboard-nav-bg: #0f1729;
+  --dashboard-content-bg: var(--bg);
+  --dashboard-link-text: var(--text);
+  --dashboard-link-muted: var(--muted);
+  --dashboard-link-hover-bg: #1e293b;
+  --dashboard-link-hover-border: rgba(96, 165, 250, 0.25);
+  --dashboard-link-active-bg: linear-gradient(135deg, #22d3ee, #a78bfa);
+  --dashboard-link-active-shadow: 0 8px 20px rgba(34, 211, 238, 0.25);
 }
 
 /* Component helpers (use throughout app) */
@@ -164,174 +188,6 @@ html:not(.rtl) body {
 .btn-simple:hover {
   transform: translateY(-1px);
   border-color: var(--primary);
-}
-
-/* Auth shared styles */
-.auth-card {
-  background: var(--card);
-  color: var(--text);
-  border-radius: clamp(1rem, 1.8vw, 1.75rem);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-strong);
-  backdrop-filter: blur(18px) saturate(140%);
-}
-
-.auth-card h2 {
-  color: var(--text);
-}
-
-.auth-muted {
-  color: var(--muted);
-}
-
-.auth-input {
-  width: 100%;
-  border-radius: 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--glass-border) 70%, transparent);
-  padding: 0.85rem 1rem;
-  background: color-mix(in srgb, var(--card-strong) 87%, #f8fafc 13%);
-  color: var(--text);
-  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
-}
-
-.dark .auth-input {
-  background: color-mix(in srgb, var(--card-strong) 65%, #0b1220 35%);
-  border-color: color-mix(in srgb, var(--glass-border) 40%, rgba(15, 23, 42, 0.8) 60%);
-}
-
-.auth-input:focus {
-  border-color: var(--primary);
-  outline: none;
-  background: var(--card-strong);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent);
-}
-
-.auth-input::placeholder {
-  color: var(--muted);
-  opacity: 0.7;
-}
-
-.auth-checkbox {
-  accent-color: var(--primary);
-}
-
-.auth-link {
-  color: var(--primary);
-  font-weight: 600;
-  cursor: pointer;
-  transition: color 150ms ease;
-}
-
-.auth-link:hover {
-  color: color-mix(in srgb, var(--primary) 75%, white);
-  text-decoration: underline;
-}
-
-.auth-button {
-  background: linear-gradient(128deg, var(--primary), color-mix(in srgb, var(--primary) 60%, white));
-  color: #fff;
-  border: none;
-  border-radius: 999px;
-  font-weight: 600;
-  box-shadow: var(--shadow-soft);
-  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
-}
-
-.auth-button:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-strong);
-}
-
-.auth-button:active {
-  transform: translateY(0);
-  filter: brightness(0.95);
-}
-
-.auth-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.auth-google {
-  border-radius: 0.9rem;
-  border: 1px solid var(--glass-border);
-  background: var(--card-strong);
-  color: var(--text);
-  padding: 0.85rem 1rem;
-  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
-}
-
-.auth-google:hover {
-  border-color: var(--primary);
-  background: color-mix(in srgb, var(--card-strong) 80%, var(--primary) 6%);
-  transform: translateY(-1px);
-}
-
-.auth-divider {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 1.5rem 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.auth-divider::before,
-.auth-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: var(--glass-border);
-}
-
-.auth-error {
-  color: var(--danger);
-  font-size: 0.78rem;
-}
-
-.auth-meta {
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.auth-hero-copy {
-  color: var(--muted);
-  text-align: center;
-}
-
-.password-field {
-  position: relative;
-  width: 100%;
-}
-
-.password-field input {
-  width: 100%;
-  padding-right: 3rem;
-}
-
-.password-toggle {
-  position: absolute;
-  top: 50%;
-  right: 0.65rem;
-  transform: translateY(-50%);
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  padding: 0.25rem;
-  border-radius: 999px;
-  transition: color 150ms ease, background 150ms ease;
-}
-
-.password-toggle:hover {
-  color: var(--primary);
-  background: color-mix(in srgb, var(--primary) 10%, transparent);
-}
-
-.auth-animation {
-  width: 100%;
-  max-width: 36rem;
-  filter: drop-shadow(0 25px 60px rgba(15, 23, 42, 0.14));
 }
 
 /* You can add global styles to this file, and also import other style files */

@@ -1,8 +1,5 @@
 .auth-wrapper {
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
     padding: clamp(0.5rem, 3vw, 2.5rem);
     background: radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.15), transparent 45%),
@@ -37,9 +34,6 @@
 }
 
 .dark-toggle {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 50%;
@@ -61,4 +55,200 @@
 
 .dark .dark-toggle {
     background: var(--card);
+}
+
+/* Auth shared styles */
+.auth-card {
+    background: var(--card);
+    color: var(--text);
+    border-radius: clamp(1rem, 1.8vw, 1.75rem);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-strong);
+    backdrop-filter: blur(18px) saturate(140%);
+}
+
+.auth-card h2 {
+    color: var(--text);
+}
+
+.auth-muted {
+    color: var(--muted);
+}
+
+.auth-input {
+    width: 100%;
+    border-radius: 0.9rem;
+    border: 1px solid color-mix(in srgb, var(--glass-border) 70%, transparent);
+    padding: 0.85rem 1rem;
+    background: color-mix(in srgb, var(--card-strong) 87%, #f8fafc 13%);
+    color: var(--text);
+    transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.dark .auth-input {
+    background: color-mix(in srgb, var(--card-strong) 65%, #0b1220 35%);
+    border-color: color-mix(in srgb, var(--glass-border) 40%, rgba(15, 23, 42, 0.8) 60%);
+}
+
+.auth-input:focus {
+    border-color: var(--primary);
+    outline: none;
+    background: var(--card-strong);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+.auth-input::placeholder {
+    color: var(--muted);
+    opacity: 0.7;
+}
+
+.auth-checkbox {
+    accent-color: var(--primary);
+}
+
+.auth-link {
+    color: var(--primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 150ms ease;
+}
+
+.auth-link:hover {
+    color: color-mix(in srgb, var(--primary) 75%, white);
+    text-decoration: underline;
+}
+
+.auth-button {
+    background: linear-gradient(128deg, var(--primary), color-mix(in srgb, var(--primary) 60%, white));
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-weight: 600;
+    box-shadow: var(--shadow-soft);
+    transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.auth-button:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-strong);
+}
+
+.auth-button:active {
+    transform: translateY(0);
+    filter: brightness(0.95);
+}
+
+.auth-button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.auth-google {
+    border-radius: 0.9rem;
+    border: 1px solid var(--glass-border);
+    background: var(--card-strong);
+    color: var(--text);
+    padding: 0.85rem 1rem;
+    transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.auth-google:hover {
+    border-color: var(--primary);
+    background: color-mix(in srgb, var(--card-strong) 80%, var(--primary) 6%);
+    transform: translateY(-1px);
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--glass-border);
+}
+
+.auth-error {
+    color: var(--danger);
+    font-size: 0.78rem;
+}
+
+.auth-meta {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.auth-hero-copy {
+    color: var(--muted);
+    text-align: center;
+}
+
+.password-field {
+    position: relative;
+    width: 100%;
+}
+
+.password-field input {
+    width: 100%;
+    padding-right: 3rem;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.65rem;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 999px;
+    transition: color 150ms ease, background 150ms ease;
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+    background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.auth-animation {
+    width: 100%;
+    max-width: 36rem;
+    filter: drop-shadow(0 25px 60px rgba(15, 23, 42, 0.14));
+}
+
+/* Fixed animation section - stays at viewport height */
+.auth-animation-section {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 1;
+}
+
+/* Fixed animation section on the right - for register page */
+.auth-animation-section-right {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 50%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 1;
 }

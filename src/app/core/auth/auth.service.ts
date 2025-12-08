@@ -105,6 +105,10 @@ export class AuthService {
     user(): Observable<any> {
         return this.apiService.get('/me');
     }
+  
+    get currentUser(): any {
+        return this.tokenStorage.getUser();
+    }
 
     ensureCsrfCookie(): Observable<void> {
         return this.apiService.getCsrfCookie();
