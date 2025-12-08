@@ -42,7 +42,7 @@ export class LessonDetailComponent implements OnInit {
 
   // Sidebar
   panelOpen = false;
-  panelMode: 'attendance' | 'assessment' | null = null;
+  panelMode: 'attendance' | 'assessment' | 'edit-lesson' | null = null;
   panelTitle = '';
 
   // Assessment Form
@@ -50,6 +50,12 @@ export class LessonDetailComponent implements OnInit {
     title: '',
     scheduled_at: '',
     max_score: 100
+  };
+
+  lessonForm = {
+    title: '',
+    scheduled_at: '',
+    description: ''
   };
 
   constructor(
@@ -253,26 +259,150 @@ export class LessonDetailComponent implements OnInit {
     return date < now ? 'Completed' : 'Upcoming';
   }
 
+  // Lesson Management
+  openEditLesson(): void {
+    this.panelMode = 'edit-lesson';
+    this.panelTitle = 'Edit Lesson';
+    this.panelOpen = true;
+    this.lessonForm = {
+      title: this.lesson.title,
+      scheduled_at: this.lesson.scheduled_at,
+      description: this.lesson.description || ''
+    };
+  }
+
+  deleteLesson(): void {
+    this.feedback.openModal({
+      icon: 'warning',
+      title: 'Delete Lesson?',
+      message: 'Are you sure you want to delete this lesson? This action cannot be undone.',
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+      onPrimary: () => {
+        this.processing = true;
+        this.staffService.deleteLesson(this.lessonId).subscribe({
+          next: () => {
+            this.processing = false;
+            this.feedback.showToast({ title: 'Success', message: 'Lesson deleted successfully.', tone: 'success' });
+            this.router.navigate(['/dashboard/staff/groups', this.groupId]);
+          },
+          error: (err) => {
+            this.processing = false;
+            console.error('Failed to delete lesson', err);
+            this.feedback.showToast({ title: 'Error', message: 'Failed to delete lesson.', tone: 'error' });
+            this.cdr.detectChanges();
+          }
+        });
+      },
+      onSecondary: () => this.feedback.closeModal()
+    });
+  }
+
+  // Assessment Management
+  selectedAssessment: any = null;
+
+  openEditAssessment(assessment: any, event: Event): void {
+    event.stopPropagation(); // Prevent navigation to detail
+    this.selectedAssessment = assessment;
+    this.assessmentForm = {
+      title: assessment.title,
+      scheduled_at: assessment.scheduled_at,
+      max_score: assessment.max_score
+    };
+    this.panelMode = 'assessment';
+    this.panelTitle = 'Edit Assessment';
+    this.panelOpen = true;
+  }
+
+  deleteAssessment(assessment: any, event: Event): void {
+    event.stopPropagation(); // Prevent navigation
+    this.feedback.openModal({
+      icon: 'warning',
+      title: 'Delete Assessment?',
+      message: `Are you sure you want to delete "${assessment.title}"?`,
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+      onPrimary: () => {
+        this.processing = true;
+        this.staffService.deleteAssessment(assessment.id).subscribe({
+          next: () => {
+            this.processing = false;
+            this.feedback.showToast({ title: 'Success', message: 'Assessment deleted successfully.', tone: 'success' });
+            this.loadData(); // Reload to remove from list
+          },
+          error: (err) => {
+            this.processing = false;
+            console.error('Failed to delete assessment', err);
+            this.feedback.showToast({ title: 'Error', message: 'Failed to delete assessment.', tone: 'error' });
+            this.cdr.detectChanges();
+          }
+        });
+      },
+      onSecondary: () => this.feedback.closeModal()
+    });
+  }
+
   saveAssessment(): void {
     if (this.processing || !this.assessmentForm.title || !this.assessmentForm.scheduled_at) return;
     this.processing = true;
 
-    this.staffService.createAssessment(this.lessonId, this.assessmentForm).subscribe({
+    const request$ = this.selectedAssessment
+      ? this.staffService.updateAssessment(this.selectedAssessment.id, this.assessmentForm)
+      : this.staffService.createAssessment(this.lessonId, this.assessmentForm);
+
+    request$.subscribe({
       next: () => {
         this.processing = false;
-        this.feedback.showToast({ title: 'Success', message: 'Assessment created successfully!', tone: 'success' });
+        const action = this.selectedAssessment ? 'updated' : 'created';
+        this.feedback.showToast({ title: 'Success', message: `Assessment ${action} successfully!`, tone: 'success' });
         this.closePanel();
         this.loadData();
         // Reset form
         this.assessmentForm = { title: '', scheduled_at: '', max_score: 100 };
+        this.selectedAssessment = null;
       },
       error: (err) => {
         this.processing = false;
-        console.error('Failed to create assessment', err);
-        this.feedback.showToast({ title: 'Error', message: 'Failed to create assessment.', tone: 'error' });
+        console.error('Failed to save assessment', err);
+        this.feedback.showToast({ title: 'Error', message: 'Failed to save assessment.', tone: 'error' });
         this.cdr.detectChanges();
       }
     });
+  }
+
+  saveLesson(): void {
+    if (this.processing) return;
+    this.processing = true;
+
+    // We need a separate form object for lesson editing, or reuse existing properties.
+    // For simplicity, let's assume we bind to a local object 'lessonForm' which we need to define.
+    // Since I didn't define it yet, let's use the lesson object directly or create a payload.
+    // Better: Define lessonForm.
+
+    const payload = {
+      title: this.lessonForm.title,
+      scheduled_at: this.lessonForm.scheduled_at,
+      description: this.lessonForm.description
+    };
+
+    this.staffService.updateLesson(this.lessonId, payload).subscribe({
+      next: (res) => {
+        this.processing = false;
+        this.lesson = res.data; // Update local
+        this.feedback.showToast({ title: 'Success', message: 'Lesson updated successfully.', tone: 'success' });
+        this.closePanel();
+      },
+      error: (err) => {
+        this.processing = false;
+        console.error('Failed to update lesson', err);
+        this.feedback.showToast({ title: 'Error', message: 'Failed to update lesson.', tone: 'error' });
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  viewAssessment(assessmentId: number): void {
+    this.router.navigate(['/dashboard/staff/groups', this.groupId, 'lessons', this.lessonId, 'assessments', assessmentId]);
   }
 
   // Sidebar Logic
@@ -298,8 +428,5 @@ export class LessonDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/dashboard/staff/groups', this.groupId]);
-  }
-  viewAssessment(assessmentId: number): void {
-    this.router.navigate(['/dashboard/staff/groups', this.groupId, 'lessons', this.lessonId, 'assessments', assessmentId]);
   }
 }

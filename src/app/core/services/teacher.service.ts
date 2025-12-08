@@ -106,6 +106,14 @@ export class TeacherService {
     return this.api.get(`/assessments/${assessmentId}`);
   }
 
+  updateAssessment(assessmentId: number, data: any): Observable<any> {
+    return this.api.put(`/assessments/${assessmentId}`, data);
+  }
+
+  deleteAssessment(assessmentId: number): Observable<any> {
+    return this.api.delete(`/assessments/${assessmentId}`);
+  }
+
   saveAssessmentGrade(assessmentId: number, studentId: number, score: number, feedback?: string): Observable<any> {
     return this.api.post(`/assessments/${assessmentId}/results`, { student_id: studentId, score, feedback });
   }

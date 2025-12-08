@@ -72,12 +72,22 @@
 
         <div class="field">
           <label>New password</label>
-          <input type="password" [(ngModel)]="password.new" />
+          <div class="password-field">
+            <input [type]="passwordVisibility.new ? 'text' : 'password'" [(ngModel)]="password.new" />
+            <button type="button" class="password-toggle" (click)="togglePasswordVisibility('new')" aria-label="Toggle new password visibility">
+              <i class="fa-solid" [ngClass]="passwordVisibility.new ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </div>
         </div>
 
         <div class="field">
           <label>Confirm password</label>
-          <input type="password" [(ngModel)]="password.confirm" />
+          <div class="password-field">
+            <input [type]="passwordVisibility.confirm ? 'text' : 'password'" [(ngModel)]="password.confirm" />
+            <button type="button" class="password-toggle" (click)="togglePasswordVisibility('confirm')" aria-label="Toggle confirm password visibility">
+              <i class="fa-solid" [ngClass]="passwordVisibility.confirm ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </div>
         </div>
 
         <div class="actions-right">
