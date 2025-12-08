@@ -106,12 +106,18 @@
         @if(!collapsed) { <span>Teachers</span> }
       </a>
 
-      <!-- <a class="group flex items-center gap-3 rounded-xl px-3 py-2 mx-2 text-sm font-medium text-slate-800 border border-transparent hover:bg-slate-100 hover-border-slate-200 transition dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-700" routerLink="/dashboard/admin/contacts" routerLinkActive="!bg-fuchsia-600 !text-white !border-transparent shadow-lg shadow-fuchsia-500/40" [routerLinkActiveOptions]="{ exact: true }" [ngClass]="collapsed ? 'justify-center px-0' : ''">
-        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"/><path d="M7 10.5 12 13l5-2.5"/></svg>
-@if(!collapsed) { <span>Contacts</span> }
+      <a class="group flex items-center gap-3 rounded-xl px-3 py-2 mx-2 text-sm font-medium text-slate-800 border border-transparent hover:bg-slate-100 hover:border-slate-200 transition dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-700"
+        routerLink="/dashboard/admin/contacts"
+        routerLinkActive="!bg-fuchsia-600 !text-white !border-transparent shadow-lg shadow-fuchsia-500/40"
+        [routerLinkActiveOptions]="{ exact: true }" [ngClass]="collapsed ? 'justify-center px-0' : ''">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 7h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z" />
+          <path d="M7 10.5 12 13l5-2.5" /></svg>
+        @if(!collapsed) { <span>Contacts</span> }
       </a>
 
-      <a class="group flex items-center gap-3 rounded-xl px-3 py-2 mx-2 text-sm font-medium text-slate-800 border border-transparent hover:bg-slate-100 hover-border-slate-200 transition dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-700" routerLink="/dashboard/admin/payments" routerLinkActive="!bg-fuchsia-600 !text-white !border-transparent shadow-lg shadow-fuchsia-500/40" [routerLinkActiveOptions]="{ exact: true }" [ngClass]="collapsed ? 'justify-center px-0' : ''">
+      <!-- <a class="group flex items-center gap-3 rounded-xl px-3 py-2 mx-2 text-sm font-medium text-slate-800 border border-transparent hover:bg-slate-100 hover-border-slate-200 transition dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:border-slate-700" routerLink="/dashboard/admin/payments" routerLinkActive="!bg-fuchsia-600 !text-white !border-transparent shadow-lg shadow-fuchsia-500/40" [routerLinkActiveOptions]="{ exact: true }" [ngClass]="collapsed ? 'justify-center px-0' : ''">
         <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v10H4V7Z"/><path d="M4 11h16M8 15h2.5"/></svg>
 @if(!collapsed) { <span>Payments</span> }
       </a> -->
