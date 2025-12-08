@@ -1,14 +1,15 @@
-<div class="p-6 space-y-6" *ngIf="childDetails$ | async as child">
+<div class="p-6 space-y-6" *ngIf="childDetails$ | async as child; else loading">
     <!-- Header / Profile -->
     <header
         class="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col sm:flex-row items-center gap-6">
         <div
             class="w-24 h-24 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-4xl">
-            {{ child.name.charAt(0) }}
+            {{ (child.name || '?').charAt(0) }}
         </div>
         <div class="text-center sm:text-left">
             <h1 class="text-3xl font-bold text-slate-900 dark:text-white">{{ child.name }}</h1>
-            <p class="text-slate-500 dark:text-slate-400">{{ child.className }}</p>
+            <p class="text-slate-500 dark:text-slate-400">{{ child.email || '—' }}</p>
+            <p class="text-slate-500 dark:text-slate-400">{{ child.center?.name || '' }}</p>
         </div>
     </header>
 
@@ -16,15 +17,15 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
             <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Overall Attendance</h3>
-            <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{{ child.attendanceRate }}%</p>
+            <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{{ child.stats?.attendanceRate || 0 }}%</p>
         </div>
         <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
             <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Active Classes</h3>
-            <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ child.classes.length }}</p>
+            <p class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ child.stats?.activeClasses || 0 }}</p>
         </div>
         <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
             <h3 class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-2">Pending Assignments</h3>
-            <p class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ child.pendingAssignments }}</p>
+            <p class="text-3xl font-bold text-amber-600 dark:text-amber-400">{{ child.stats?.pendingAssignments || 0 }}</p>
         </div>
     </div>
 
@@ -41,59 +42,15 @@
                     <div class="flex-1">
                         <h3 class="text-lg font-bold text-slate-900 dark:text-white">{{ cls.name }}</h3>
                         <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{{ cls.teacherName }}</p>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">{{ cls.subject }}</p>
                     </div>
-                    <span
-                        class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 text-sm font-medium">
-                        {{ cls.progress }}%
-                    </span>
-                </div>
-
-                <div class="space-y-3">
-                    <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>{{ cls.schedule }}</span>
-                    </div>
-
-                    @if (cls.exams && cls.exams.length > 0) {
-                    <div class="pt-3 border-t border-slate-100 dark:border-slate-700">
-                        <p class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
-                            Exams & Grades</p>
-                        @for (exam of cls.exams; track exam.id) {
-                        <div class="flex items-center justify-between py-2">
-                            <div class="flex-1 min-w-0">
-                                <p class="text-sm font-medium text-slate-700 dark:text-slate-300 truncate">{{ exam.title
-                                    }}</p>
-                                <p class="text-xs text-slate-500 dark:text-slate-400">{{ exam.date | date:'mediumDate'
-                                    }}</p>
-                            </div>
-                            @if (exam.score !== null) {
-                            <span class="ml-3 font-bold text-sm shrink-0" [class.text-emerald-600]="exam.score >= 85"
-                                [class.dark:text-emerald-400]="exam.score >= 85"
-                                [class.text-amber-600]="exam.score >= 70 && exam.score < 85"
-                                [class.dark:text-amber-400]="exam.score >= 70 && exam.score < 85"
-                                [class.text-red-600]="exam.score < 70" [class.dark:text-red-400]="exam.score < 70">
-                                {{ exam.score }}/{{ exam.total }}
-                            </span>
-                            } @else {
-                            <span
-                                class="ml-3 px-2 py-1 rounded bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 text-xs font-medium shrink-0">
-                                Upcoming
-                            </span>
-                            }
-                        </div>
-                        }
-                    </div>
-                    } @else {
-                    <p
-                        class="text-sm text-slate-500 dark:text-slate-400 italic pt-3 border-t border-slate-100 dark:border-slate-700">
-                        No exams recorded yet</p>
-                    }
                 </div>
             </div>
             }
         </div>
     </div>
 </div>
+
+<ng-template #loading>
+  <app-loader label="Loading child details..." size="md"></app-loader>
+</ng-template>

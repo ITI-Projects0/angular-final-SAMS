@@ -12,5 +12,5 @@ import { ParentService } from '../../../core/services/parent.service';
 })
 export class ParentChildren {
   private parentService = inject(ParentService);
-  childrenSummary$ = this.parentService.getChildrenSummary();
+  childrenSummary$ = this.parentService.getChildren();
 }
