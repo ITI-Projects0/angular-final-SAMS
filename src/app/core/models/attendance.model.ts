@@ -1,7 +1,8 @@
 export interface AttendanceRecord {
+    id?: number | string;
     date: string;
     subject: string;
-    status: 'present' | 'absent' | 'late';
+    status: 'present' | 'absent' | 'late' | 'excused' | 'unknown';
 }
 
 export interface ChildAttendance {
@@ -9,5 +10,5 @@ export interface ChildAttendance {
     childName: string;
     subject: string;
     date: string;
-    status: 'present' | 'absent' | 'late';
+    status: 'present' | 'absent' | 'late' | 'excused' | 'unknown';
 }

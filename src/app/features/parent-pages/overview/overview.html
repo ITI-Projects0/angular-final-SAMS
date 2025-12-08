@@ -1,174 +1,187 @@
 <div class="max-w-6xl mx-auto p-4 lg:p-6 space-y-6 min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] transition-colors">
-  @if (childrenSummary$ | async; as children) {
-  <div
-    class="rounded-3xl overflow-hidden bg-gradient-to-r from-indigo-600 via-sky-600 to-emerald-500 dark:from-[#0f1729] dark:via-[#0b1223] dark:to-[#0f1729] shadow-lg">
-    <div class="p-6 lg:p-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-      <div class="space-y-2">
-        <p class="text-sm uppercase tracking-wide text-white/80">Overview</p>
-        <h1 class="text-3xl font-bold text-white">Parent Dashboard</h1>
-        <p class="text-white/80">Stay aligned with classes, attendance, and updates for your children.</p>
-      </div>
-      <div class="flex flex-wrap gap-3">
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 dark:bg-white/5 text-white text-sm font-semibold shadow-sm ring-1 ring-white/30 dark:ring-white/10 backdrop-blur">
-          <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
-          <span>{{ children.length }} Children</span>
+  @if (summary$ | async; as summary) {
+    <div
+      class="rounded-3xl overflow-hidden bg-linear-to-r from-indigo-600 via-sky-600 to-emerald-500 dark:from-[#0f1729] dark:via-[#0b1223] dark:to-[#0f1729] shadow-lg">
+      <div class="p-6 lg:p-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div class="space-y-2">
+          <p class="text-sm uppercase tracking-wide text-white/80">Overview</p>
+          <h1 class="text-3xl font-bold text-white">Parent Dashboard</h1>
+          <p class="text-white/80">Stay aligned with classes, attendance, and updates for your children.</p>
         </div>
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 dark:bg-white/5 text-white text-sm font-semibold shadow-sm ring-1 ring-white/30 dark:ring-white/10 backdrop-blur">
-          <span class="h-2 w-2 rounded-full bg-amber-200"></span>
-          <span>{{ getTotalClasses(children) }} Classes</span>
-        </div>
-        <div
-          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 dark:bg-white/5 text-white text-sm font-semibold shadow-sm ring-1 ring-white/30 dark:ring-white/10 backdrop-blur">
-          <span class="h-2 w-2 rounded-full bg-sky-200"></span>
-          <span>{{ getAvgAttendance(children) }}% Attendance</span>
+        <div class="flex flex-wrap gap-3">
+          <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 dark:bg-white/5 text-white text-sm font-semibold shadow-sm ring-1 ring-white/30 dark:ring-white/10 backdrop-blur">
+            <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+            <span>{{ summary.childrenTotal }} Children</span>
+          </div>
+          <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 dark:bg-white/5 text-white text-sm font-semibold shadow-sm ring-1 ring-white/30 dark:ring-white/10 backdrop-blur">
+            <span class="h-2 w-2 rounded-full bg-amber-200"></span>
+            <span>{{ summary.upcomingClassesCount }} Upcoming Classes</span>
+          </div>
+          <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 dark:bg-white/5 text-white text-sm font-semibold shadow-sm ring-1 ring-white/30 dark:ring-white/10 backdrop-blur">
+            <span class="h-2 w-2 rounded-full bg-sky-200"></span>
+            <span>{{ summary?.pendingAssignmentsCount ?? 0 }} Pending</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  @if (children.length > 0) {
-  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-    <div
-      class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
-      <div class="flex items-center gap-3">
-        <div
-          class="p-3 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 shadow-inner">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div
+        class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
+        <div class="flex items-center gap-3">
+          <div
+            class="p-3 rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 shadow-inner">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 20h5v-2a3 3 0 00-5-2.236M17 20H7m10 0v-2a3 3 0 00-5-2.236M7 20H2v-2a3 3 0 015-2.236m0 0a3 3 0 016 0m-6 0a3 3 0 10-6 0m6-8a3 3 0 110-6 3 3 0 010 6zm8 0a3 3 0 110-6 3 3 0 010 6z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Children</p>
+            <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ summary.childrenTotal }}</h3>
+            <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Linked to your account</p>
+          </div>
         </div>
-        <div>
-          <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Children</p>
-          <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ children.length }}</h3>
-          <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Linked to your account</p>
+      </div>
+      <div
+        class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
+        <div class="flex items-center gap-3">
+          <div
+            class="p-3 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300 shadow-inner">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Attendance</p>
+            <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ summary.averageAttendanceRate }}%</h3>
+            <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Average attendance rate</p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
+        <div class="flex items-center gap-3">
+          <div
+            class="p-3 rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300 shadow-inner">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Classes</p>
+            <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ summary.activeClasses }}</h3>
+            <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Active classes</p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
+        <div class="flex items-center gap-3">
+          <div
+            class="p-3 rounded-xl bg-sky-50 text-sky-600 dark:bg-sky-900/40 dark:text-sky-300 shadow-inner">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8c-1.657 0-3 1.343-3 3v1H8a2 2 0 100 4h8a2 2 0 100-4h-1v-1c0-1.657-1.343-3-3-3z" />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Pending</p>
+            <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ summary?.pendingAssignmentsCount ?? 0 }}</h3>
+            <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Assignments</p>
+          </div>
         </div>
       </div>
     </div>
-    <div
-      class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
-      <div class="flex items-center gap-3">
-        <div
-          class="p-3 rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-900/40 dark:text-amber-300 shadow-inner">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-          </svg>
-        </div>
-        <div>
-          <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Classes</p>
-          <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ getTotalClasses(children) }}</h3>
-          <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Across all children</p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="p-4 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm backdrop-blur">
-      <div class="flex items-center gap-3">
-        <div
-          class="p-3 rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300 shadow-inner">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </div>
-        <div>
-          <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Attendance</p>
-          <h3 class="text-xl font-bold text-[#0F172A] dark:text-[#F8FAFC]">{{ getAvgAttendance(children) }}%</h3>
-          <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Average attendance rate</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  } @else {
-  <div
-    class="p-6 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm text-center text-[#475569] dark:text-[#CBD5E1]">
-    No children are linked to your account yet.
-  </div>
-  }
-  }
 
-  <div
-    class="bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm overflow-hidden backdrop-blur">
-    <div class="flex items-center justify-between gap-3 p-4 border-b border-[#F1F5F9] dark:border-[#334155]">
-      <div>
-        <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Schedule</p>
-        <h2 class="text-lg font-bold text-[#0F172A] dark:text-[#F8FAFC]">Upcoming Classes (next 48 hours)</h2>
+    @if (overview$ | async; as overview) {
+    <div
+      class="bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm overflow-hidden backdrop-blur">
+      <div class="flex items-center justify-between gap-3 p-4 border-b border-[#F1F5F9] dark:border-[#334155]">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Schedule</p>
+          <h2 class="text-lg font-bold text-[#0F172A] dark:text-[#F8FAFC]">Upcoming Classes (preview)</h2>
+        </div>
+        <span
+          class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold dark:bg-indigo-900/40 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-800">
+          Live view
+        </span>
       </div>
-      <span
-        class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold dark:bg-indigo-900/40 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-800">
-        Live view
-      </span>
-    </div>
-    <div class="p-4">
-      @if (upcomingClasses$ | async; as classes) {
-      @if (classes.length > 0) {
-      <div class="divide-y divide-[#F1F5F9] dark:divide-[#334155]">
-        @for (cls of classes; track cls.id) {
-        <div class="py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div class="flex items-start gap-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-700 dark:text-indigo-200 font-semibold">
-              {{ cls.childName.charAt(0) }}
+      <div class="p-4">
+        @if (overview.upcomingClasses.length > 0) {
+        <div class="divide-y divide-[#F1F5F9] dark:divide-[#334155]">
+          @for (cls of overview.upcomingClasses; track cls.id) {
+          <div class="py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex items-start gap-3">
+              <div
+                class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-700 dark:text-indigo-200 font-semibold">
+                {{ (cls.title || 'C').charAt(0) }}
+              </div>
+              <div class="space-y-1">
+                <p class="font-semibold text-[#0F172A] dark:text-[#F8FAFC]">{{ cls.title }}</p>
+                <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">Subject: {{ cls.subject }}</p>
+              </div>
             </div>
-            <div class="space-y-1">
-              <p class="font-semibold text-[#0F172A] dark:text-[#F8FAFC]">{{ cls.className }}</p>
-              <p class="text-sm text-[#475569] dark:text-[#CBD5E1]">{{ cls.childName }} • {{ cls.teacherName }} • {{
-                cls.location }}</p>
+            <div class="flex items-center gap-2">
+              <span
+                class="px-3 py-1 rounded-full bg-[#F1F5F9] text-[#0F172A] text-xs font-semibold dark:bg-[#334155] dark:text-[#F8FAFC] border border-[#E2E8F0] dark:border-[#1E293B]">
+                {{ cls.scheduledAt | date:'MMM d' }}
+              </span>
+              <span
+                class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold dark:bg-indigo-900/40 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-800">
+                {{ cls.scheduledAt | date:'shortTime' }}
+              </span>
             </div>
           </div>
-          <div class="flex items-center gap-2">
-            <span
-              class="px-3 py-1 rounded-full bg-[#F1F5F9] text-[#0F172A] text-xs font-semibold dark:bg-[#334155] dark:text-[#F8FAFC] border border-[#E2E8F0] dark:border-[#1E293B]">
-              {{ cls.scheduledAt | date:'MMM d' }}
-            </span>
-            <span
-              class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-semibold dark:bg-indigo-900/40 dark:text-indigo-200 border border-indigo-100 dark:border-indigo-800">
-              {{ cls.scheduledAt | date:'shortTime' }}
-            </span>
+          }
+        </div>
+        } @else {
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] text-center py-4">No classes scheduled for today or
+          tomorrow</p>
+        }
+      </div>
+    </div>
+
+    <div
+      class="bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm overflow-hidden backdrop-blur">
+      <div class="p-4 border-b border-[#F1F5F9] dark:border-[#334155]">
+        <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Activity</p>
+        <h2 class="text-lg font-bold text-[#0F172A] dark:text-[#F8FAFC]">Recent Notifications</h2>
+      </div>
+      <div class="divide-y divide-[#F1F5F9] dark:divide-[#334155]">
+        @if (overview.notifications.length > 0) {
+        @for (notif of overview.notifications; track notif.id) {
+        <div class="p-4 flex flex-col gap-2 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors"
+          [class.bg-blue-50]="!notif.read" [class.dark:bg-blue-900/10]="!notif.read">
+          <div class="flex items-start gap-3">
+            <div class="mt-1 h-2 w-2 rounded-full"
+              [class.bg-blue-500]="!notif.read" [class.bg-slate-300]="notif.read"></div>
+            <div class="flex-1 space-y-1">
+              <div class="flex items-start justify-between gap-2">
+                <p class="font-medium text-[#0F172A] dark:text-[#F8FAFC]">{{ notif.title }}</p>
+                <span class="text-xs text-[#64748B] dark:text-[#CBD5E1]">{{ notif.timestamp | date:'short' }}</span>
+              </div>
+              <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{{ notif.message }}</p>
+            </div>
           </div>
         </div>
         }
+        } @else {
+        <p class="text-sm text-[#475569] dark:text-[#CBD5E1] text-center py-6">No notifications</p>
+        }
       </div>
-      } @else {
-      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] text-center py-4">No classes scheduled for today or
-        tomorrow</p>
-      }
-      }
     </div>
+    }
+  } @else {
+  <div class="space-y-3">
+    <div class="h-28 rounded-2xl bg-slate-200/60 dark:bg-slate-700/40 animate-pulse"></div>
+    <div class="h-24 rounded-2xl bg-slate-200/60 dark:bg-slate-700/40 animate-pulse"></div>
+    <div class="h-32 rounded-2xl bg-slate-200/60 dark:bg-slate-700/40 animate-pulse"></div>
   </div>
-
-  <div
-    class="bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl border border-[#F1F5F9] dark:border-[#334155] shadow-sm overflow-hidden backdrop-blur">
-    <div class="p-4 border-b border-[#F1F5F9] dark:border-[#334155]">
-      <p class="text-xs font-semibold uppercase tracking-wide text-[#475569] dark:text-[#CBD5E1]">Activity</p>
-      <h2 class="text-lg font-bold text-[#0F172A] dark:text-[#F8FAFC]">Recent Notifications</h2>
-    </div>
-    <div class="divide-y divide-[#F1F5F9] dark:divide-[#334155]">
-      @if (notifications$ | async; as notifications) {
-      @if (notifications.length > 0) {
-      @for (notif of notifications; track notif.id) {
-      <div class="p-4 flex flex-col gap-2 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors"
-        [class.bg-blue-50]="!notif.read" [class.dark:bg-blue-900/10]="!notif.read">
-        <div class="flex items-start gap-3">
-          <div class="mt-1 h-2 w-2 rounded-full"
-            [class.bg-blue-500]="!notif.read" [class.bg-slate-300]="notif.read"></div>
-          <div class="flex-1 space-y-1">
-            <div class="flex items-start justify-between gap-2">
-              <p class="font-medium text-[#0F172A] dark:text-[#F8FAFC]">{{ notif.title }}</p>
-              <span class="text-xs text-[#64748B] dark:text-[#CBD5E1]">{{ notif.timestamp | date:'short' }}</span>
-            </div>
-            <p class="text-sm text-[#475569] dark:text-[#CBD5E1] leading-relaxed">{{ notif.message }}</p>
-          </div>
-        </div>
-      </div>
-      }
-      } @else {
-      <p class="text-sm text-[#475569] dark:text-[#CBD5E1] text-center py-6">No notifications</p>
-      }
-      }
-    </div>
-  </div>
+  }
 </div>

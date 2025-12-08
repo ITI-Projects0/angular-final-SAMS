@@ -1,0 +1,89 @@
+<section class="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-900">
+  <div class="p-4 border-b border-slate-200 dark:border-slate-700 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <div>
+      <p class="text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Parent AI</p>
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white">Weekly story for {{ studentName || 'student' }}</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400">Attendance, grades, and a friendly explanation.</p>
+    </div>
+    <button type="button"
+      class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-800 hover:-translate-y-0.5 transition dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+      (click)="loadSummary()" [disabled]="loadingSummary">
+      {{ loadingSummary ? 'Updating...' : 'Refresh summary' }}
+    </button>
+  </div>
+
+  <div class="p-4 space-y-4">
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="md:col-span-2 rounded-xl border border-slate-200 bg-slate-50/60 p-3 text-sm dark:border-slate-700 dark:bg-slate-800/70">
+        <div class="flex items-center justify-between mb-2">
+          <p class="font-semibold text-slate-800 dark:text-slate-100">AI weekly summary</p>
+          <span class="text-xs text-slate-500 dark:text-slate-400">Last 7 days</span>
+        </div>
+        <div *ngIf="summaryError" class="text-sm text-red-600 dark:text-red-400">{{ summaryError }}</div>
+        <div *ngIf="!summaryError" class="prose prose-sm max-w-none text-slate-700 dark:text-slate-200 whitespace-pre-line">
+          {{ loadingSummary ? 'Preparing the summary...' : (summary || 'No summary yet. Click refresh to generate it.') }}
+        </div>
+      </div>
+
+      <div class="rounded-xl border border-slate-200 bg-white p-3 text-sm shadow-sm space-y-2 dark:border-slate-700 dark:bg-slate-800">
+        <p class="font-semibold text-slate-800 dark:text-slate-100">Quick stats</p>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500 dark:text-slate-400">Attendance</span>
+          <span class="font-semibold text-emerald-600 dark:text-emerald-300">{{ formatPercent(summaryData?.attendance_rate) }}%</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-500 dark:text-slate-400">Avg grade</span>
+          <span class="font-semibold text-indigo-600 dark:text-indigo-300">{{ summaryData?.avg_grade ?? '—' }}</span>
+        </div>
+        <div class="flex items-start gap-2 text-slate-600 dark:text-slate-300">
+          <span class="mt-0.5 inline-block h-2 w-2 rounded-full bg-amber-500"></span>
+          <div>
+            <p class="font-medium">Missed days</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              {{ (summaryData?.missed_days?.length || 0) ? (summaryData?.missed_days || []).join(', ') : 'None in the last week' }}
+            </p>
+          </div>
+        </div>
+        <div class="flex items-start gap-2 text-slate-600 dark:text-slate-300">
+          <span class="mt-0.5 inline-block h-2 w-2 rounded-full bg-sky-500"></span>
+          <div>
+            <p class="font-medium">Recent grades</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              {{ (summaryData?.recent_grades?.length || 0) ? (summaryData?.recent_grades || []).join(' • ') : 'No grades yet' }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <p class="text-xs uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Explain a note</p>
+            <h4 class="font-semibold text-slate-900 dark:text-white">Ask AI to explain</h4>
+          </div>
+          <span class="text-xs text-slate-500 dark:text-slate-400">Max 2-3 lines</span>
+        </div>
+        <textarea [(ngModel)]="explainText" rows="4" placeholder="Paste a report or note and get a parent-friendly explanation..."
+          class="w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-900 shadow-inner dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"></textarea>
+        <div class="flex items-center gap-3 mt-3">
+          <button type="button"
+            class="inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold shadow hover:-translate-y-0.5 transition disabled:opacity-60 disabled:cursor-not-allowed"
+            [disabled]="loadingExplain || !explainText.trim()" (click)="askExplain()">
+            {{ loadingExplain ? 'Sending...' : 'Explain it' }}
+          </button>
+          <span class="text-xs text-slate-500 dark:text-slate-400">We will summarize in simple language.</span>
+        </div>
+        <div *ngIf="explainError" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ explainError }}</div>
+      </div>
+
+      <div class="rounded-xl border border-slate-200 bg-slate-50/60 p-4 text-sm dark:border-slate-700 dark:bg-slate-800/70">
+        <p class="font-semibold text-slate-800 dark:text-slate-100 mb-2">AI reply</p>
+        <div class="prose prose-sm max-w-none text-slate-700 dark:text-slate-200 whitespace-pre-line">
+          {{ loadingExplain ? 'AI is writing...' : (explainReply || 'Submit a note to get an explanation for parents.') }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

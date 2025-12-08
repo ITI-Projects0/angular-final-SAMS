@@ -1,6 +1,8 @@
 export interface Child {
     id: number;
     name: string;
-    className: string;
-    avatarUrl?: string;
+    email?: string;
+    center?: { id: number; name: string };
+    className?: string;
+    avatar?: string;
 }

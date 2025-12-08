@@ -40,7 +40,7 @@ export class TeacherService {
   // ========================================
 
   getGroups(page: number = 1): Observable<any> {
-    return this.api.get(`/teacher/groups?page=${page}`);
+    return this.api.get(`/groups?page=${page}`);
   }
 
   getGroup(id: number): Observable<any> {
