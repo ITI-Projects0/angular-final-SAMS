@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { guestGuard } from './core/auth/guest.guard';
 import { authGuard } from './core/auth/auth.guard';
+import { approvalGuard } from './core/auth/approval.guard';
 import { StaffRoutes } from './features/staff-dashboard/staff.routes';
 import { AdminRoutes } from './features/admin/admin.routes';
 
@@ -33,7 +34,17 @@ export const routes: Routes = [
     ]
   },
 
-  // Staff Pages
+  // Pending Approval Page (Authenticated but not guest-only)
+  {
+    path: 'pending-approval',
+    loadComponent: () => import('./layouts/auth-layout/auth-layout').then(m => m.AuthLayout),
+    canActivate: [authGuard],
+    children: [
+      { path: '', loadComponent: () => import('./features/auth/pending-approval/pending-approval').then(m => m.PendingApproval) },
+    ]
+  },
+
+  // Staff Pages (require approval)
   ...StaffRoutes,
   ...AdminRoutes,
 

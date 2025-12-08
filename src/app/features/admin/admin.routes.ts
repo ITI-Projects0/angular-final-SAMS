@@ -5,6 +5,7 @@ import { AdminLayout } from '../../layouts/admin-layout/admin-layout';
 import { AdminDashboard } from './admin-dashboard/admin-dashboard';
 import { Setting } from './setting/setting';
 import { Centers } from './centers/centers';
+import { PendingCenters } from './pending-centers/pending-centers';
 import { Courses } from './courses/courses';
 import { Teachers } from './teachers/teachers';
 import { Students } from './students/students';
@@ -22,6 +23,7 @@ export const AdminRoutes: Routes = [
       { path: '', component: AdminDashboard },
       { path: 'setting', component: Setting },
       { path: 'centers', component: Centers },
+      { path: 'pending-centers', component: PendingCenters },
       { path: 'courses', component: Courses },
       { path: 'teachers', component: Teachers },
       { path: 'students', component: Students },

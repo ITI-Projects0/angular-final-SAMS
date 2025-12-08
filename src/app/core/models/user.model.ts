@@ -5,8 +5,10 @@ export interface User {
     phone?: string;
     roles: string[];
     status: 'active' | 'pending' | 'inactive';
+    approval_status?: 'pending' | 'approved' | 'rejected';
     is_data_complete?: boolean;
     firstName?: string;
     lastName?: string;
     token?: string;
+    center_id?: number;
 }

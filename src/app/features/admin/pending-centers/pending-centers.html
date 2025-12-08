@@ -1,0 +1,117 @@
+<div class="pending-centers-container">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                Pending Approvals
+            </h1>
+            <p class="page-subtitle">Review and approve new center registrations</p>
+        </div>
+        <button class="refresh-btn" (click)="loadPendingCenters()">
+            <i class="fa-solid fa-arrows-rotate" [class.fa-spin]="isLoading()"></i>
+            Refresh
+        </button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name, email, or center..."
+            class="search-input" />
+    </div>
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+    <div class="loading-state">
+        <i class="fa-solid fa-spinner fa-spin fa-2x"></i>
+        <p>Loading pending centers...</p>
+    </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isLoading() && filteredCenters.length === 0) {
+    <div class="empty-state">
+        <i class="fa-solid fa-check-circle fa-3x"></i>
+        <h3>No Pending Approvals</h3>
+        <p>All center registrations have been processed.</p>
+    </div>
+    }
+
+    <!-- Centers List -->
+    @if (!isLoading() && filteredCenters.length > 0) {
+    <div class="centers-grid">
+        @for (center of filteredCenters; track center.id) {
+        <div class="center-card">
+            <div class="card-header">
+                <div class="avatar">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+                <div class="info">
+                    <h3 class="center-name">{{ center.centerName }}</h3>
+                    <span class="date">
+                        <i class="fa-regular fa-calendar"></i>
+                        {{ formatDate(center.createdAt) }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="detail-row">
+                    <i class="fa-solid fa-user"></i>
+                    <span>{{ center.name }}</span>
+                </div>
+                <div class="detail-row">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>{{ center.email }}</span>
+                </div>
+                <div class="detail-row">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>{{ center.phone }}</span>
+                </div>
+            </div>
+
+            <div class="card-actions">
+                <button class="btn-approve" (click)="approve(center)">
+                    <i class="fa-solid fa-check"></i>
+                    Approve
+                </button>
+                <button class="btn-reject" (click)="openRejectModal(center)">
+                    <i class="fa-solid fa-xmark"></i>
+                    Reject
+                </button>
+            </div>
+        </div>
+        }
+    </div>
+    }
+
+    <!-- Reject Modal -->
+    @if (rejectModalOpen()) {
+    <div class="modal-backdrop" (click)="closeRejectModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Reject Registration
+                </h2>
+                <button class="close-btn" (click)="closeRejectModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label for="rejectReason">Reason for rejection (optional)</label>
+                <textarea id="rejectReason" [(ngModel)]="rejectReason" placeholder="Enter reason for rejection..."
+                    rows="4"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" (click)="closeRejectModal()">Cancel</button>
+                <button class="btn-confirm-reject" (click)="confirmReject()">
+                    <i class="fa-solid fa-xmark"></i>
+                    Confirm Rejection
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+</div>

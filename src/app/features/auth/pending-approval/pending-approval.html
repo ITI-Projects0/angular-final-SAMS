@@ -1,0 +1,85 @@
+<div class="auth-card
+            p-8 relative z-10 flex flex-col justify-center items-center
+            w-full min-h-screen md:w-[45vw] md:min-h-[70vh]
+            md:rounded-3xl rounded-none
+            transition-all duration-[700ms]">
+    <div class="w-full max-w-xl mx-auto text-center">
+        <!-- Waiting Icon -->
+        <div class="mb-8">
+            <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/30">
+                <i class="fa-solid fa-hourglass-half text-4xl text-white animate-pulse"></i>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-3xl font-bold mb-3">Pending Approval</h1>
+        
+        <!-- Description -->
+        <p class="auth-hero-copy text-lg mb-6">
+            Thank you for registering, <strong>{{ userName() }}</strong>!
+        </p>
+        
+        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl p-6 mb-8">
+            <div class="flex items-start gap-3">
+                <i class="fa-solid fa-clock text-amber-600 dark:text-amber-400 mt-1"></i>
+                <div class="text-left">
+                    <h3 class="font-semibold text-amber-800 dark:text-amber-300 mb-1">Account Under Review</h3>
+                    <p class="text-sm text-amber-700 dark:text-amber-400/80">
+                        Your center registration is currently being reviewed by our administrators. 
+                        You will be notified via email once your account is approved.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Info Card -->
+        <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 mb-8">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 flex items-center justify-center">
+                    <i class="fa-solid fa-user text-white text-xl"></i>
+                </div>
+                <div class="text-left">
+                    <p class="font-semibold">{{ userName() }}</p>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">{{ userEmail() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="space-y-3">
+            <button (click)="checkStatus()" 
+                    [disabled]="checking()"
+                    class="auth-button w-full py-3 flex items-center justify-center gap-2">
+                @if (checking()) {
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <span>Checking...</span>
+                } @else {
+                    <i class="fa-solid fa-rotate"></i>
+                    <span>Check Approval Status</span>
+                }
+            </button>
+            
+            <button (click)="logout()" 
+                    class="w-full py-3 px-6 rounded-xl font-semibold
+                           bg-slate-100 dark:bg-slate-800 
+                           text-slate-700 dark:text-slate-300
+                           hover:bg-slate-200 dark:hover:bg-slate-700
+                           transition-colors duration-200
+                           flex items-center justify-center gap-2">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </button>
+        </div>
+
+        <!-- Help Section -->
+        <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+                <i class="fa-solid fa-circle-info mr-1"></i>
+                Need help? Contact us at 
+                <a href="mailto:support@sams.com" class="text-cyan-600 dark:text-cyan-400 hover:underline">
+                    support&#64;sams.com
+                </a>
+            </p>
+        </div>
+    </div>
+</div>

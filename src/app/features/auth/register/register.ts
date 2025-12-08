@@ -96,24 +96,33 @@ export class Register implements OnInit {
       phone,
       center_name: finalCenterName
     }).subscribe({
-      next: () => {
-        // Auto-login after successful registration
+      next: (response) => {
+        this.loadingService.hide();
+
+        // New accounts require approval - redirect to pending page
+        if (response.requires_approval || response.user?.approval_status === 'pending') {
+          this.feedback.showToast({
+            tone: 'success',
+            title: 'Registration Successful!',
+            message: 'Your account is pending admin approval.'
+          });
+          this.router.navigate(['/pending-approval']);
+          return;
+        }
+
+        // Fallback: if somehow approved immediately, auto-login
         this.authService.login({ email, password }).subscribe({
-          next: (response) => {
-            this.loadingService.hide();
+          next: (loginResponse) => {
             this.feedback.showToast({
               tone: 'success',
               title: 'Welcome!',
               message: 'Account created and signed in successfully.'
             });
 
-            // Redirect based on role
-            const redirectUrl = this.authService.getDashboardUrl(response.user?.roles || []);
+            const redirectUrl = this.authService.getDashboardUrl(loginResponse.user?.roles || []);
             this.router.navigate([redirectUrl]);
           },
-          error: (loginErr) => {
-            this.loadingService.hide();
-            // Fallback if login fails but register succeeded (unlikely but possible)
+          error: () => {
             this.feedback.openModal({
               icon: 'info',
               title: 'Account created',
