@@ -16,7 +16,7 @@
     padding: 0 1rem;
     background: var(--dashboard-sidebar-bg);
     border-right: 1px solid var(--dashboard-sidebar-border);
-    color: var(--dashboard-link-text);
+    color: var(--dashboard-sidebar-text);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: width 0.3s ease, padding 0.3s ease;
     overflow: hidden;
@@ -58,13 +58,13 @@
 
 .brand-sub {
     font-size: 0.875rem;
-    color: var(--dashboard-link-muted);
+    color: var(--dashboard-sidebar-muted);
 }
 
 .brand-title {
     font-size: 1.125rem;
     font-weight: 700;
-    color: var(--dashboard-link-text);
+    color: var(--dashboard-sidebar-text);
 }
 
 /* Navigation Wrapper */
@@ -92,7 +92,7 @@
     border-radius: 0.75rem;
     font-size: 0.875rem;
     font-weight: 500;
-    color: var(--dashboard-link-text);
+    color: var(--dashboard-sidebar-text);
     text-decoration: none;
     border: 1px solid transparent;
     background: transparent;

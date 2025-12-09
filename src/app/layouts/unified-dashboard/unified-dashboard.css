@@ -95,14 +95,20 @@
     gap: 1rem;
 }
 
-/* Cards - Matching .auth-card */
+/* Cards - Matching Admin Overview Premium Style */
 .dashboard-card {
     background: var(--card);
     color: var(--text);
-    border-radius: clamp(1rem, 1.8vw, 1.75rem);
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-strong);
+    border-radius: 1rem;
+    border: 1px solid var(--dashboard-sidebar-border);
+    box-shadow: var(--shadow-soft);
     overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
 }
 
 .dashboard-stat-card {
@@ -110,7 +116,7 @@
     border: 1px solid var(--dashboard-sidebar-border);
     border-radius: 1rem;
     padding: 1.25rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    box-shadow: var(--shadow-soft);
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -119,7 +125,24 @@
 
 .dashboard-stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: var(--shadow-strong);
+}
+
+/* Card Accents */
+.card-accent-indigo {
+    border-top: 4px solid #6366f1;
+}
+
+.card-accent-emerald {
+    border-top: 4px solid #10b981;
+}
+
+.card-accent-amber {
+    border-top: 4px solid #f59e0b;
+}
+
+.card-accent-rose {
+    border-top: 4px solid #f43f5e;
 }
 
 /* Tables */
@@ -167,6 +190,28 @@
 
 .dashboard-table tbody tr:hover {
     background-color: var(--dashboard-link-hover-bg);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+.page-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-indicator {
+    font-weight: 500;
+    color: var(--text);
+    margin: 0 0.5rem;
 }
 
 /* Forms & Inputs - Matching .auth-input */
@@ -286,12 +331,13 @@
     justify-content: center;
     gap: 0.5rem;
     padding: 0.625rem 1.25rem;
-    border-radius: 0.75rem;
+    border-radius: 9999px;
+    /* Rounded full */
     background: transparent;
     color: var(--muted);
     font-weight: 500;
     font-size: 0.875rem;
-    border: 1px solid transparent;
+    border: 1px solid var(--dashboard-sidebar-border);
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -299,6 +345,14 @@
 .btn-dashboard-ghost:hover {
     background: var(--dashboard-link-hover-bg);
     color: var(--text);
+    border-color: var(--dashboard-link-hover-border);
+    transform: translateY(-1px);
+}
+
+.btn-dashboard-ghost:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
 }
 
 /* Form Panel (Slide-over) */

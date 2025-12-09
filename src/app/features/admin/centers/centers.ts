@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { HttpParams } from '@angular/common/http';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination';
 
 @Component({
   selector: 'app-admin-centers',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginationComponent],
   templateUrl: './centers.html',
   styleUrl: './centers.css',
 })
@@ -80,14 +81,16 @@ export class Centers implements OnInit {
     return this.centers;
   }
 
-  changePage(page: number) {
+  /** Handle page change from pagination component */
+  onPageChange(page: number): void {
     if (page < 1 || page > this.lastPage) return;
     this.page = page;
     this.loadCenters(page);
   }
 
-  changePerPage(value: number) {
-    this.perPage = value;
+  /** Handle per-page change from pagination component */
+  onPerPageChange(perPage: number): void {
+    this.perPage = perPage;
     this.page = 1;
     this.loadCenters(1);
   }
@@ -95,14 +98,6 @@ export class Centers implements OnInit {
   onSearchChange() {
     this.page = 1;
     this.loadCenters(1);
-  }
-
-  get rangeStart(): number {
-    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
-  }
-
-  get rangeEnd(): number {
-    return Math.min(this.rangeStart + this.centers.length - 1, this.total);
   }
 
   openForm(center?: typeof this.formCenter) {

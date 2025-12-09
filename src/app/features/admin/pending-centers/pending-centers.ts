@@ -5,6 +5,7 @@ import { ApiService } from '../../../core/services/api.service';
 import { FeedbackService } from '../../../core/services/feedback.service';
 import { LoadingService } from '../../../core/services/loading.service';
 import { HttpParams } from '@angular/common/http';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination';
 
 interface PendingCenter {
   id: number;
@@ -19,7 +20,7 @@ interface PendingCenter {
 @Component({
   selector: 'app-pending-centers',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginationComponent],
   templateUrl: './pending-centers.html',
   styleUrl: './pending-centers.css',
 })
@@ -97,14 +98,16 @@ export class PendingCenters implements OnInit {
     return this.pendingCenters();
   }
 
-  changePage(page: number) {
+  /** Handle page change from pagination component */
+  onPageChange(page: number): void {
     if (page < 1 || page > this.lastPage) return;
     this.page = page;
     this.loadPendingCenters(page);
   }
 
-  changePerPage(value: number) {
-    this.perPage = value;
+  /** Handle per-page change from pagination component */
+  onPerPageChange(perPage: number): void {
+    this.perPage = perPage;
     this.page = 1;
     this.loadPendingCenters(1);
   }
@@ -112,14 +115,6 @@ export class PendingCenters implements OnInit {
   onSearchChange() {
     this.page = 1;
     this.loadPendingCenters(1);
-  }
-
-  get rangeStart(): number {
-    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
-  }
-
-  get rangeEnd(): number {
-    return Math.min(this.rangeStart + this.pendingCenters().length - 1, this.total);
   }
 
   approve(center: PendingCenter): void {

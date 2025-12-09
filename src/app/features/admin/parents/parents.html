@@ -48,15 +48,15 @@
     </tbody>
   </table>
 
-  <div class="pagination" *ngIf="lastPage > 1 || total">
-    <div class="muted small">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
-    <div class="page-controls">
-      <button class="btn-simple" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
-      <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
-      <button class="btn-simple" [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
-    </div>
-  </div>
 </section>
+<div class="pagination" *ngIf="lastPage > 1 || total">
+  <div class="muted small">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
+  <div class="page-controls">
+    <button class="btn-simple" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
+    <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
+    <button class="btn-simple" [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
+  </div>
+</div>
 
 <div class="overlay" [class.open]="infoOpen" (click)="closeInfo()"></div>
 <div class="side-panel glass" [class.open]="infoOpen" (click)="$event.stopPropagation()">
@@ -87,6 +87,5 @@
         </div>
       </div>
     </div>
-    <!-- <p><strong>Role tags:</strong> {{ selectedParent.raw?.roles?.map((r: any) => r?.name || r).join(', ') || selectedParent.raw?.role || 'parent' }}</p> -->
   </div>
 </div>

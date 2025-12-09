@@ -3,16 +3,17 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { HttpParams } from '@angular/common/http';
+import { PaginationComponent } from '../../../shared/ui/pagination/pagination';
 
 @Component({
   selector: 'app-admin-students',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PaginationComponent],
   templateUrl: './students.html',
   styleUrl: './students.css',
 })
 export class Students implements OnInit {
-  constructor(private api: ApiService, private cdr: ChangeDetectorRef) {}
+  constructor(private api: ApiService, private cdr: ChangeDetectorRef) { }
   students: any[] = [];
   loading = false;
 
@@ -96,14 +97,16 @@ export class Students implements OnInit {
     this.selectedStudent = null;
   }
 
-  changePage(page: number) {
+  /** Handle page change from pagination component */
+  onPageChange(page: number): void {
     if (page < 1 || page > this.lastPage) return;
     this.page = page;
     this.loadStudents(page);
   }
 
-  changePerPage(value: number) {
-    this.perPage = value;
+  /** Handle per-page change from pagination component */
+  onPerPageChange(perPage: number): void {
+    this.perPage = perPage;
     this.page = 1;
     this.loadStudents(1);
   }
@@ -111,13 +114,5 @@ export class Students implements OnInit {
   onSearchChange() {
     this.page = 1;
     this.loadStudents(1);
-  }
-
-  get rangeStart(): number {
-    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
-  }
-
-  get rangeEnd(): number {
-    return Math.min(this.rangeStart + this.students.length - 1, this.total);
   }
 }

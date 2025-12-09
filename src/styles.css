@@ -1,29 +1,49 @@
 /* Global theme variables and glass effect */
 :root {
-  /* Student Dashboard Palette (Light) */
-  --bg: #F8FAFC;
+  /* =========================
+     Light Mode Palette (Refined)
+     ========================= */
+  --bg: #F1F5F9;
+  /* Slate 100 - slightly darker than card for separation */
   --card: #FFFFFF;
-  --card-strong: #F1F5F9;
-  --border: #E2E8F0;
-  --text: #0F172A;
-  --muted: #64748b;
-  --primary: #3B82F6;
-  --success: #14B8A6;
+  --card-strong: #F8FAFC;
+  /* Slate 50 */
+  --card-strong: #F8FAFC; /* Slate 50 */
+  --border: #E2E8F0; /* Slate 200 */
+  --text: #334155; /* Slate 700 */
+  --text-strong: #0F172A; /* Slate 900 */
+  --muted: #64748B; /* Slate 500 */
+  --muted-light: #94A3B8; /* Slate 400 */
+  
+  --primary: #3B82F6; /* Blue 500 */
+  --primary-light: #EFF6FF; /* Blue 50 */
+  --success: #10B981;
   --danger: #EF4444;
-  --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-strong: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  
+  --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-strong: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
-  /* Dashboard specific vars mapped to palette */
-  --dashboard-sidebar-bg: #0F172A; /* User requested #0f172a */
-  --dashboard-sidebar-border: #1E293B;
+  /* Dashboard Specifics (Light Mode) */
+  --dashboard-sidebar-bg: #FFFFFF;
+  --dashboard-sidebar-border: #E2E8F0;
+  --dashboard-sidebar-text: #475569;
+  --dashboard-sidebar-text-hover: #0F172A;
+  --dashboard-sidebar-active-bg: #F1F5F9;
+  --dashboard-sidebar-active-text: #3B82F6;
+
   --dashboard-nav-bg: #FFFFFF;
-  --dashboard-content-bg: #F1F5F9; /* Light gray background for contrast with white cards */
-  --dashboard-link-text: #F8FAFC; /* Light text for dark sidebar */
-  --dashboard-link-muted: #94A3B8;
-  --dashboard-link-hover-bg: #1E293B;
-  --dashboard-link-hover-border: #334155;
-  --dashboard-link-active-bg: #3B82F6;
-  --dashboard-link-active-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --dashboard-nav-text: #334155;
+  --dashboard-nav-border: #E2E8F0;
+  
+  --dashboard-content-bg: #F1F5F9;
+  
+  --dashboard-link-hover-bg: #F8FAFC;
+  --dashboard-link-hover-border: #CBD5E1;
+  --dashboard-link-active-bg: #EFF6FF;
+  --dashboard-link-active-shadow: none;
+
+  /* Colors */
+  --color-slate-900: #0F172A;
 
   /* Existing vars kept for compatibility */
   --glass: rgba(255, 255, 255, 0.9);
@@ -32,89 +52,93 @@
   --muted-strong: #475569;
   --warning: #F59E0B;
 
-  /* Student specific variables (kept as they are) */
-  --student-bg: #f8fafc;
-  --student-surface: #ffffff;
-  --student-elevated: #f1f5f9;
-  --student-border: #cbd5e1;
-  --student-border-strong: #2563eb;
-  --student-text: #0f172a;
-  --student-muted: #475569;
-  --student-muted-2: #94a3b8;
-  --student-teal: #14b8a6;
-  --student-teal-strong: #0d9488;
-  --student-teal-hover: #0f766e;
-  --student-indigo: #3b82f6;
-  --student-indigo-strong: #2563eb;
-  --student-indigo-hover: #1d4ed8;
-  --student-success: #10b981;
-  --student-warning: #f59e0b;
-  --student-danger: #ef4444;
-  --student-info: #3b82f6;
+  /* Student specific variables */
+  --student-bg: #F1F5F9;
+  --student-surface: #FFFFFF;
+  --student-elevated: #F8FAFC;
+  --student-border: #E2E8F0;
+  --student-border-strong: #3B82F6;
+  --student-text: #334155;
+  --student-muted: #64748B;
+  --student-muted-2: #94A3B8;
+  --student-teal: #14B8A6;
+  --student-teal-strong: #0D9488;
+  --student-teal-hover: #0F766E;
+  --student-indigo: #3B82F6;
+  --student-indigo-strong: #2563EB;
+  --student-indigo-hover: #1D4ED8;
+  --student-success: #10B981;
+  --student-warning: #F59E0B;
+  --student-danger: #EF4444;
+  --student-info: #3B82F6;
 }
 
 .dark {
-  /* Student Dashboard Palette (Dark) */
-  --bg: #0F172A;
-  --card: #1E293B;
-  --card-strong: #334155;
-  --border: #334155;
-  --text: #F8FAFC;
-  --muted: #94a3b8;
-  --primary: #3B82F6;
-  --success: #14B8A6;
-  --danger: #F87171;
-  --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow-strong: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+  /* =========================
+     Dark Mode Palette (Refined)
+     ========================= */
+  --bg: #020617; /* Slate 950 */
+  --card: #0F172A; /* Slate 900 */
+  --card-strong: #1E293B; /* Slate 800 */
+  --border: #1E293B; /* Slate 800 */
+  --text: #F1F5F9; /* Slate 100 */
+  --text-strong: #FFFFFF;
+  --muted: #94A3B8; /* Slate 400 */
+  --muted-light: #64748B; /* Slate 500 */
+  
+  --primary: #60A5FA; /* Blue 400 */
+  --primary-light: rgba(59, 130, 246, 0.1);
+  --success: #2DD4BF; /* Teal 400 */
+  --danger: #F87171; /* Red 400 */
+  
+  --shadow-soft: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-strong: 0 10px 15px -3px rgb(0 0 0 / 0.5);
 
-  /* Dashboard specific vars mapped to palette */
-  --dashboard-sidebar-bg: #1E293B;
-  --dashboard-sidebar-border: #334155;
-  --dashboard-content-bg: #0F172A;
+  /* Dashboard Specifics (Dark Mode) */
+  --dashboard-sidebar-bg: #0F172A; /* Slate 900 */
+  --dashboard-sidebar-border: #1E293B;
+  --dashboard-sidebar-text: #CBD5E1;
+  --dashboard-sidebar-text-hover: #FFFFFF;
+  --dashboard-sidebar-active-bg: #1E293B;
+  --dashboard-sidebar-active-text: #60A5FA;
 
-  /* Existing variables that are not part of the new palette but might be used */
-  --glass: rgba(255, 255, 255, 0.06);
-  /* Kept from original dark mode */
-  --glass-border: rgba(255, 255, 255, 0.12);
-  /* Kept from original dark mode */
-  --panel: #111827;
-  /* Kept from original dark mode */
-  --muted-strong: #cbd5e1;
-  /* Kept from original dark mode */
-  --warning: #fbbf24;
-  /* Kept from original dark mode */
+  --dashboard-nav-bg: #0F172A; /* Slate 900 */
+  --dashboard-nav-text: #F1F5F9;
+  --dashboard-nav-border: #1E293B;
+  
+  --dashboard-content-bg: #020617; /* Slate 950 */
+  
+  --dashboard-link-hover-bg: #1E293B;
+  --dashboard-link-hover-border: #334155;
+  --dashboard-link-active-bg: rgba(59, 130, 246, 0.15);
+  --dashboard-link-active-shadow: none;
 
-  /* Student specific variables (kept as they are) */
-  --student-bg: #0f172a;
-  --student-surface: #1e293b;
-  --student-elevated: #334155;
-  --student-border: #475569;
-  --student-border-strong: #93c5fd;
-  --student-text: #f8fafc;
-  --student-muted: #cbd5e1;
-  --student-muted-2: #94a3b8;
-  --student-teal: #0d9488;
-  --student-teal-strong: #0d9488;
-  --student-teal-hover: #0f766e;
-  --student-indigo: #2563eb;
-  --student-indigo-strong: #1d4ed8;
-  --student-indigo-hover: #1e40af;
-  --student-success: #059669;
-  --student-warning: #d97706;
-  --student-danger: #dc2626;
-  --student-info: #2563eb;
+  /* Existing variables */
+  --glass: rgba(15, 23, 42, 0.8);
+  --glass-border: #1E293B;
+  --panel: #0F172A;
+  --muted-strong: #CBD5E1;
+  --warning: #FBBF24;
 
-  /* Dashboard specific - dark mode */
-  --dashboard-sidebar-bg: #0f1729;
-  --dashboard-sidebar-border: var(--glass-border);
-  --dashboard-nav-bg: #0f1729;
-  --dashboard-content-bg: var(--bg);
-  --dashboard-link-text: var(--text);
-  --dashboard-link-muted: var(--muted);
-  --dashboard-link-hover-bg: #1e293b;
-  --dashboard-link-hover-border: rgba(96, 165, 250, 0.25);
-  --dashboard-link-active-bg: linear-gradient(135deg, #22d3ee, #a78bfa);
-  --dashboard-link-active-shadow: 0 8px 20px rgba(34, 211, 238, 0.25);
+  /* Student specific variables */
+  --student-bg: #020617;
+  --student-surface: #0F172A;
+  --student-elevated: #1E293B;
+  --student-border: #1E293B;
+  --student-border-strong: #60A5FA;
+  --student-text: #F1F5F9;
+  --student-muted: #94A3B8;
+  --student-muted-2: #64748B;
+  --student-teal: #2DD4BF;
+  --student-teal-strong: #14B8A6;
+  --student-teal-hover: #0D9488;
+  --student-indigo: #60A5FA;
+  --student-indigo-strong: #3B82F6;
+  --student-indigo-hover: #2563EB;
+  --student-success: #34D399;
+  --student-warning: #FBBF24;
+  --student-danger: #F87171;
+  --student-info: #60A5FA;
 }
 
 /* Component helpers (use throughout app) */

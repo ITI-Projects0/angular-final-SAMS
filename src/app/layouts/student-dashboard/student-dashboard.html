@@ -1,9 +1,9 @@
-<div
-    class="dashboard-layout bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100 min-h-screen relative flex flex-col">
+<div class="dashboard-layout min-h-screen relative flex flex-col"
+    style="background-color: var(--bg); color: var(--text);">
 
     <app-header></app-header>
 
-    <main class="mt-[56px] content flex-1 bg-slate-50 dark:bg-slate-900/50 p-6 overflow-y-auto">
+    <main class="mt-[56px] content flex-1 p-6 overflow-y-auto" style="background-color: var(--dashboard-content-bg);">
         <router-outlet></router-outlet>
     </main>
 

@@ -87,17 +87,14 @@
     }
 
     <!-- Pagination -->
-    @if (lastPage > 1 || total) {
-    <div class="pagination">
-        <div class="muted small">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
-        <div class="page-controls">
-            <button class="btn-dashboard-ghost" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
-            <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
-            <button class="btn-dashboard-ghost" [disabled]="page === lastPage"
-                (click)="changePage(page + 1)">Next</button>
-        </div>
-    </div>
-    }
+    <app-pagination
+        [page]="page"
+        [perPage]="perPage"
+        [total]="total"
+        [lastPage]="lastPage"
+        (pageChange)="onPageChange($event)"
+        (perPageChange)="onPerPageChange($event)">
+    </app-pagination>
 
     <!-- Reject Modal -->
     @if (rejectModalOpen()) {
