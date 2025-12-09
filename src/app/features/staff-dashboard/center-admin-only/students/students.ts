@@ -40,6 +40,8 @@ export class Students implements OnInit {
   private roles: string[] = [];
   availableGroups: any[] = [];
   centerGroupsUnavailable = false;
+  groupFilter = '';
+  studentFilter = '';
 
   ngOnInit(): void {
     this.roles = this.tokenStorage.getUser()?.roles ?? [];
@@ -286,6 +288,22 @@ export class Students implements OnInit {
     }
   }
 
+  get filteredGroupsForSelect(): any[] {
+    const q = this.groupFilter.trim().toLowerCase();
+    if (!q) return this.availableGroups;
+    return this.availableGroups.filter((g) =>
+      [g.name, g.subject].filter(Boolean).some((val: string) => val.toLowerCase().includes(q))
+    );
+  }
+
+  get filteredStudentsForSelect(): any[] {
+    const q = this.studentFilter.trim().toLowerCase();
+    if (!q) return this.students;
+    return this.students.filter((s) =>
+      [s.name, s.email, s.center].filter(Boolean).some((val: string) => val.toLowerCase().includes(q))
+    );
+  }
+
   private loadGroupsForForms(): void {
     const source$ =
       this.isCenterAdmin && !this.centerGroupsUnavailable
@@ -312,13 +330,15 @@ export class Students implements OnInit {
   }
 
   openCreateStudent(): void {
-    this.studentForm = { name: '', email: '', phone: '', groupId: this.availableGroups[0]?.id ?? '' };
+    this.groupFilter = '';
+    this.studentForm = { name: '', email: '', phone: '', groupId: this.filteredGroupsForSelect[0]?.id ?? '' };
     this.panelMode = 'create-student';
     this.panelOpen = true;
   }
 
   openCreateParent(): void {
-    this.parentForm = { name: '', email: '', phone: '', studentId: this.students[0]?.id ?? '' };
+    this.studentFilter = '';
+    this.parentForm = { name: '', email: '', phone: '', studentId: this.filteredStudentsForSelect[0]?.id ?? '' };
     this.panelMode = 'create-parent';
     this.panelOpen = true;
   }

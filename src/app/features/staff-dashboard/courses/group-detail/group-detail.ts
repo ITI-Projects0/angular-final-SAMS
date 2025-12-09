@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { Subscription, combineLatest, of } from 'rxjs';
@@ -61,6 +61,7 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
   panelMode: 'lesson' | null = null;
   processing = false;
   lessonForm = { title: '', description: '', scheduled_at: '' };
+  lessonError = '';
 
   // Pagination
   studentsMeta: PaginationMeta | null = null;
@@ -117,6 +118,7 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
       description: '',
       scheduled_at: this.defaultDateTime()
     };
+    this.lessonError = '';
     this.panelMode = 'lesson';
     this.panelOpen = true;
   }
@@ -132,17 +134,43 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
     this.panelOpen = false;
     this.panelMode = null;
     this.processing = false;
+    this.lessonError = '';
+  }
+
+  @HostListener('document:keydown.escape')
+  handleEscape(): void {
+    if (this.panelOpen) {
+      this.closePanel();
+    }
   }
 
   submitLesson(): void {
-    if (!this.groupId || this.processing || !this.lessonForm.title) {
+    if (!this.groupId || this.processing || !this.lessonForm.title || !this.lessonForm.description) {
       return;
     }
+
+    const trimmedTitle = this.lessonForm.title.trim();
+    const trimmedDesc = this.lessonForm.description.trim();
+    const scheduledAt = this.lessonForm.scheduled_at;
+
+    if (!trimmedTitle || !trimmedDesc) {
+      this.lessonError = 'Title and description are required.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!scheduledAt || !this.isScheduleValid(scheduledAt)) {
+      this.lessonError = 'Please choose a date/time that is today or later.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.lessonError = '';
     this.processing = true;
     this.staffService.createLesson(this.groupId, {
-      title: this.lessonForm.title,
-      description: this.lessonForm.description,
-      scheduled_at: this.lessonForm.scheduled_at || null
+      title: trimmedTitle,
+      description: trimmedDesc,
+      scheduled_at: scheduledAt
     }).subscribe({
       next: () => {
         this.closePanel();
@@ -291,5 +319,23 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
     const now = new Date();
     now.setMinutes(0);
     return now.toISOString().slice(0, 16);
+  }
+
+  get minDateTime(): string {
+    return this.defaultDateTime();
+  }
+
+  private isScheduleValid(value: string): boolean {
+    const selected = new Date(value);
+    if (isNaN(selected.getTime())) return false;
+    const now = new Date();
+    return selected.getTime() >= now.setSeconds(0, 0);
+  }
+
+  get lessonFormValid(): boolean {
+    return !!this.lessonForm.title.trim() &&
+      !!this.lessonForm.description.trim() &&
+      !!this.lessonForm.scheduled_at &&
+      this.isScheduleValid(this.lessonForm.scheduled_at);
   }
 }

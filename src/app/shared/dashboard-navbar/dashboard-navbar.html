@@ -1,0 +1,71 @@
+<div class="navbar">
+    <div class="navbar-inner">
+
+        <!-- Left: Toggle Button -->
+        <div class="navbar-left">
+            <button class="toggle-btn" (click)="toggleSidebar.emit()" aria-label="Toggle sidebar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M4 7h16M4 12h12M4 17h16" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Right: Actions -->
+        <div class="navbar-right">
+
+            <!-- Notifications -->
+            <app-notification-bell></app-notification-bell>
+
+            <!-- Refresh Button -->
+            <!-- <button class="action-btn" aria-label="Refresh">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M21 2v6h-6" />
+                    <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                    <path d="M3 22v-6h6" />
+                    <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+                </svg>
+            </button> -->
+
+            <!-- Role Badge -->
+            <div class="role-badge">
+                <span class="status-dot"></span>
+                {{ userRole }}
+            </div>
+
+            <!-- Theme Toggle -->
+            <button class="theme-btn" (click)="theme.toggle()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M12 3c.132 0 .263 0 .392.01A7.5 7.5 0 1 0 20.99 11.608 9 9 0 0 1 12 3Z" />
+                </svg>
+                <span>{{ (theme.theme$ | async) === 'dark' ? 'Light mode' : 'Dark mode' }}</span>
+            </button>
+
+            <!-- User Menu -->
+            <div class="user-menu" (click)="dropdown = !dropdown" (document:click)="dropdown = false"
+                (click)="$event.stopPropagation()">
+
+                <span class="avatar">{{ userInitials }}</span>
+
+                <svg class="chevron" [class.rotate]="dropdown" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m6 9 6 6 6-6" />
+                </svg>
+
+                @if (dropdown) {
+                <div class="dropdown">
+                    <div class="dropdown-header">
+                        <p class="dropdown-name">{{ userName }}</p>
+                        <p class="dropdown-email">{{ userEmail }}</p>
+                    </div>
+                    <a class="dropdown-item">Settings</a>
+                    <button type="button" class="dropdown-item logout" (click)="logout()">
+                        Logout
+                    </button>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

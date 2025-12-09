@@ -50,7 +50,7 @@ export class NotificationService {
     const user = this.tokenStorage.getUser();
     const token = this.tokenStorage.getToken();
 
-    if (!user || !token) {
+    if (!user) {
       console.warn('Cannot initialize notifications: User not authenticated');
       return;
     }
@@ -157,26 +157,43 @@ export class NotificationService {
     this.unreadCountSubject.next(0);
   }
 
-  private createAuthorizer(token: string) {
+  private createAuthorizer(token?: string | null) {
     const authUrl = 'http://localhost:8000/broadcasting/auth';
 
     return (channel: any, options: any) => ({
       authorize: (socketId: string, callback: (error: Error | null, data: any) => void) => {
-        const body = new URLSearchParams({
-          socket_id: socketId,
-          channel_name: channel.name
-        }).toString();
+        this.ensureCsrfCookie()
+          .then(() => {
+            const body = new URLSearchParams({
+              socket_id: socketId,
+              channel_name: channel.name
+            }).toString();
 
-        fetch(authUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json'
-          },
-          body
-        })
+            const headers: Record<string, string> = {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Accept': 'application/json'
+            };
+
+            const xsrfToken = this.getXsrfToken();
+            if (token) {
+              headers['Authorization'] = `Bearer ${token}`;
+            } else if (xsrfToken) {
+              headers['X-XSRF-TOKEN'] = decodeURIComponent(xsrfToken);
+            }
+
+            return fetch(authUrl, {
+              method: 'POST',
+              headers,
+              credentials: 'include',
+              body
+            });
+          })
           .then(async (response) => {
+            if (!response) {
+              callback(new Error('Auth request not sent'), null);
+              return;
+            }
+
             let data: any = null;
             try {
               data = await response.json();
@@ -198,5 +215,16 @@ export class NotificationService {
           });
       }
     });
+  }
+
+  private ensureCsrfCookie(): Promise<void> {
+    const csrfUrl = 'http://localhost:8000/sanctum/csrf-cookie';
+    return fetch(csrfUrl, { credentials: 'include' }).then(() => undefined).catch(() => undefined);
+  }
+
+  private getXsrfToken(): string | null {
+    if (typeof document === 'undefined') return null;
+    const match = document.cookie.split('; ').find((row) => row.startsWith('XSRF-TOKEN='));
+    return match ? match.split('=')[1] : null;
   }
 }

@@ -1,0 +1,25 @@
+<div class="dashboard-wrapper" dir="ltr">
+
+    <!-- Sidebar -->
+    <app-dashboard-sidebar [menuType]="dashboardType" [collapsed]="isSidebarCollapsed"
+        [class.open]="!isSidebarCollapsed">
+    </app-dashboard-sidebar>
+
+    <!-- Mobile Overlay -->
+    @if (!isSidebarCollapsed) {
+    <div class="mobile-overlay lg:hidden" (click)="toggleSidebar()"></div>
+    }
+
+    <!-- Main Content Area -->
+    <div class="main-area">
+
+        <!-- Navbar -->
+        <app-dashboard-navbar (toggleSidebar)="toggleSidebar()">
+        </app-dashboard-navbar>
+
+        <!-- Page Content -->
+        <main class="content">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</div>

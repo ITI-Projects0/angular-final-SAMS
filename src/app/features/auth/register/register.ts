@@ -110,28 +110,15 @@ export class Register implements OnInit {
           return;
         }
 
-        // Fallback: if somehow approved immediately, auto-login
-        this.authService.login({ email, password }).subscribe({
-          next: (loginResponse) => {
-            this.feedback.showToast({
-              tone: 'success',
-              title: 'Welcome!',
-              message: 'Account created and signed in successfully.'
-            });
-
-            const redirectUrl = this.authService.getDashboardUrl(loginResponse.user?.roles || []);
-            this.router.navigate([redirectUrl]);
-          },
-          error: () => {
-            this.feedback.openModal({
-              icon: 'info',
-              title: 'Account created',
-              message: 'Please sign in with your new account.',
-              primaryText: 'Go to Login',
-              onPrimary: () => this.onSwitch('login')
-            });
-          }
+        // Account approved immediately - session cookie already issued
+        this.feedback.showToast({
+          tone: 'success',
+          title: 'Welcome!',
+          message: 'Account created and signed in successfully.'
         });
+
+        const redirectUrl = this.authService.getDashboardUrl(response.user?.roles || []);
+        this.router.navigate([redirectUrl]);
       },
       error: (err) => {
         this.loadingService.hide();

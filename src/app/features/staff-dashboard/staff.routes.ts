@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../../core/auth/auth.guard';
 import { roleGuard } from '../../core/auth/role.guard';
-import { DashboardLayout } from '../../layouts/dashboard-layout/dashboard-layout';
+import { approvalGuard } from '../../core/auth/approval.guard';
+import { UnifiedDashboard } from '../../layouts/unified-dashboard/unified-dashboard';
 import { Overview } from './overview/overview';
 import { StaffGroups } from './courses/courses';
 import { StaffGroupDetail } from './courses/group-detail/group-detail';
@@ -13,9 +14,9 @@ import { Setting as StaffSettingPage } from './setting/setting';
 export const StaffRoutes: Routes = [
   {
     path: 'dashboard/staff',
-    component: DashboardLayout,
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['teacher', 'assistant', 'center_admin'] },
+    component: UnifiedDashboard,
+    canActivate: [authGuard, approvalGuard, roleGuard],
+    data: { roles: ['teacher', 'assistant', 'center_admin'], dashboardType: 'staff' },
     children: [
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: Overview },

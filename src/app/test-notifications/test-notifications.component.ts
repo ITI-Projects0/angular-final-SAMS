@@ -169,8 +169,12 @@ export class TestNotificationsComponent implements OnInit {
     const user = this.tokenStorage.getUser();
     const token = this.tokenStorage.getToken();
 
-    if (user && token) {
-      this.updateLastResult('success', `User authenticated: ${user.name}`, { userId: user.id, email: user.email });
+    if (user) {
+      this.updateLastResult('success', `User authenticated: ${user.name}`, {
+        userId: user.id,
+        email: user.email,
+        tokenPresent: !!token
+      });
     } else {
       this.updateLastResult('error', 'User not authenticated');
     }

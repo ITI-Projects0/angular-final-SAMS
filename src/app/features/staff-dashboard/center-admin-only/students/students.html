@@ -23,8 +23,6 @@
         <th>Name</th>
         <th>Email</th>
         <th>Center</th>
-        <th>Groups</th>
-        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -36,12 +34,6 @@
         </td>
         <td>{{ s.email }}</td>
         <td>{{ s.center }}</td>
-        <td>
-          <span class="group-pill" *ngFor="let group of s.groups">{{ group }}</span>
-        </td>
-        <td>
-          <span class="status-pill" [class.active]="s.status === 'active'">{{ s.status }}</span>
-        </td>
         <td>
           <button class="btn-simple" (click)="openInfo(s)">Info</button>
           <button class="btn-simple" *ngIf="canEditStudents" (click)="openEditStudent(s)">Edit</button>
@@ -74,9 +66,7 @@
     <p><strong>Name:</strong> {{ selectedStudent.name }}</p>
     <p><strong>Email:</strong> {{ selectedStudent.email }}</p>
     <p><strong>Center:</strong> {{ selectedStudent.center || '-' }}</p>
-    <p><strong>Groups:</strong> {{ selectedStudent.groups?.join(', ') || '—' }}</p>
     <p><strong>Phone:</strong> {{ selectedStudent.phone || '—' }}</p>
-    <p><strong>Status:</strong> {{ selectedStudent.status }}</p>
     <p><strong>User ID:</strong> {{ selectedStudent.id }}</p>
     <div class="panel-actions" *ngIf="canEditStudents">
       <button class="btn-primary" type="button" (click)="openEditStudent(selectedStudent)">Edit</button>
@@ -100,8 +90,17 @@
     </div>
     <div class="field" *ngIf="panelMode === 'create-student'">
       <label>Group</label>
+      <input
+        class="input-control"
+        type="text"
+        placeholder="Filter groups..."
+        [(ngModel)]="groupFilter"
+        style="margin-bottom: 0.5rem;"
+      />
       <select class="input-control" [(ngModel)]="studentForm.groupId">
-        <option *ngFor="let group of availableGroups" [value]="group.id">{{ group.name }}</option>
+        <option *ngFor="let group of filteredGroupsForSelect" [value]="group.id">
+          {{ group.name }}{{ group.subject ? ' (' + group.subject + ')' : '' }}
+        </option>
       </select>
     </div>
     <div class="panel-actions sticky-footer">
@@ -136,8 +135,17 @@
     </div>
     <div class="field">
       <label><span class="required">*</span>Linked student</label>
+      <input
+        class="input-control"
+        type="text"
+        placeholder="Filter students..."
+        [(ngModel)]="studentFilter"
+        style="margin-bottom: 0.5rem;"
+      />
       <select class="input-control" [(ngModel)]="parentForm.studentId">
-        <option *ngFor="let student of students" [value]="student.id">{{ student.name }}</option>
+        <option *ngFor="let student of filteredStudentsForSelect" [value]="student.id">
+          {{ student.name }} - {{ student.email }}
+        </option>
       </select>
     </div>
     <div class="panel-actions sticky-footer">

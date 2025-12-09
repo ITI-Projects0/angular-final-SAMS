@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, HostListener } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TeacherService } from '../../../core/services/teacher.service';
@@ -177,6 +177,13 @@ export class StaffGroups implements OnInit {
     this.selectedGroup = null;
     this.panelMode = 'info';
     this.processing = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  handleEscape(): void {
+    if (this.panelOpen) {
+      this.closeInfo();
+    }
   }
 
   openCreate(): void {

@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '../../core/auth/auth.guard';
 import { roleGuard } from '../../core/auth/role.guard';
-import { AdminLayout } from '../../layouts/admin-layout/admin-layout';
+import { approvalGuard } from '../../core/auth/approval.guard';
+import { UnifiedDashboard } from '../../layouts/unified-dashboard/unified-dashboard';
 import { AdminDashboard } from './admin-dashboard/admin-dashboard';
 import { Setting } from './setting/setting';
 import { Centers } from './centers/centers';
@@ -16,9 +17,9 @@ import { Payments } from './payments/payments';
 export const AdminRoutes: Routes = [
   {
     path: 'dashboard/admin',
-    component: AdminLayout,
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['admin'] },
+    component: UnifiedDashboard,
+    canActivate: [authGuard, approvalGuard, roleGuard],
+    data: { roles: ['admin'], dashboardType: 'admin' },
     children: [
       { path: '', component: AdminDashboard },
       { path: 'setting', component: Setting },

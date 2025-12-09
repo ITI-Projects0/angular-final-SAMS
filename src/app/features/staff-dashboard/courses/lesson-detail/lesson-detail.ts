@@ -57,6 +57,7 @@ export class LessonDetailComponent implements OnInit {
     scheduled_at: '',
     description: ''
   };
+  lessonError = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -269,6 +270,7 @@ export class LessonDetailComponent implements OnInit {
       scheduled_at: this.lesson.scheduled_at,
       description: this.lesson.description || ''
     };
+    this.lessonError = '';
   }
 
   deleteLesson(): void {
@@ -372,17 +374,29 @@ export class LessonDetailComponent implements OnInit {
 
   saveLesson(): void {
     if (this.processing) return;
+    const title = this.lessonForm.title?.trim() ?? '';
+    const description = this.lessonForm.description?.trim() ?? '';
+    const scheduledAt = this.lessonForm.scheduled_at;
+
+    if (!title || !description || !scheduledAt) {
+      this.lessonError = 'Title, description, and schedule are required.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (!this.isScheduleValid(scheduledAt)) {
+      this.lessonError = 'Please choose a date/time that is today or later.';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.lessonError = '';
     this.processing = true;
 
-    // We need a separate form object for lesson editing, or reuse existing properties.
-    // For simplicity, let's assume we bind to a local object 'lessonForm' which we need to define.
-    // Since I didn't define it yet, let's use the lesson object directly or create a payload.
-    // Better: Define lessonForm.
-
     const payload = {
-      title: this.lessonForm.title,
-      scheduled_at: this.lessonForm.scheduled_at,
-      description: this.lessonForm.description
+      title,
+      scheduled_at: scheduledAt,
+      description
     };
 
     this.staffService.updateLesson(this.lessonId, payload).subscribe({
@@ -422,11 +436,35 @@ export class LessonDetailComponent implements OnInit {
     this.panelOpen = false;
     setTimeout(() => {
       this.panelMode = null;
+      this.lessonError = '';
       this.cdr.detectChanges();
     }, 300); // Wait for animation
   }
 
   goBack(): void {
     this.router.navigate(['/dashboard/staff/groups', this.groupId]);
+  }
+
+  get minDateTime(): string {
+    const now = new Date();
+    now.setSeconds(0, 0);
+    now.setMilliseconds(0);
+    return now.toISOString().slice(0, 16);
+  }
+
+  private isScheduleValid(value: string): boolean {
+    const selected = new Date(value);
+    if (isNaN(selected.getTime())) return false;
+    const now = new Date();
+    now.setSeconds(0, 0);
+    now.setMilliseconds(0);
+    return selected.getTime() >= now.getTime();
+  }
+
+  get lessonFormValid(): boolean {
+    return !!this.lessonForm.title?.trim() &&
+      !!this.lessonForm.description?.trim() &&
+      !!this.lessonForm.scheduled_at &&
+      this.isScheduleValid(this.lessonForm.scheduled_at);
   }
 }
