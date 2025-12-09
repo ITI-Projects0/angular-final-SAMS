@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -17,6 +17,8 @@ type Theme = ThemePreference;
   styleUrl: './setting.css',
 })
 export class Setting implements OnInit, OnDestroy {
+  @ViewChild('avatarInput') avatarInputRef!: ElementRef<HTMLInputElement>;
+
   user = {
     id: 0,
     name: 'John Doe',
@@ -45,6 +47,7 @@ export class Setting implements OnInit, OnDestroy {
     private tokenStorage: TokenStorageService,
     private cdr: ChangeDetectorRef
   ) { }
+
 
   ngOnInit(): void {
     this.preferences.theme = this.themeService.currentPreference;
@@ -153,6 +156,11 @@ export class Setting implements OnInit, OnDestroy {
     };
     reader.readAsDataURL(file);
   }
+
+  triggerAvatarUpload(): void {
+    this.avatarInputRef?.nativeElement?.click();
+  }
+
 
   // -------------------------------------
   // Data loading

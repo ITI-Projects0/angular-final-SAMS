@@ -27,8 +27,10 @@
             class="relative w-24 h-24 rounded-full overflow-hidden border-4 border-[var(--dashboard-sidebar-border)] shadow-lg">
             <img [src]="user.avatar" [alt]="user.name" class="w-full h-full object-cover" />
           </div>
-          <input #avatarInput type="file" accept="image/*" class="hidden" (change)="onAvatarSelected($event)" />
-          <button type="button" class="btn-dashboard-ghost text-xs py-2 px-3" (click)="avatarInput.click()">
+          <input id="staffAvatarInput" #avatarInput type="file" accept="image/*" class="hidden"
+            (change)="onAvatarSelected($event)" />
+          <button type="button" (click)="triggerAvatarUpload()"
+            class="btn-dashboard-ghost text-xs py-2 px-3 inline-flex items-center">
             <i class="fa-solid fa-camera mr-2"></i> Change photo
           </button>
         </div>
@@ -81,8 +83,11 @@
           <div>
             <label class="dashboard-label">Current password</label>
             <div class="relative">
-              <input [type]="passwordVisibility.current ? 'text' : 'password'" class="dashboard-input pr-10" [(ngModel)]="password.current" />
-              <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--text)]" (click)="togglePasswordVisibility('current')">
+              <input [type]="passwordVisibility.current ? 'text' : 'password'" class="dashboard-input pr-10"
+                [(ngModel)]="password.current" />
+              <button type="button"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--text)]"
+                (click)="togglePasswordVisibility('current')">
                 <i class="fa-solid" [ngClass]="passwordVisibility.current ? 'fa-eye-slash' : 'fa-eye'"></i>
               </button>
             </div>

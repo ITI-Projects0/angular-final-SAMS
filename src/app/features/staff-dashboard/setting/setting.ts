@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -17,6 +17,7 @@ type Theme = ThemePreference;
   styleUrl: './setting.css',
 })
 export class Setting implements OnInit, OnDestroy {
+  @ViewChild('avatarInput') avatarInputRef!: ElementRef<HTMLInputElement>;
   user = {
     id: 0,
     name: 'Staff Member',
@@ -87,10 +88,9 @@ export class Setting implements OnInit, OnDestroy {
     if (hasAvatar) {
       body.append('avatar', this.avatarFile as File);
     }
-    body.append('_method', 'PUT');
 
     this.loading = true;
-    this.api.post('/me', body).subscribe({
+    this.api.put('/me', body).subscribe({
       next: (res: any) => {
         const payload = (res as any)?.data ?? res;
         const cached = this.tokenStorage.getUser();
@@ -156,6 +156,10 @@ export class Setting implements OnInit, OnDestroy {
       this.cdr.detectChanges();
     };
     reader.readAsDataURL(file);
+  }
+
+  triggerAvatarUpload(): void {
+    this.avatarInputRef?.nativeElement?.click();
   }
 
   // -------------------------------------
