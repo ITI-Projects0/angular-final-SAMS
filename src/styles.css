@@ -219,7 +219,7 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'Space Grotesk', 'Inter', 'Cairo', system-ui, -apple-system, sans-serif;
+  font-family: 'Space Grotesk', 'Inter', system-ui, -apple-system, sans-serif;
   margin: 0;
   transition: background-color 180ms ease, color 180ms ease;
 }
@@ -232,13 +232,8 @@ body {
     var(--bg);
 }
 
-html.rtl,
-html.rtl body {
-  direction: rtl;
-}
-
-html:not(.rtl),
-html:not(.rtl) body {
+/* Default LTR direction */
+body {
   direction: ltr;
 }
 
