@@ -4,6 +4,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { FeedbackService } from '../../../core/services/feedback.service';
 import { LoadingService } from '../../../core/services/loading.service';
+import { HttpParams } from '@angular/common/http';
 
 interface PendingCenter {
   id: number;
@@ -27,12 +28,18 @@ export class PendingCenters implements OnInit {
     private api: ApiService,
     private feedback: FeedbackService,
     private loading: LoadingService
-  ) {}
+  ) { }
 
   pendingCenters = signal<PendingCenter[]>([]);
   isLoading = signal(false);
   searchTerm = '';
-  
+
+  // Pagination
+  page = 1;
+  perPage = 10;
+  total = 0;
+  lastPage = 1;
+
   // Reject modal state
   rejectModalOpen = signal(false);
   rejectReason = '';
@@ -42,13 +49,18 @@ export class PendingCenters implements OnInit {
     this.loadPendingCenters();
   }
 
-  loadPendingCenters(): void {
+  loadPendingCenters(page = this.page): void {
     this.isLoading.set(true);
-    this.api.get<any>('/admin/pending-centers').subscribe({
+    const params = new HttpParams()
+      .set('page', page)
+      .set('per_page', this.perPage)
+      .set('search', this.searchTerm.trim());
+
+    this.api.get<any>('/admin/pending-centers', params).subscribe({
       next: (res) => {
         const payload = res?.data ?? res;
         const items = payload?.data ?? payload ?? [];
-        
+
         const centers = items.map((user: any) => ({
           id: user.id,
           name: user.name,
@@ -58,8 +70,15 @@ export class PendingCenters implements OnInit {
           createdAt: user.created_at,
           raw: user,
         }));
-        
+
         this.pendingCenters.set(centers);
+
+        const pagination = res?.meta?.pagination ?? payload?.meta ?? {};
+        this.page = pagination.current_page ?? page;
+        this.perPage = pagination.per_page ?? this.perPage;
+        this.total = pagination.total ?? this.pendingCenters().length;
+        this.lastPage = pagination.last_page ?? this.lastPage ?? 1;
+
         this.isLoading.set(false);
       },
       error: () => {
@@ -73,14 +92,34 @@ export class PendingCenters implements OnInit {
     });
   }
 
+  // Removed client-side filtering as we now use backend search
   get filteredCenters() {
-    const q = this.searchTerm.toLowerCase().trim();
-    if (!q) return this.pendingCenters();
-    return this.pendingCenters().filter(c =>
-      c.name.toLowerCase().includes(q) ||
-      c.email.toLowerCase().includes(q) ||
-      c.centerName.toLowerCase().includes(q)
-    );
+    return this.pendingCenters();
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.lastPage) return;
+    this.page = page;
+    this.loadPendingCenters(page);
+  }
+
+  changePerPage(value: number) {
+    this.perPage = value;
+    this.page = 1;
+    this.loadPendingCenters(1);
+  }
+
+  onSearchChange() {
+    this.page = 1;
+    this.loadPendingCenters(1);
+  }
+
+  get rangeStart(): number {
+    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
+  }
+
+  get rangeEnd(): number {
+    return Math.min(this.rangeStart + this.pendingCenters().length - 1, this.total);
   }
 
   approve(center: PendingCenter): void {
@@ -135,7 +174,7 @@ export class PendingCenters implements OnInit {
 
   confirmReject(): void {
     if (!this.selectedUserId) return;
-    
+
     this.loading.show();
     this.api.post<any>(`/admin/centers/${this.selectedUserId}/reject`, {
       reason: this.rejectReason || null

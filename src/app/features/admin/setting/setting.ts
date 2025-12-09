@@ -31,20 +31,20 @@ export class Setting implements OnInit, OnDestroy {
   preferences: {
     theme: Theme;
   } = {
-    theme: 'light',
-  };
+      theme: 'light',
+    };
 
   loading = false;
   private themeSub?: Subscription;
-  password = { new: '', confirm: '' };
-  passwordVisibility = { new: false, confirm: false };
+  password = { current: '', new: '', confirm: '' };
+  passwordVisibility = { current: false, new: false, confirm: false };
 
   constructor(
     private themeService: ThemeService,
     private api: ApiService,
     private tokenStorage: TokenStorageService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.preferences.theme = this.themeService.currentPreference;
@@ -76,19 +76,22 @@ export class Setting implements OnInit, OnDestroy {
   }
 
   // -------------------------------------
-  // Actions (placeholder until API wiring)
+  // Actions
   // -------------------------------------
   saveAccount() {
-    if (!this.user.id) return;
-    const body: any = this.avatarFile ? new FormData() : {};
+    const body = new FormData();
+    body.append('name', this.user.name);
     if (this.avatarFile) {
       body.append('avatar', this.avatarFile);
-      body.append('name', this.user.name);
-    } else {
-      body.name = this.user.name;
     }
+    // Add _method PUT to trick Laravel if needed, or just use PUT directly if API supports it with FormData
+    // Angular HttpClient puts FormData as multipart/form-data automatically.
+    // However, Laravel sometimes has issues with PUT and FormData. Using POST with _method=PUT is safer for file uploads.
+    body.append('_method', 'PUT');
+
     this.loading = true;
-    this.api.put(`/users/${this.user.id}`, body).subscribe({
+    // Use POST /me with _method=PUT for file upload support
+    this.api.post('/me', body).subscribe({
       next: (res: any) => {
         const cached = this.tokenStorage.getUser();
         const serverUser = (res as any)?.data ?? res;
@@ -100,7 +103,7 @@ export class Setting implements OnInit, OnDestroy {
           this.tokenStorage.updateStoredUser(updated as any);
         }
       },
-      error: () => {},
+      error: () => { },
       complete: () => {
         this.loading = false;
         this.cdr.detectChanges();
@@ -109,14 +112,24 @@ export class Setting implements OnInit, OnDestroy {
   }
 
   changePassword() {
-    if (!this.user.id || !this.password.new || this.password.new !== this.password.confirm) return;
+    if (!this.password.current || !this.password.new || this.password.new !== this.password.confirm) return;
+
+    const payload = {
+      current_password: this.password.current,
+      password: this.password.new,
+      password_confirmation: this.password.confirm
+    };
+
     this.loading = true;
-    this.api.put(`/users/${this.user.id}`, { password: this.password.new }).subscribe({
+    this.api.put('/me/password', payload).subscribe({
       next: () => {
-        this.password = { new: '', confirm: '' };
-        this.passwordVisibility = { new: false, confirm: false };
+        this.password = { current: '', new: '', confirm: '' };
+        this.passwordVisibility = { current: false, new: false, confirm: false };
+        alert('Password updated successfully.');
       },
-      error: () => {},
+      error: (err) => {
+        alert(err.error?.message || 'Failed to update password.');
+      },
       complete: () => {
         this.loading = false;
         this.cdr.detectChanges();
@@ -124,7 +137,7 @@ export class Setting implements OnInit, OnDestroy {
     });
   }
 
-  togglePasswordVisibility(field: 'new' | 'confirm') {
+  togglePasswordVisibility(field: 'current' | 'new' | 'confirm') {
     this.passwordVisibility[field] = !this.passwordVisibility[field];
   }
 
@@ -175,8 +188,8 @@ export class Setting implements OnInit, OnDestroy {
     const roles =
       Array.isArray(payload?.roles)
         ? payload.roles
-            .map((r: any) => (typeof r === 'string' ? r : r?.name))
-            .filter((r: any) => !!r && typeof r === 'string')
+          .map((r: any) => (typeof r === 'string' ? r : r?.name))
+          .filter((r: any) => !!r && typeof r === 'string')
         : payload?.role
           ? [payload.role]
           : this.user.roles;

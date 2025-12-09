@@ -17,8 +17,8 @@
     <!-- Search -->
     <div class="search-bar">
         <i class="fa-solid fa-search"></i>
-        <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name, email, or center..."
-            class="search-input" />
+        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+            placeholder="Search by name, email, or center..." class="search-input" />
     </div>
 
     <!-- Loading State -->
@@ -83,6 +83,19 @@
             </div>
         </div>
         }
+    </div>
+    }
+
+    <!-- Pagination -->
+    @if (lastPage > 1 || total) {
+    <div class="pagination">
+        <div class="muted small">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
+        <div class="page-controls">
+            <button class="btn-dashboard-ghost" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
+            <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
+            <button class="btn-dashboard-ghost" [disabled]="page === lastPage"
+                (click)="changePage(page + 1)">Next</button>
+        </div>
     </div>
     }
 

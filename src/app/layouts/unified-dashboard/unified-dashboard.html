@@ -19,6 +19,9 @@
 
         <!-- Page Content -->
         <main class="content">
+            <div class="mb-4">
+                <app-breadcrumb [items]="breadcrumbs" [homeLink]="homeLink"></app-breadcrumb>
+            </div>
             <router-outlet></router-outlet>
         </main>
     </div>

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-admin-centers',
@@ -25,13 +26,24 @@ export class Centers implements OnInit {
   currentIndex: number | null = null;
   formCenter = { name: '', city: '', phone: '', paid: false };
 
+  // Pagination
+  page = 1;
+  perPage = 10;
+  total = 0;
+  lastPage = 1;
+
   ngOnInit(): void {
     this.loadCenters();
   }
 
-  private loadCenters() {
+  loadCenters(page = this.page) {
     this.loading = true;
-    this.api.get<any>('/centers').subscribe({
+    const params = new HttpParams()
+      .set('page', page)
+      .set('per_page', this.perPage)
+      .set('search', this.searchTerm.trim());
+
+    this.api.get<any>('/centers', params).subscribe({
       next: (res) => {
         const payload = res?.data ?? res;
         const items = payload?.data ?? payload ?? [];
@@ -49,6 +61,13 @@ export class Centers implements OnInit {
           })),
           raw: c,
         }));
+
+        const pagination = res?.meta?.pagination ?? payload?.meta ?? {};
+        this.page = pagination.current_page ?? page;
+        this.perPage = pagination.per_page ?? this.perPage;
+        this.total = pagination.total ?? this.centers.length;
+        this.lastPage = pagination.last_page ?? this.lastPage ?? 1;
+        
         this.cdr.detectChanges();
       },
       error: () => { this.loading = false; this.cdr.detectChanges(); },
@@ -56,15 +75,34 @@ export class Centers implements OnInit {
     });
   }
 
+  // Removed client-side filtering as we now use backend search
   get filteredCenters() {
-    const q = this.searchTerm.toLowerCase().trim();
-    if (!q) return this.centers;
-    return this.centers.filter(c =>
-      (c.name || '').toLowerCase().includes(q) ||
-      (c.city || '').toLowerCase().includes(q) ||
-      (c.phone || '').toLowerCase().includes(q) ||
-      (c.paid ? 'paid' : 'unpaid').includes(q)
-    );
+    return this.centers;
+  }
+
+  changePage(page: number) {
+    if (page < 1 || page > this.lastPage) return;
+    this.page = page;
+    this.loadCenters(page);
+  }
+
+  changePerPage(value: number) {
+    this.perPage = value;
+    this.page = 1;
+    this.loadCenters(1);
+  }
+
+  onSearchChange() {
+    this.page = 1;
+    this.loadCenters(1);
+  }
+
+  get rangeStart(): number {
+    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
+  }
+
+  get rangeEnd(): number {
+    return Math.min(this.rangeStart + this.centers.length - 1, this.total);
   }
 
   openForm(center?: typeof this.formCenter) {
@@ -110,7 +148,7 @@ export class Centers implements OnInit {
     }
 
     this.api.delete(`/centers/${found.id}`).subscribe(() => {
-      this.centers = this.centers.filter(c => c.id !== found.id);
+      this.loadCenters(); // Reload to update pagination
     });
   }
 

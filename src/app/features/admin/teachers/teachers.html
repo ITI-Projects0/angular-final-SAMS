@@ -1,14 +1,16 @@
-<section class="list-wrapper">
-  <header class="list-header">
+<section class="dashboard-page">
+  <header class="dashboard-header">
     <h2>Teachers</h2>
-    <p class="muted">Teaching staff and their assigned centers</p>
+    <p>Teaching staff and their assigned centers</p>
   </header>
 
-  <div class="toolbar">
-    <input placeholder="Search teachers..." class="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" />
+  <div class="dashboard-toolbar">
+    <input placeholder="Search teachers..." class="dashboard-input" style="max-width: 300px;" [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange()" />
     <div class="toolbar-actions">
-      <label class="muted">Per page</label>
-      <select class="select" [(ngModel)]="perPage" (ngModelChange)="changePerPage($event)">
+      <label class="dashboard-label" style="margin: 0;">Per page</label>
+      <select class="dashboard-select" style="width: auto;" [(ngModel)]="perPage"
+        (ngModelChange)="changePerPage($event)">
         <option [ngValue]="10">10</option>
         <option [ngValue]="15">15</option>
         <option [ngValue]="25">25</option>
@@ -22,44 +24,51 @@
     <span>Loading teachers...</span>
   </div>
 
-  <div class="cards-grid">
-    <div class="teacher-card glass" *ngFor="let t of filteredTeachers">
-      <div class="card-head">
-        <div class="avatar">{{ t.name ? t.name[0] : '?' }}</div>
-        <div class="head-info">
-          <div class="name">{{ t.name }}</div>
-          <div class="muted">{{ t.email }}</div>
-          <div class="meta-row">
-            <span class="pill">{{ t.center || '-' }}</span>
-            <span class="pill pill-ghost">{{ t.courses }} courses</span>
-            <span class="pill pill-ghost students-pill">{{ t.totalStudents }} students</span>
-          </div>
-        </div>
-        <span class="pill status-pill"
-          [ngClass]="t.status === 'active' ? 'pill-success' : 'pill-muted'">{{ t.status }}</span>
-      </div>
-      <!-- <div class="course-chips" *ngIf="t.courseList?.length">
-        <div class="course-chip" *ngFor="let c of t.courseList | slice:0:3">
-          <div class="chip-title">{{ c.name }}</div>
-          <div class="chip-meta">
-            <span *ngIf="c.center">{{ c.center }}</span>
-            <span class="dot"></span>
-            <span>{{ c.studentsCount }} students</span>
-          </div>
-        </div>
-      </div> -->
-      <div class="actions">
-        <button class="btn-simple" (click)="openInfo(t)">Info</button>
-      </div>
-    </div>
+  <div class="dashboard-table-wrapper">
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Teacher</th>
+          <th>Center</th>
+          <th>Stats</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of filteredTeachers">
+          <td>
+            <div class="stack">
+              <span class="strong">{{ t.name }}</span>
+              <span class="muted">{{ t.email }}</span>
+            </div>
+          </td>
+          <td><span class="badge badge-neutral">{{ t.center || '-' }}</span></td>
+          <td>
+            <div class="flex gap-2">
+              <span class="badge badge-neutral">{{ t.courses }} courses</span>
+              <span class="badge badge-neutral">{{ t.totalStudents }} students</span>
+            </div>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="t.status === 'active' ? 'badge-success' : 'badge-neutral'">
+              {{ t.status }}
+            </span>
+          </td>
+          <td>
+            <button class="btn-dashboard-ghost" (click)="openInfo(t)">Info</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="pagination" *ngIf="lastPage > 1 || total">
     <div class="muted small">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
     <div class="page-controls">
-      <button class="btn-simple" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
+      <button class="btn-dashboard-ghost" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
       <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
-      <button class="btn-simple" [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
+      <button class="btn-dashboard-ghost" [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
     </div>
   </div>
 </section>

@@ -20,16 +20,16 @@ export const AdminRoutes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { roles: ['admin'], dashboardType: 'admin' },
     children: [
-      { path: '', component: AdminDashboard },
-      { path: 'setting', component: Setting },
-      { path: 'centers', component: Centers },
-      { path: 'pending-centers', component: PendingCenters },
-      { path: 'courses', component: Courses },
-      { path: 'teachers', component: Teachers },
-      { path: 'students', component: Students },
-      { path: 'parents', component: Parents },
-      { path: 'contacts', component: Contacts },
-      { path: 'payments', component: Payments },
+      { path: '', component: AdminDashboard, data: { breadcrumb: 'Overview' } },
+      { path: 'setting', component: Setting, data: { breadcrumb: 'Settings' } },
+      { path: 'centers', component: Centers, data: { breadcrumb: 'Centers' } },
+      { path: 'pending-centers', component: PendingCenters, data: { breadcrumb: 'Pending Centers' } },
+      { path: 'courses', component: Courses, data: { breadcrumb: 'Courses' } },
+      { path: 'teachers', component: Teachers, data: { breadcrumb: 'Teachers' } },
+      { path: 'students', component: Students, data: { breadcrumb: 'Students' } },
+      { path: 'parents', component: Parents, data: { breadcrumb: 'Parents' } },
+      { path: 'contacts', component: Contacts, data: { breadcrumb: 'Contacts' } },
+      { path: 'payments', component: Payments, data: { breadcrumb: 'Payments' } },
     ]
   }
 ];
