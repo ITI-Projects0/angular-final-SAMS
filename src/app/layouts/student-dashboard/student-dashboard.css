@@ -1,0 +1,52 @@
+/* Student Dashboard Layout Styles */
+/* Import shared dashboard card styles from unified-dashboard */
+
+/* Cards - Matching Admin/Staff Dashboard Style */
+.dashboard-card {
+    background: var(--card);
+    color: var(--text);
+    border-radius: 1rem;
+    border: 1px solid var(--dashboard-sidebar-border, var(--border));
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+}
+
+.dashboard-stat-card {
+    background: var(--card);
+    border: 1px solid var(--dashboard-sidebar-border, var(--border));
+    border-radius: 1rem;
+    padding: 1.25rem;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+}
+
+/* Card Accents */
+.card-accent-indigo {
+    border-top: 4px solid #6366f1;
+}
+
+.card-accent-emerald {
+    border-top: 4px solid #10b981;
+}
+
+.card-accent-amber {
+    border-top: 4px solid #f59e0b;
+}
+
+.card-accent-rose {
+    border-top: 4px solid #f43f5e;
+}
