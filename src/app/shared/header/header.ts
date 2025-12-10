@@ -72,6 +72,11 @@ export class Header implements OnInit {
     return this.tokenStorage.getUser();
   }
 
+  get profileRoute(): string {
+    const roles = this.user?.roles || [];
+    return roles.includes('parent') ? '/dashboard/parent-profile' : '/dashboard/profile';
+  }
+
   toggleMenu(): void {
     this.isMenuOpen = !this.isMenuOpen;
   }

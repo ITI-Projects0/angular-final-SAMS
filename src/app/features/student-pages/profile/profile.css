@@ -1,0 +1,80 @@
+/* Tailwind-based styling kept minimal; utilities are applied inline in templates */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 0.9rem;
+  border: 1px solid transparent;
+  font-weight: 600;
+  transition: all 0.18s ease;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, #4f46e5, #22c55e);
+  color: #f8fafc;
+  border-color: rgba(79, 70, 229, 0.3);
+}
+
+.btn-ghost {
+  background: rgba(99, 102, 241, 0.06);
+  color: #0f172a;
+  border-color: #e2e8f0;
+}
+
+.dark .btn-ghost {
+  color: #e2e8f0;
+  border-color: #1e293b;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 0.15rem;
+}
+
+.dark .field-label {
+  color: #e2e8f0;
+}
+
+.field-value {
+  font-weight: 600;
+  color: #0f172a;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(120deg, rgba(99, 102, 241, 0.08), rgba(14, 165, 233, 0.08));
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.dark .field-value {
+  color: #e2e8f0;
+  background: rgba(15, 23, 42, 0.7);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.dark .eyebrow {
+  color: #cbd5e1;
+}

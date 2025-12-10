@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { Child } from '../models/child.model';
@@ -84,6 +84,42 @@ export class ParentService {
       map((res: any) => res?.data ?? res ?? []),
       catchError(() => of([]))
     );
+  }
+
+  getProfile(): Observable<any> {
+    return this.api.get('/me').pipe(map((res: any) => res?.data ?? res ?? {}));
+  }
+
+  updateProfile(payload: {
+    name?: string;
+    phone?: string;
+    avatar?: string;
+    avatarFile?: File | null;
+  }): Observable<any> {
+    const { avatarFile, name, phone, avatar } = payload;
+
+    if (avatarFile instanceof File) {
+      const form = new FormData();
+      if (name) form.append('name', name);
+      if (phone) form.append('phone', phone);
+      if (avatar) form.append('avatar', avatar);
+      form.append('avatar', avatarFile);
+      form.append('_method', 'PUT');
+
+      return this.api.post('/me', form);
+    }
+
+    const body: any = {};
+    if (name) body.name = name;
+    if (phone) body.phone = phone;
+    if (avatar) body.avatar = avatar;
+
+    return this.api.put('/me', body);
+  }
+
+
+  updatePassword(payload: { current_password: string; password: string; password_confirmation: string }): Observable<any> {
+    return this.api.put('/me/password', payload).pipe(map((res: any) => res?.data ?? res ?? {}));
   }
 
   getSummary(): Observable<any> {

@@ -1,58 +1,184 @@
-@if (isParent) {
-<div class="p-6 space-y-6">
-    <header>
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Parent Profile</h1>
-        <p class="text-slate-500 dark:text-slate-400">Manage your account settings.</p>
-    </header>
-    <!-- Parent profile content can be added here similarly -->
-    <div class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
-        <p class="text-slate-500 dark:text-slate-400">Parent profile details will appear here.</p>
-    </div>
-</div>
-} @else {
-<div class="p-6 space-y-6">
-    <header>
-        <h1 class="text-2xl font-bold text-slate-900 dark:text-white">My Profile</h1>
-        <p class="text-slate-500 dark:text-slate-400">View and manage your personal information.</p>
-    </header>
-
-    @if (profile$ | async; as profile) {
-    <div
-        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-        <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row items-center gap-6">
-            <div
-                class="w-24 h-24 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-4xl">
-                {{ profile.name.charAt(0) }}
-            </div>
-            <div class="text-center sm:text-left">
-                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ profile.name }}</h2>
-                <p class="text-slate-500 dark:text-slate-400">{{ profile.role }}</p>
-            </div>
-        </div>
-
-        <div class="p-6 grid gap-6 md:grid-cols-2">
-            <div>
-                <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Email Address</label>
-                <p class="text-slate-900 dark:text-white font-medium">{{ profile.email }}</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Student ID</label>
-                <p class="text-slate-900 dark:text-white font-medium">{{ profile.studentId }}</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Grade Level</label>
-                <p class="text-slate-900 dark:text-white font-medium">{{ profile.grade }}</p>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Phone Number</label>
-                <p class="text-slate-900 dark:text-white font-medium">{{ profile.phone }}</p>
-            </div>
-            <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Address</label>
-                <p class="text-slate-900 dark:text-white font-medium">{{ profile.address }}</p>
-            </div>
-        </div>
+<div class="px-4 md:px-6">
+  <div class="space-y-6 max-w-6xl mx-auto">
+    @if (loading()) {
+    <div class="rounded-3xl bg-white/70 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 p-8 text-slate-500 dark:text-slate-400 shadow">
+      Loading profile...
     </div>
     }
+    @if (!loading() && !profile() && !error()) {
+    <div class="rounded-3xl bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 text-sm">
+      Still waiting on your profile data. Please refresh or check your connection.
+    </div>
+    }
+
+    @if (!loading() && profile()) {
+    <section class="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xl border border-slate-100 dark:border-slate-800">
+      <div class="relative p-6 sm:p-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex items-center gap-4 sm:gap-6">
+          @if (profile()?.avatar) {
+          <img [src]="profile()?.avatar" alt="Avatar"
+            class="h-20 w-20 rounded-2xl border border-slate-200 dark:border-slate-700 object-cover shadow" />
+          } @else {
+          <div class="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-2xl sm:text-3xl font-semibold uppercase">
+            {{ profile()?.name?.charAt(0) }}
+          </div>
+          }
+          <div>
+            <p class="text-xs uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Student Profile</p>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h1 class="text-3xl sm:text-4xl font-semibold leading-tight">{{ profile()?.name }}</h1>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-sm font-semibold bg-indigo-50 border-indigo-200 text-indigo-800 dark:bg-indigo-900/40 dark:border-indigo-800 dark:text-indigo-100">Student</span>
+            </div>
+            <div class="flex flex-wrap gap-2 mt-3 text-sm text-slate-600 dark:text-slate-300">
+              <span class="inline-flex items-center px-3 py-1 rounded-full border text-xs font-medium bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">ID: {{ profile()?.studentId }}</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full border text-xs font-medium bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">{{ profile()?.email }}</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full border text-xs font-medium bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">{{ profile()?.phone }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-slate-900/70 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl overflow-hidden">
+      <div class="p-6 sm:p-8 space-y-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <p class="text-xs uppercase tracking-[0.12em] font-semibold text-slate-500 dark:text-slate-400">Account details</p>
+            <h2 class="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Personal Information</h2>
+            <p class="text-slate-500 dark:text-slate-400">Your contact and academic snapshot in one place.</p>
+          </div>
+          <span class="inline-flex items-center px-3 py-1 rounded-full border text-xs font-medium bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">Student account</span>
+        </div>
+
+        <form class="grid gap-6 md:grid-cols-2">
+          <div class="flex flex-col gap-2 md:col-span-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Profile Photo</label>
+            <div class="flex flex-wrap items-center gap-3">
+              <input type="file" accept="image/*" (change)="handleAvatarSelected($event.target.files?.[0] ?? null)"
+                class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-white cursor-pointer" />
+              @if (avatarFile()) {
+              <span class="text-sm text-slate-600 dark:text-slate-300">Selected: {{ avatarFile()?.name }}</span>
+              }
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Upload a square image for best results.</p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Full Name</label>
+            <input type="text"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              [ngModel]="profile()?.name" (ngModelChange)="updateProfileField('name', $event)" name="studentName" autocomplete="name">
+            @if (nameError()) {
+            <p class="text-xs text-red-600 dark:text-red-400">{{ nameError() }}</p>
+            }
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Role</label>
+            <input type="text"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-3 text-sm text-slate-500 dark:text-slate-400"
+              [ngModel]="profile()?.role" name="studentRole" [ngModelOptions]="{standalone: true}" disabled>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Email Address</label>
+            <input type="email"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-3 text-sm text-slate-500 dark:text-slate-400"
+              [ngModel]="profile()?.email" name="studentEmail" [ngModelOptions]="{standalone: true}" disabled>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Email cannot be changed</p>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Phone Number</label>
+            <input type="tel"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              [ngModel]="profile()?.phone" (ngModelChange)="updateProfileField('phone', $event)" name="studentPhone" autocomplete="tel">
+            @if (phoneError()) {
+            <p class="text-xs text-red-600 dark:text-red-400">{{ phoneError() }}</p>
+            }
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Student ID</label>
+            <input type="text"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-3 text-sm text-slate-500 dark:text-slate-400"
+              [ngModel]="profile()?.studentId" name="studentId" [ngModelOptions]="{standalone: true}" disabled>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Grade Level</label>
+            <input type="text"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-3 text-sm text-slate-500 dark:text-slate-400"
+              [ngModel]="profile()?.grade" name="studentGrade" [ngModelOptions]="{standalone: true}" disabled>
+          </div>
+        </form>
+
+        <div class="flex flex-wrap gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <button type="button" (click)="saveProfile()" [disabled]="saving()"
+            class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-md disabled:opacity-60 disabled:cursor-not-allowed">
+            @if (saving()) { Saving... } @else { Save Changes }
+          </button>
+          <button type="button" (click)="cancelEdit()"
+            class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-slate-900/70 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl overflow-hidden">
+      <div class="p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <p class="text-xs uppercase tracking-[0.12em] font-semibold text-slate-500 dark:text-slate-400">Security</p>
+            <h2 class="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Change Password</h2>
+            <p class="text-slate-500 dark:text-slate-400">Keep your account safe with a strong password.</p>
+          </div>
+        </div>
+
+        @if (passwordSuccess()) {
+        <div class="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 px-4 py-3 text-sm">
+          {{ passwordSuccess() }}
+        </div>
+        }
+
+        <form class="space-y-4" (ngSubmit)="changePassword()" novalidate>
+          <!-- Hidden username for accessibility -->
+          <input type="text" class="hidden" [ngModel]="profile()?.email" name="username" autocomplete="username">
+          <div class="grid gap-4 md:grid-cols-3">
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Current Password</label>
+            <input type="password"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              [ngModel]="passwordForm().current" (ngModelChange)="updatePasswordField('current', $event)" name="studentCurrent"
+              [ngModelOptions]="{standalone: true}" autocomplete="current-password">
+            @if (passwordFieldErrors().current) {
+            <p class="text-xs text-red-600 dark:text-red-400">{{ passwordFieldErrors().current }}</p>
+            }
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">New Password</label>
+            <input type="password"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              [ngModel]="passwordForm().password" (ngModelChange)="updatePasswordField('password', $event)" name="studentNew"
+              [ngModelOptions]="{standalone: true}" autocomplete="new-password">
+            @if (passwordFieldErrors().password) {
+            <p class="text-xs text-red-600 dark:text-red-400">{{ passwordFieldErrors().password }}</p>
+            }
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Confirm New Password</label>
+            <input type="password"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              [ngModel]="passwordForm().confirm" (ngModelChange)="updatePasswordField('confirm', $event)" name="studentConfirm"
+              [ngModelOptions]="{standalone: true}" autocomplete="new-password">
+            @if (passwordFieldErrors().confirm) {
+            <p class="text-xs text-red-600 dark:text-red-400">{{ passwordFieldErrors().confirm }}</p>
+            }
+          </div>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <button type="submit" [disabled]="passwordSaving()"
+              class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-md disabled:opacity-60 disabled:cursor-not-allowed">
+              @if (passwordSaving()) { Updating... } @else { Update Password }
+            </button>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Use at least 8 characters with a mix of letters and numbers.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+    }
+  </div>
 </div>
-}

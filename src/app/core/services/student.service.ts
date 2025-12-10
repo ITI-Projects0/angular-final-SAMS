@@ -59,7 +59,30 @@ export class StudentService {
   }
 
   getProfile(): Observable<any> {
-    return this.api.get('/dashboard/student/profile');
+    return this.api.get('/me').pipe(map((res: any) => res?.data ?? res ?? {}));
+  }
+
+  updateProfile(payload: { name?: string; phone?: string; avatar?: string; avatarFile?: File | null }): Observable<any> {
+    const { avatarFile, avatar, ...rest } = payload;
+    const hasFile = avatarFile instanceof File;
+
+    const body = hasFile ? new FormData() : rest as any;
+    if (hasFile) {
+      if (rest.name) body.append('name', rest.name);
+      if (rest.phone) body.append('phone', rest.phone);
+      if (avatar) body.append('avatar', avatar);
+      body.append('avatar', avatarFile as File);
+      body.append('_method', 'PUT');
+      return this.api.post('/me', body).pipe(map((res: any) => res?.data ?? res ?? {}));
+    }
+
+    if (avatar) (body as any).avatar = avatar;
+
+    return this.api.put('/me', body).pipe(map((res: any) => res?.data ?? res ?? {}));
+  }
+
+  updatePassword(payload: { current_password: string; password: string; password_confirmation: string }): Observable<any> {
+    return this.api.put('/me/password', payload).pipe(map((res: any) => res?.data ?? res ?? {}));
   }
 
   getClassDetails(id: number): Observable<any> {
