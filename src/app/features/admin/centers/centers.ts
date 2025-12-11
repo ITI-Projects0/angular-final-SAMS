@@ -30,7 +30,9 @@ export class Centers implements OnInit {
   isFormOpen = false;
   isEditMode = false;
   currentIndex: number | null = null;
-  formCenter = { name: '', city: '', phone: '', paid: false };
+  formCenter: { id?: number | null; name: string; paid: boolean } = { id: null, name: '', paid: false };
+  formErrors = { name: '' };
+  formSubmitting = false;
 
   // Pagination
   page = 1;
@@ -43,7 +45,7 @@ export class Centers implements OnInit {
   }
 
   loadCenters(page = this.page) {
-    this.loading = true;
+    this.setLoading(true);
     const params = new HttpParams()
       .set('page', page)
       .set('per_page', this.perPage)
@@ -56,8 +58,6 @@ export class Centers implements OnInit {
         this.centers = items.map((c: any) => ({
           id: c.id,
           name: c.name,
-          city: c.subdomain || '',
-          phone: c.owner?.phone || '',
           paid: !!c.is_active,
           courses: (c.groups || []).map((g: any) => ({
             id: g.id,
@@ -68,20 +68,35 @@ export class Centers implements OnInit {
           raw: c,
         }));
 
-        const pagination = res?.meta?.pagination ?? payload?.meta ?? {};
-        this.page = pagination.current_page ?? page;
-        this.perPage = pagination.per_page ?? this.perPage;
-        this.total = pagination.total ?? this.centers.length;
-        this.lastPage = pagination.last_page ?? this.lastPage ?? 1;
+        // Normalize pagination regardless of API shape
+        const paginationSource =
+          res?.meta?.pagination ??
+          res?.pagination ??
+          res?.meta ??
+          payload?.meta?.pagination ??
+          payload?.meta ??
+          {};
+        const currentPage = paginationSource.current_page ?? page;
+        const perPage = paginationSource.per_page ?? this.perPage;
+        const total = paginationSource.total ?? payload?.total ?? this.centers.length;
+        const lastPage =
+          paginationSource.last_page ??
+          payload?.last_page ??
+          Math.max(Math.ceil(total / perPage) || 1, 1);
+
+        this.page = currentPage;
+        this.perPage = perPage;
+        this.total = total;
+        this.lastPage = lastPage;
 
         this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; this.cdr.detectChanges(); },
-      complete: () => { this.loading = false; this.cdr.detectChanges(); }
+      error: () => { this.setLoading(false); this.cdr.detectChanges(); },
+      complete: () => { this.setLoading(false); this.cdr.detectChanges(); }
     });
   }
 
-  // Removed client-side filtering as we now use backend search
+  // Backend handles search; display results as returned
   get filteredCenters() {
     return this.centers;
   }
@@ -109,37 +124,45 @@ export class Centers implements OnInit {
     this.isFormOpen = true;
     if (center) {
       this.isEditMode = true;
-      this.formCenter = { ...center };
-      this.currentIndex = this.centers.findIndex(c => c.name === center.name && c.phone === center.phone);
-      this.currentId = this.centers[this.currentIndex]?.id ?? null;
+      this.formCenter = { id: center.id ?? null, name: center.name, paid: center.paid };
+      this.currentIndex = this.centers.findIndex(c => c.id === center.id);
+      this.currentId = center.id ?? null;
     } else {
       this.isEditMode = false;
       this.currentIndex = null;
       this.currentId = null;
-      this.formCenter = { name: '', city: '', phone: '', paid: false };
+      this.formCenter = { id: null, name: '', paid: false };
     }
+    this.formErrors = { name: '' };
   }
 
   save() {
+    if (!this.validateForm()) {
+      this.cdr.detectChanges();
+      return;
+    }
+
     const payload = {
       name: this.formCenter.name,
-      subdomain: this.formCenter.city,
       is_active: this.formCenter.paid,
     };
 
     if (this.isEditMode && this.currentId !== null) {
+      this.formSubmitting = true;
       this.api.put<any>(`/centers/${this.currentId}`, payload).subscribe({
         next: () => {
+          this.formSubmitting = false;
+          this.cdr.detectChanges();
+          this.closeForm();
           this.feedback.showToast({
             title: 'Center updated',
             message: `"${this.formCenter.name}" has been updated.`,
             tone: 'success'
           });
           this.loadCenters();
-          this.closeForm();
         },
         error: () => {
-          this.closeForm();
+          this.formSubmitting = false;
           this.feedback.showToast({
             title: 'Update failed',
             message: 'Could not update the center. Please try again.',
@@ -149,8 +172,10 @@ export class Centers implements OnInit {
         }
       });
     } else {
+      this.formSubmitting = true;
       this.api.post<any>('/centers', payload).subscribe({
         next: () => {
+          this.formSubmitting = false;
           this.feedback.showToast({
             title: 'Center created',
             message: `"${this.formCenter.name}" has been added.`,
@@ -160,6 +185,7 @@ export class Centers implements OnInit {
           this.closeForm();
         },
         error: () => {
+          this.formSubmitting = false;
           this.feedback.showToast({
             title: 'Create failed',
             message: 'Could not create the center. Please try again.',
@@ -171,10 +197,26 @@ export class Centers implements OnInit {
     }
   }
 
+  private validateForm(): boolean {
+    this.formErrors = { name: '' };
+
+    const name = this.formCenter.name?.trim() ?? '';
+
+    this.formCenter = { ...this.formCenter, name };
+
+    if (!name) {
+      this.formErrors.name = 'Center name is required.';
+    } else if (name.length < 3) {
+      this.formErrors.name = 'Center name must be at least 3 characters.';
+    }
+
+    return !this.formErrors.name;
+  }
+
   delete(center: typeof this.formCenter) {
-    const found = this.centers.find(c => c.name === center.name && c.phone === center.phone);
+    const found = this.centers.find(c => c.id === center.id);
     if (!found?.id) {
-      this.centers = this.centers.filter(c => !(c.name === center.name && c.phone === center.phone));
+      this.centers = this.centers.filter(c => c.id !== center.id);
       return;
     }
 
@@ -185,7 +227,7 @@ export class Centers implements OnInit {
       primaryText: 'Delete',
       secondaryText: 'Cancel',
       onPrimary: () => {
-        this.loading = true;
+        this.setLoading(true);
         this.api.delete(`/centers/${found.id}`).subscribe({
           next: () => {
             this.feedback.showToast({
@@ -196,7 +238,7 @@ export class Centers implements OnInit {
             this.loadCenters(); // Reload to update pagination
           },
           error: () => {
-            this.loading = false;
+            this.setLoading(false);
             this.feedback.showToast({
               title: 'Delete failed',
               message: 'Could not delete the center. Please try again.',
@@ -222,5 +264,14 @@ export class Centers implements OnInit {
   closeInfo() {
     this.infoOpen = false;
     this.selectedCenter = null;
+  }
+
+  private setLoading(state: boolean) {
+    this.loading = state;
+    try {
+      this.cdr.detectChanges();
+    } catch {
+      // View might be destroyed; ignore
+    }
   }
 }

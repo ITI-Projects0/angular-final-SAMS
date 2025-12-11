@@ -68,8 +68,9 @@
       <option [ngValue]="false">Inactive</option>
     </select>
 
-    <button type="submit" class="btn-dashboard-primary full">{{ isEditMode ? 'Save Changes' : 'Create Center'
-      }}</button>
+    <button type="submit" class="btn-dashboard-primary full" [disabled]="formSubmitting">
+      {{ formSubmitting ? 'Saving...' : (isEditMode ? 'Save Changes' : 'Create Center') }}
+    </button>
   </form>
 </div>
 
