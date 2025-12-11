@@ -4,7 +4,7 @@ import { roleGuard } from '../../core/auth/role.guard';
 import { approvalGuard } from '../../core/auth/approval.guard';
 import { UnifiedDashboard } from '../../layouts/unified-dashboard/unified-dashboard';
 import { AdminDashboard } from './admin-dashboard/admin-dashboard';
-import { Setting } from './setting/setting';
+import { Setting } from '../shared-dashboard-pages/setting/setting';
 import { Centers } from './centers/centers';
 import { PendingCenters } from './pending-centers/pending-centers';
 import { Courses } from './courses/courses';
@@ -22,7 +22,7 @@ export const AdminRoutes: Routes = [
     data: { roles: ['admin'], dashboardType: 'admin' },
     children: [
       { path: '', component: AdminDashboard, data: { breadcrumb: 'Overview' } },
-      { path: 'setting', component: Setting, data: { breadcrumb: 'Settings' } },
+      { path: 'settings', component: Setting, data: { breadcrumb: 'Settings' } },
       { path: 'centers', component: Centers, data: { breadcrumb: 'Centers' } },
       { path: 'pending-centers', component: PendingCenters, data: { breadcrumb: 'Pending Centers' } },
       { path: 'courses', component: Courses, data: { breadcrumb: 'Courses' } },

@@ -1,7 +1,0 @@
-/* Settings page styles */
-/* Most styles are now handled by global utility classes and Tailwind CSS */
-
-:host {
-  display: block;
-  width: 100%;
-}

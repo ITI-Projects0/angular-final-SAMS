@@ -1,49 +1,45 @@
-import { ChangeDetectorRef, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { TokenStorageService } from '../../../core/auth/token-storage.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { StudentService } from '../../../core/services/student.service';
-import { RouterLink } from '@angular/router';
+import { ApiService } from '../../../core/services/api.service';
 import { FeedbackService } from '../../../core/services/feedback.service';
 
 type Profile = {
   name: string;
   email: string;
-  phone: string;
-  address?: string;
-  studentId?: string;
-  grade?: string;
-  role?: string;
+  phone?: string;
+  roles: string[];
   avatar?: string;
 };
 
 @Component({
-  selector: 'app-student-profile',
+  selector: 'app-setting',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './profile.html',
-  styleUrl: './profile.css'
+  templateUrl: './setting.html',
+  styleUrl: './setting.css'
 })
-export class StudentProfile implements OnInit {
+export class Setting implements OnInit {
   private tokenService = inject(TokenStorageService);
-  private studentService = inject(StudentService);
+  private api = inject(ApiService);
   private cdr = inject(ChangeDetectorRef);
   private feedback = inject(FeedbackService);
 
   profile = signal<Profile | null>(null);
   initialProfile = signal<Profile | null>(null);
   loading = signal(false);
-  isEditMode = signal(false);
   saving = signal(false);
   success = signal('');
   error = signal('');
   nameError = signal('');
-  phoneError = signal('');
+  avatarFile = signal<File | null>(null);
+
+  // Password form
   passwordSaving = signal(false);
   passwordError = signal('');
   passwordSuccess = signal('');
   passwordFieldErrors = signal<{ current?: string; password?: string; confirm?: string }>({});
-  avatarFile = signal<File | null>(null);
   passwordForm = signal({
     current: '',
     password: '',
@@ -59,42 +55,43 @@ export class StudentProfile implements OnInit {
     this.loadProfile();
   }
 
-  get isParent(): boolean {
-    return this.tokenService.getUser()?.roles.includes('parent') ?? false;
-  }
-
   private mapProfile(raw: any): Profile {
     const user = raw?.user ?? raw ?? {};
     const roles = Array.isArray(user.roles)
-      ? user.roles
+      ? user.roles.map((r: any) => typeof r === 'string' ? r : r?.name).filter(Boolean)
       : typeof user.roles === 'string'
         ? [user.roles]
-        : [];
+        : user.role ? [user.role] : [];
 
     return {
       name: user.name ?? '—',
       email: user.email ?? '—',
-      phone: user.phone ?? user.mobile ?? '—',
-      address: user.address ?? raw.address ?? '',
-      avatar: user.avatar ?? user.photo ?? '',
-      studentId: user.student_id ?? user.studentId ?? user.id ?? '—',
-      grade: user.grade ?? user.level ?? '—',
-      role: roles.join(', ') || user.role || 'Student'
+      phone: user.phone ?? user.mobile ?? '',
+      roles,
+      avatar: user.avatar ?? user.photo ?? ''
     };
   }
 
   private loadProfile(): void {
     this.loading.set(true);
     this.error.set('');
-    this.studentService.getProfile().subscribe({
+    this.api.get<any>('/me').subscribe({
       next: (data) => {
-        const mapped = this.mapProfile(data);
+        const payload = data?.data ?? data;
+        const mapped = this.mapProfile(payload);
         this.profile.set(mapped);
         this.initialProfile.set({ ...mapped });
-        this.syncStoredUser(data);
+        this.syncStoredUser(payload);
         this.cdr.markForCheck();
       },
       error: () => {
+        // Try to use cached user
+        const cached = this.tokenService.getUser();
+        if (cached) {
+          const mapped = this.mapProfile(cached);
+          this.profile.set(mapped);
+          this.initialProfile.set({ ...mapped });
+        }
         this.error.set('Unable to load your profile right now.');
         this.loading.set(false);
         this.toast('Could not load profile.', 'error');
@@ -107,42 +104,33 @@ export class StudentProfile implements OnInit {
     });
   }
 
-  toggleEditMode(): void {
-    if (!this.profile()) return;
-    this.success.set('');
-    this.error.set('');
-    this.nameError.set('');
-    this.phoneError.set('');
-    this.passwordFieldErrors.set({});
-    this.isEditMode.set(!this.isEditMode());
-  }
-
   saveProfile(): void {
     const current = this.profile();
     if (!current) return;
     if (!this.validateProfile()) return;
+
     this.saving.set(true);
     this.success.set('');
     this.error.set('');
     this.nameError.set('');
-    this.phoneError.set('');
-    this.passwordFieldErrors.set({});
 
+    const body = new FormData();
+    body.append('name', current.name);
+    if (current.phone) {
+      body.append('phone', current.phone);
+    }
     const avatarFile = this.avatarFile();
-    const payload = {
-      name: current.name,
-      phone: current.phone,
-      avatarFile: avatarFile ?? null,
-      // only send avatar string when a new file was chosen
-      avatar: avatarFile ? current.avatar : undefined
-    };
+    if (avatarFile) {
+      body.append('avatar', avatarFile);
+    }
+    body.append('_method', 'PUT');
 
-    this.studentService.updateProfile(payload).subscribe({
+    this.api.post('/me', body).subscribe({
       next: () => {
-        this.isEditMode.set(false);
         this.saving.set(false);
         this.success.set('Profile updated.');
         this.toast('Profile updated', 'success');
+        this.avatarFile.set(null);
         this.loadProfile();
         this.cdr.markForCheck();
       },
@@ -156,12 +144,9 @@ export class StudentProfile implements OnInit {
   }
 
   cancelEdit(): void {
-    this.isEditMode.set(false);
     this.success.set('');
     this.error.set('');
     this.nameError.set('');
-    this.phoneError.set('');
-    this.passwordFieldErrors.set({});
     this.avatarFile.set(null);
     if (this.initialProfile()) {
       this.profile.set({ ...this.initialProfile()! });
@@ -173,6 +158,7 @@ export class StudentProfile implements OnInit {
     this.passwordSuccess.set('');
     this.passwordFieldErrors.set({});
     const pwd = this.passwordForm();
+
     if (!pwd.current || !pwd.password || !pwd.confirm) {
       this.passwordError.set('Please fill in all password fields.');
       this.passwordFieldErrors.set({
@@ -183,12 +169,14 @@ export class StudentProfile implements OnInit {
       this.toast('Please fill in all password fields.', 'error');
       return;
     }
+
     if (pwd.password !== pwd.confirm) {
       this.passwordError.set('New passwords do not match.');
       this.passwordFieldErrors.set({ confirm: 'New passwords do not match.' });
       this.toast('New passwords do not match.', 'error');
       return;
     }
+
     const pwdValue = pwd.password;
     const strong =
       pwdValue.length >= 8 &&
@@ -196,6 +184,7 @@ export class StudentProfile implements OnInit {
       /[A-Z]/.test(pwdValue) &&
       /\d/.test(pwdValue) &&
       /[^A-Za-z0-9]/.test(pwdValue);
+
     if (!strong) {
       this.passwordError.set('Password must be at least 8 chars with upper, lower, number, and symbol.');
       this.passwordFieldErrors.set({
@@ -207,7 +196,7 @@ export class StudentProfile implements OnInit {
     }
 
     this.passwordSaving.set(true);
-    this.studentService.updatePassword({
+    this.api.put('/me/password', {
       current_password: pwd.current,
       password: pwd.password,
       password_confirmation: pwd.confirm
@@ -232,7 +221,6 @@ export class StudentProfile implements OnInit {
   updateProfileField(field: keyof Profile, value: string): void {
     this.profile.update((p) => (p ? { ...p, [field]: value } : p));
     if (field === 'name') this.nameError.set('');
-    if (field === 'phone') this.phoneError.set('');
   }
 
   updatePasswordField(field: 'current' | 'password' | 'confirm', value: string): void {
@@ -244,6 +232,7 @@ export class StudentProfile implements OnInit {
   }
 
   handleAvatarSelected(file: File | null): void {
+    console.log('Avatar selected:', file);
     this.avatarFile.set(file);
     if (file) {
       const reader = new FileReader();
@@ -256,7 +245,7 @@ export class StudentProfile implements OnInit {
   }
 
   private toast(message: string, tone: 'success' | 'error' | 'info' | 'warning' | 'danger') {
-    this.feedback.showToast({ title: 'Profile', message, tone, timeout: 4000 });
+    this.feedback.showToast({ title: 'Settings', message, tone, timeout: 4000 });
   }
 
   private syncStoredUser(raw: any): void {
@@ -281,12 +270,10 @@ export class StudentProfile implements OnInit {
       this.toast('Name must be at least 3 characters.', 'error');
       return false;
     }
-    const phone = current.phone ?? '';
-    if (phone && !/^01[0125][0-9]{8}$/.test(phone)) {
-      this.phoneError.set('Phone must start with 010/011/012/015 and be 11 digits.');
-      this.toast('Phone must start with 010/011/012/015 and be 11 digits.', 'error');
-      return false;
-    }
     return true;
   }
+
+
+
 }
+

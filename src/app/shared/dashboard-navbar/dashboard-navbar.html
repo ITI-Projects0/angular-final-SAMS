@@ -32,10 +32,14 @@
             </button>
 
             <!-- User Menu -->
-            <div class="user-menu" (click)="dropdown = !dropdown" (document:click)="dropdown = false"
+            <div class="user-menu" (click)="dropdown = !dropdown"
                 (click)="$event.stopPropagation()">
 
+                @if (userAvatar) {
+                <img [src]="userAvatar" [alt]="userName" class="avatar-img" />
+                } @else {
                 <span class="avatar">{{ userInitials }}</span>
+                }
 
                 <svg class="chevron" [class.rotate]="dropdown" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -48,7 +52,7 @@
                         <p class="dropdown-name">{{ userName }}</p>
                         <p class="dropdown-email">{{ userEmail }}</p>
                     </div>
-                    <a routerLink="/dashboard/admin/setting" class="dropdown-item">Settings</a>
+                    <a [routerLink]="settingsRoute" class="dropdown-item">Settings</a>
                     <button type="button" class="dropdown-item logout" (click)="logout()">
                         Logout
                     </button>
