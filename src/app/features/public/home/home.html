@@ -1,21 +1,13 @@
-﻿<div
-  class="home-shell relative min-h-screen w-full overflow-hidden"
-  [ngClass]="isDark ? 'bg-slate-950 text-slate-50' : 'bg-slate-50 text-slate-900'"
->
+﻿<div class="home-shell relative min-h-screen w-full overflow-hidden"
+  [ngClass]="isDark ? 'bg-slate-950 text-slate-50' : 'bg-slate-50 text-slate-900'">
   <!-- Floating background orbs -->
   <div class="pointer-events-none absolute inset-0 overflow-hidden">
-    <div
-      class="floating-orb absolute -left-32 top-20 h-96 w-96 rounded-full"
-      [ngClass]="isDark ? 'bg-cyan-500/20' : 'bg-cyan-300/40'"
-    ></div>
-    <div
-      class="floating-orb floating-orb--secondary absolute -right-32 top-1/3 h-96 w-96 rounded-full"
-      [ngClass]="isDark ? 'bg-purple-500/20' : 'bg-purple-300/40'"
-    ></div>
-    <div
-      class="floating-orb floating-orb--tertiary absolute left-1/2 bottom-20 h-96 w-96 rounded-full"
-      [ngClass]="isDark ? 'bg-amber-500/15' : 'bg-amber-300/30'"
-    ></div>
+    <div class="floating-orb absolute -left-32 top-20 h-96 w-96 rounded-full"
+      [ngClass]="isDark ? 'bg-cyan-500/20' : 'bg-cyan-300/40'"></div>
+    <div class="floating-orb floating-orb--secondary absolute -right-32 top-1/3 h-96 w-96 rounded-full"
+      [ngClass]="isDark ? 'bg-purple-500/20' : 'bg-purple-300/40'"></div>
+    <div class="floating-orb floating-orb--tertiary absolute left-1/2 bottom-20 h-96 w-96 rounded-full"
+      [ngClass]="isDark ? 'bg-amber-500/15' : 'bg-amber-300/30'"></div>
   </div>
 
   <app-header></app-header>
@@ -25,23 +17,17 @@
     <section id="hero" class="mx-auto max-w-7xl px-6 pt-20 pb-24 sm:pt-32 sm:pb-32">
       <div class="text-center">
         <!-- Badge -->
-        <div
-          class="animate-fade mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold"
+        <div class="animate-fade mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold"
           [ngClass]="
             isDark
               ? 'bg-cyan-500/10 text-cyan-300 ring-1 ring-cyan-500/20'
               : 'bg-cyan-50 text-cyan-700 ring-1 ring-cyan-200'
-          "
-        >
+          ">
           <span class="relative flex h-2 w-2">
-            <span
-              class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
-              [ngClass]="isDark ? 'bg-cyan-400' : 'bg-cyan-500'"
-            ></span>
-            <span
-              class="relative inline-flex h-2 w-2 rounded-full"
-              [ngClass]="isDark ? 'bg-cyan-500' : 'bg-cyan-600'"
-            ></span>
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+              [ngClass]="isDark ? 'bg-cyan-400' : 'bg-cyan-500'"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full"
+              [ngClass]="isDark ? 'bg-cyan-500' : 'bg-cyan-600'"></span>
           </span>
           Nominal monthly plans — less than an hour of manual admin
         </div>
@@ -49,8 +35,7 @@
         <!-- Main Headline -->
         <h1
           class="animate-fade anim-delay-100 mx-auto max-w-4xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
-          [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
-        >
+          [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
           Start Your Own Academy in
           <span class="bg-gradient-to-r from-cyan-500 to-purple-500 bg-clip-text text-transparent">
             Under 5 Minutes
@@ -58,86 +43,63 @@
         </h1>
 
         <!-- Sub-headline -->
-        <p
-          class="animate-fade anim-delay-200 mx-auto mt-6 max-w-2xl text-lg sm:text-xl"
-          [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
-        >
-          The complete academy management system built for teachers and center owners. Track attendance, manage grades, send weekly reports, and let AI handle student questions - all for a small monthly fee that costs less than an hour of admin time.
+        <p class="animate-fade anim-delay-200 mx-auto mt-6 max-w-2xl text-lg sm:text-xl"
+          [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
+          The complete academy management system built for teachers and center owners. Track attendance, manage grades,
+          send weekly reports, and let AI handle student questions - all for a small monthly fee that costs less than an
+          hour of admin time.
         </p>
 
         <!-- CTA Buttons -->
-        <div
-          class="animate-fade anim-delay-300 mt-10 flex flex-wrap items-center justify-center gap-4"
-        >
-          <a
-            routerLink="/login"
+        <div class="animate-fade anim-delay-300 mt-10 flex flex-wrap items-center justify-center gap-4">
+          <a routerLink="/login"
             class="group inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold shadow-lg transition-all hover:scale-105"
             [ngClass]="
               isDark
                 ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white hover:shadow-cyan-500/50'
                 : 'bg-gradient-to-r from-cyan-600 to-purple-600 text-white hover:shadow-cyan-600/50'
-            "
-          >
+            ">
             Start Your Academy - See Pricing
-            <svg
-              class="h-5 w-5 transition-transform group-hover:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
+            <svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </a>
-          <a
-            href="#features"
+          <a href="#features"
             class="inline-flex items-center gap-2 rounded-full px-8 py-4 text-base font-semibold transition-all"
             [ngClass]="
               isDark
                 ? 'bg-slate-800 text-slate-100 hover:bg-slate-700'
                 : 'bg-white text-slate-900 ring-1 ring-slate-200 hover:bg-slate-50'
-            "
-          >
+            ">
             See How It Works
           </a>
         </div>
 
         <!-- Trust Indicators -->
-        <div
-          class="animate-fade anim-delay-400 mt-12 flex flex-wrap items-center justify-center gap-8 text-sm"
-          [ngClass]="isDark ? 'text-slate-400' : 'text-slate-500'"
-        >
+        <div class="animate-fade anim-delay-400 mt-12 flex flex-wrap items-center justify-center gap-8 text-sm"
+          [ngClass]="isDark ? 'text-slate-400' : 'text-slate-500'">
           <div class="flex items-center gap-2">
             <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
+              <path fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd" />
             </svg>
             <span>No credit card required</span>
           </div>
           <div class="flex items-center gap-2">
             <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
+              <path fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd" />
             </svg>
             <span>Setup in 5 minutes</span>
           </div>
           <div class="flex items-center gap-2">
             <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
+              <path fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd" />
             </svg>
             <span>100% private & isolated</span>
           </div>
@@ -148,10 +110,7 @@
     <!-- 3-Step Flow Section -->
     <section id="how-it-works" class="mx-auto max-w-7xl px-6 py-20">
       <div class="text-center">
-        <h2
-          class="text-3xl font-bold sm:text-4xl"
-          [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
-        >
+        <h2 class="text-3xl font-bold sm:text-4xl" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
           Get Started in 3 Simple Steps
         </h2>
         <p class="mt-4 text-lg" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
@@ -160,19 +119,14 @@
       </div>
 
       <div class="mt-16 grid gap-8 md:grid-cols-3">
-        <article
-          *ngFor="let step of setupSteps; let i = index"
-          class="animate-fade relative rounded-3xl p-8 transition-all hover:scale-105"
-          [ngClass]="
+        <article *ngFor="let step of setupSteps; let i = index"
+          class="animate-fade relative rounded-3xl p-8 transition-all hover:scale-105" [ngClass]="
             isDark ? 'bg-slate-900/50 ring-1 ring-slate-800' : 'bg-white ring-1 ring-slate-200'
-          "
-          [style.animation-delay]="i * 0.15 + 's'"
-        >
+          " [style.animation-delay]="i * 0.15 + 's'">
           <!-- Step Number -->
           <div
             class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br text-2xl font-bold text-white shadow-lg"
-            [ngClass]="step.color"
-          >
+            [ngClass]="step.color">
             {{ step.step }}
           </div>
 
@@ -185,23 +139,10 @@
           </p>
 
           <!-- Connector Arrow (except last) -->
-          <div
-            *ngIf="i < setupSteps.length - 1"
-            class="absolute -right-4 top-1/2 hidden -translate-y-1/2 md:block"
-          >
-            <svg
-              class="h-8 w-8"
-              [ngClass]="isDark ? 'text-slate-700' : 'text-slate-300'"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
+          <div *ngIf="i < setupSteps.length - 1" class="absolute -right-4 top-1/2 hidden -translate-y-1/2 md:block">
+            <svg class="h-8 w-8" [ngClass]="isDark ? 'text-slate-700' : 'text-slate-300'" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </div>
         </article>
@@ -211,10 +152,7 @@
     <!-- Features Grid Section -->
     <section id="features" class="mx-auto max-w-7xl px-6 py-20">
       <div class="text-center">
-        <h2
-          class="text-3xl font-bold sm:text-4xl"
-          [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
-        >
+        <h2 class="text-3xl font-bold sm:text-4xl" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
           Everything You Need to Run Your Academy
         </h2>
         <p class="mt-4 text-lg" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
@@ -223,16 +161,12 @@
       </div>
 
       <div class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <article
-          *ngFor="let feature of features; let i = index"
-          class="animate-fade group rounded-2xl p-8 transition-all hover:scale-105"
-          [ngClass]="
+        <article *ngFor="let feature of features; let i = index"
+          class="animate-fade group rounded-2xl p-8 transition-all hover:scale-105" [ngClass]="
             isDark
               ? 'bg-slate-900/50 ring-1 ring-slate-800 hover:bg-slate-900/70'
               : 'bg-white ring-1 ring-slate-200 hover:shadow-xl'
-          "
-          [style.animation-delay]="i * 0.1 + 's'"
-        >
+          " [style.animation-delay]="i * 0.1 + 's'">
           <!-- Icon -->
           <div class="mb-4 text-5xl">{{ feature.icon }}</div>
 
@@ -252,10 +186,7 @@
     <!-- Testimonials Section -->
     <section id="testimonials" class="mx-auto max-w-7xl px-6 py-20">
       <div class="text-center">
-        <h2
-          class="text-3xl font-bold sm:text-4xl"
-          [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
-        >
+        <h2 class="text-3xl font-bold sm:text-4xl" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
           Trusted by Teachers Across Egypt
         </h2>
         <p class="mt-4 text-lg" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
@@ -264,39 +195,25 @@
       </div>
 
       <div class="mt-16 grid gap-8 md:grid-cols-3">
-        <article
-          *ngFor="let testimonial of testimonials; let i = index"
-          class="animate-fade rounded-2xl p-8"
-          [ngClass]="
+        <article *ngFor="let testimonial of testimonials; let i = index" class="animate-fade rounded-2xl p-8" [ngClass]="
             isDark ? 'bg-slate-900/50 ring-1 ring-slate-800' : 'bg-white ring-1 ring-slate-200'
-          "
-          [style.animation-delay]="i * 0.15 + 's'"
-        >
+          " [style.animation-delay]="i * 0.15 + 's'">
           <!-- Quote Icon -->
-          <svg
-            class="mb-4 h-10 w-10 opacity-50"
-            [ngClass]="isDark ? 'text-cyan-400' : 'text-cyan-600'"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg class="mb-4 h-10 w-10 opacity-50" [ngClass]="isDark ? 'text-cyan-400' : 'text-cyan-600'"
+            fill="currentColor" viewBox="0 0 24 24">
             <path
-              d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"
-            />
+              d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
           </svg>
 
           <!-- Quote -->
-          <p
-            class="text-base leading-relaxed"
-            [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'"
-          >
+          <p class="text-base leading-relaxed" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'">
             "{{ testimonial.quote }}"
           </p>
 
           <!-- Author -->
           <div class="mt-6 flex items-center gap-4">
             <div
-              class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 text-lg font-bold text-white"
-            >
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-purple-500 text-lg font-bold text-white">
               {{ testimonial.author.charAt(0) }}
             </div>
             <div>
@@ -314,76 +231,58 @@
 
     <!-- Pricing Section -->
     <section id="pricing" class="mx-auto max-w-7xl px-6 py-20">
-      <div
-        class="rounded-3xl p-12 text-center"
-        [ngClass]="
+      <div class="rounded-3xl p-12 text-center" [ngClass]="
           isDark
             ? 'bg-gradient-to-br from-slate-900 to-slate-800 ring-1 ring-slate-700'
             : 'bg-gradient-to-br from-cyan-50 to-purple-50 ring-1 ring-slate-200'
-        "
-      >
+        ">
         <div class="mx-auto max-w-3xl">
           <!-- Badge -->
-          <div
-            class="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold"
-            [ngClass]="
+          <div class="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold" [ngClass]="
               isDark
                 ? 'bg-green-500/10 text-green-300 ring-1 ring-green-500/20'
                 : 'bg-green-50 text-green-700 ring-1 ring-green-200'
-            "
-          >
+            ">
             <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
+              <path fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd" />
             </svg>
             Simple, Transparent Pricing
           </div>
 
-          <h2
-            class="text-4xl font-bold sm:text-5xl"
-            [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
-          >
+          <h2 class="text-4xl font-bold sm:text-5xl" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
             Simple, Nominal Pricing
           </h2>
 
           <p class="mt-6 text-xl" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
-            Start with a small monthly fee - less than what you would spend chasing payments or updating spreadsheets for an hour. Built to save you far more time than it costs.
+            Start with a small monthly fee - less than what you would spend chasing payments or updating spreadsheets
+            for an hour. Built to save you far more time than it costs.
           </p>
 
-          <div
-            class="mt-8 flex flex-wrap items-center justify-center gap-6 text-base"
-            [ngClass]="isDark ? 'text-slate-400' : 'text-slate-600'"
-          >
+          <div class="mt-8 flex flex-wrap items-center justify-center gap-6 text-base"
+            [ngClass]="isDark ? 'text-slate-400' : 'text-slate-600'">
             <div class="flex items-center gap-2">
               <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
+                <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
+                  clip-rule="evenodd" />
               </svg>
               <span>All features included</span>
             </div>
             <div class="flex items-center gap-2">
               <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
+                <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
+                  clip-rule="evenodd" />
               </svg>
               <span>No hidden fees</span>
             </div>
             <div class="flex items-center gap-2">
               <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
+                <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
+                  clip-rule="evenodd" />
               </svg>
               <span>Cancel anytime</span>
             </div>
@@ -398,61 +297,44 @@
 
     <!-- Final CTA Section -->
     <section id="final-cta" class="mx-auto max-w-7xl px-6 py-20">
-      <div
-        class="relative overflow-hidden rounded-3xl p-12 text-center sm:p-16"
-        [ngClass]="
+      <div class="relative overflow-hidden rounded-3xl p-12 text-center sm:p-16" [ngClass]="
           isDark
             ? 'bg-gradient-to-br from-cyan-600 to-purple-600'
             : 'bg-gradient-to-br from-cyan-500 to-purple-500'
-        "
-      >
+        ">
         <!-- Background Pattern -->
         <div class="pointer-events-none absolute inset-0 opacity-10">
-          <div
-            class="absolute inset-0"
-            style="
+          <div class="absolute inset-0" style="
               background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0);
               background-size: 32px 32px;
-            "
-          ></div>
+            "></div>
         </div>
 
         <div class="relative z-10 mx-auto max-w-3xl">
           <h2 class="text-4xl font-bold text-white sm:text-5xl">Ready to Start Your Academy?</h2>
           <p class="mt-6 text-xl text-white/90">
-            Join hundreds of teachers who run leaner academies with SAMS. No technical skills required. Try it with a nominal monthly plan and cancel anytime.
+            Join hundreds of teachers who run leaner academies with SAMS. No technical skills required. Try it with a
+            nominal monthly plan and cancel anytime.
           </p>
 
           <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <a
-              routerLink="/login"
+            <a routerLink="/login"
               class="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-base font-semibold shadow-xl transition-all hover:scale-105"
               [ngClass]="
                 isDark ? 'text-slate-900 hover:bg-slate-50' : 'text-slate-900 hover:bg-slate-50'
-              "
-            >
+              ">
               Start Your Academy - See Pricing
-              <svg
-                class="h-5 w-5 transition-transform group-hover:translate-x-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
+              <svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </a>
           </div>
 
           <p class="mt-6 text-sm text-white/80">
             Questions? Email us at
-            <a href="mailto:support@sams.app" class="font-semibold underline hover:text-white"
-              >ahmed.alla56756@gmail.com</a
-            >
+            <a href="mailto:support@sams.app"
+              class="font-semibold underline hover:text-white">ahmed.alla56756@gmail.com</a>
           </p>
         </div>
       </div>
@@ -461,5 +343,3 @@
 
   <app-footer></app-footer>
 </div>
-
-

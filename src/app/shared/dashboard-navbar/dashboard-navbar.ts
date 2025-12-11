@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, HostListener } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
@@ -23,6 +23,11 @@ export class DashboardNavbar {
         public theme: ThemeService,
         private router: Router
     ) { }
+
+    @HostListener('document:click')
+    onDocumentClick() {
+        this.dropdown = false;
+    }
 
     get userName(): string {
         return this.authService.currentUser?.name || 'User';
@@ -49,6 +54,18 @@ export class DashboardNavbar {
         if (roles.includes('teacher')) return 'Teacher';
         if (roles.includes('assistant')) return 'Assistant';
         return 'Staff';
+    }
+
+    get userAvatar(): string | null {
+        return this.authService.currentUser?.avatar || null;
+    }
+
+    get settingsRoute(): string {
+        const roles = this.authService.currentUser?.roles || [];
+        if (roles.includes('admin')) {
+            return '/dashboard/admin/settings';
+        }
+        return '/dashboard/staff/settings';
     }
 
     logout(): void {

@@ -1,136 +1,143 @@
-<section class="w-full max-w-6xl mx-auto px-4 lg:px-0 py-4 space-y-4 text-slate-900 dark:text-slate-100">
-  <div *ngIf="loading" class="px-4 py-3 rounded-xl bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+<section class="dashboard-page">
+  <div *ngIf="loading" class="dashboard-card" style="padding: 1rem; text-align: center; color: var(--muted);">
     Loading dashboard...
   </div>
 
-  <div
-    class="rounded-2xl p-4 lg:p-6 grid lg:grid-cols-[1.4fr_1fr] gap-4 lg:gap-6 items-center bg-white border border-slate-200 shadow-xl dark:bg-slate-900 dark:border-slate-800">
-    <div class="space-y-3">
-      <p class="uppercase tracking-[0.18em] text-xs text-slate-500 dark:text-slate-400">Teaching pulse</p>
-      <h1 class="text-2xl lg:text-3xl font-extrabold text-slate-900 dark:text-white">Staff Overview</h1>
-      <p class="text-slate-600 dark:text-slate-300">Snapshot of your groups, students, lessons, and attendance.</p>
-      <div class="flex flex-wrap gap-2">
-        <button routerLink="/dashboard/staff/groups" class="cta-btn primary">View groups</button>
-        <button routerLink="/dashboard/staff/students" class="cta-btn ghost">View students</button>
+  <div class="dashboard-card"
+    style="padding: 1.5rem; display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; align-items: center;">
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <p style="text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.75rem; color: var(--muted);">Teaching
+        pulse</p>
+      <h1 style="font-size: 1.875rem; font-weight: 800; color: var(--text);">Staff Overview</h1>
+      <p style="color: var(--muted);">Snapshot of your groups, students, lessons, and attendance.</p>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button routerLink="/dashboard/staff/groups" class="btn-dashboard-primary">View groups</button>
+        <button routerLink="/dashboard/staff/students" class="btn-dashboard-ghost">View students</button>
       </div>
-      <div class="flex flex-wrap gap-2">
-        <span class="chip">Students: {{ stats.students }}</span>
-        <span class="chip chip-emerald">Attendance today: {{ stats.attendanceToday }}</span>
-        <span class="chip">Lessons scheduled: {{ stats.lessons }}</span>
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+        <span class="badge badge-neutral">Students: {{ stats.students }}</span>
+        <span class="badge badge-success">Attendance today: {{ stats.attendanceToday }}</span>
+        <span class="badge badge-neutral">Lessons scheduled: {{ stats.lessons }}</span>
       </div>
     </div>
-    <div class="grid sm:grid-cols-2 gap-3">
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p class="text-sm text-slate-500 dark:text-slate-400">Groups</p>
-        <p class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ stats.groups }}</p>
-        <span class="text-sm text-slate-500 dark:text-slate-400">Active classes under your care</span>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div class="dashboard-stat-card">
+        <p style="font-size: 0.875rem; color: var(--muted);">Groups</p>
+        <p style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.groups }}</p>
+        <span style="font-size: 0.875rem; color: var(--muted);">Active classes under your care</span>
       </div>
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p class="text-sm text-slate-500 dark:text-slate-400">Lessons</p>
-        <p class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ stats.lessons }}</p>
-        <span class="text-sm text-slate-500 dark:text-slate-400">Total scheduled lessons</span>
+      <div class="dashboard-stat-card">
+        <p style="font-size: 0.875rem; color: var(--muted);">Lessons</p>
+        <p style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.lessons }}</p>
+        <span style="font-size: 0.875rem; color: var(--muted);">Total scheduled lessons</span>
       </div>
     </div>
   </div>
 
-  <div class="grid md:grid-cols-2 gap-4">
-    <article
-      class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-2 text-slate-500 text-sm font-semibold dark:text-slate-400">
-          <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+    <article class="dashboard-stat-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <div
+          style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--muted);">
+          <span style="width: 10px; height: 10px; border-radius: 50%; background: #6366f1;"></span>
           Students
         </div>
-        <span class="text-xs text-slate-500 dark:text-slate-400">Enrolled</span>
+        <span style="font-size: 0.75rem; color: var(--muted);">Enrolled</span>
       </div>
-      <div class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ stats.students }}</div>
-      <p class="text-sm text-slate-500 dark:text-slate-400">
+      <div style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.students }}</div>
+      <p style="font-size: 0.875rem; color: var(--muted);">
         Attendance today: {{ stats.attendanceToday }}
       </p>
-      <div class="mt-3 w-full h-2 rounded-full bg-slate-200 overflow-hidden dark:bg-slate-800">
-        <span class="block h-full rounded-full bg-linear-to-r from-indigo-500 to-sky-500"
+      <div
+        style="margin-top: 0.75rem; width: 100%; height: 8px; border-radius: 9999px; background: var(--dashboard-sidebar-border); overflow: hidden;">
+        <span
+          style="display: block; height: 100%; border-radius: 9999px; background: linear-gradient(to right, #6366f1, #0ea5e9);"
           [style.width.%]="stats.students ? (stats.attendanceToday / stats.students) * 100 : 0"></span>
       </div>
     </article>
 
-    <article
-      class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-2 text-slate-500 text-sm font-semibold dark:text-slate-400">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+    <article class="dashboard-stat-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <div
+          style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--muted);">
+          <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></span>
           Lessons
         </div>
-        <span class="text-xs text-slate-500 dark:text-slate-400">Upcoming</span>
+        <span style="font-size: 0.75rem; color: var(--muted);">Upcoming</span>
       </div>
-      <div class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ stats.lessons }}</div>
-      <p class="text-sm text-slate-500 dark:text-slate-400">Total sessions scheduled for all groups</p>
-      <div class="mt-3 w-full h-2 rounded-full bg-slate-200 overflow-hidden dark:bg-slate-800">
-        <span class="block h-full rounded-full bg-linear-to-r from-emerald-400 to-teal-400"></span>
+      <div style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.lessons }}</div>
+      <p style="font-size: 0.875rem; color: var(--muted);">Total sessions scheduled for all groups</p>
+      <div
+        style="margin-top: 0.75rem; width: 100%; height: 8px; border-radius: 9999px; background: var(--dashboard-sidebar-border); overflow: hidden;">
+        <span
+          style="display: block; height: 100%; border-radius: 9999px; background: linear-gradient(to right, #34d399, #2dd4bf);"></span>
       </div>
     </article>
 
-    <article
-      class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-2 text-slate-500 text-sm font-semibold dark:text-slate-400">
-          <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+    <article class="dashboard-stat-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <div
+          style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--muted);">
+          <span style="width: 10px; height: 10px; border-radius: 50%; background: #fbbf24;"></span>
           Groups
         </div>
-        <span class="text-xs text-slate-500 dark:text-slate-400">Active</span>
+        <span style="font-size: 0.75rem; color: var(--muted);">Active</span>
       </div>
-      <div class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ stats.groups }}</div>
-      <p class="text-sm text-slate-500 dark:text-slate-400">Classes you're teaching or managing</p>
-      <div class="mt-3 w-full h-2 rounded-full bg-slate-200 overflow-hidden dark:bg-slate-800">
-        <span class="block h-full rounded-full bg-linear-to-r from-amber-400 to-orange-400"></span>
+      <div style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.groups }}</div>
+      <p style="font-size: 0.875rem; color: var(--muted);">Classes you're teaching or managing</p>
+      <div
+        style="margin-top: 0.75rem; width: 100%; height: 8px; border-radius: 9999px; background: var(--dashboard-sidebar-border); overflow: hidden;">
+        <span
+          style="display: block; height: 100%; border-radius: 9999px; background: linear-gradient(to right, #fbbf24, #fb923c);"></span>
       </div>
     </article>
 
-    <article
-      class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-      <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-2 text-slate-500 text-sm font-semibold dark:text-slate-400">
-          <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+    <article class="dashboard-stat-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+        <div
+          style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--muted);">
+          <span style="width: 10px; height: 10px; border-radius: 50%; background: #f43f5e;"></span>
           Attendance
         </div>
-        <span class="text-xs text-slate-500 dark:text-slate-400">Today</span>
+        <span style="font-size: 0.75rem; color: var(--muted);">Today</span>
       </div>
-      <div class="text-3xl font-extrabold text-slate-900 dark:text-white">{{ stats.attendanceToday }}</div>
-      <p class="text-sm text-slate-500 dark:text-slate-400">Attendance entries submitted today</p>
+      <div style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.attendanceToday }}</div>
+      <p style="font-size: 0.875rem; color: var(--muted);">Attendance entries submitted today</p>
     </article>
   </div>
 
-  <section *ngIf="isCenterAdmin && centerStats as summary"
-    class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-    <div class="flex flex-col gap-1 mb-4">
-      <p class="uppercase tracking-[0.18em] text-xs text-slate-500 dark:text-slate-400">Center snapshot</p>
-      <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Members & lessons</h2>
-      <p class="text-sm text-slate-500 dark:text-slate-400">High level overview across the entire center.</p>
+  <section *ngIf="isCenterAdmin && centerStats as summary" class="dashboard-card" style="padding: 1.5rem;">
+    <div style="margin-bottom: 1rem;">
+      <p style="text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.75rem; color: var(--muted);">Center
+        snapshot</p>
+      <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text); margin: 0.25rem 0;">Members & lessons</h2>
+      <p style="font-size: 0.875rem; color: var(--muted);">High level overview across the entire center.</p>
     </div>
-    <div class="grid md:grid-cols-3 gap-4">
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p class="text-sm text-slate-500 dark:text-slate-400">Teachers</p>
-        <p class="text-2xl font-bold">{{ summary.teachers_count }}</p>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+      <div class="dashboard-stat-card">
+        <p style="font-size: 0.875rem; color: var(--muted);">Teachers</p>
+        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.teachers_count }}</p>
       </div>
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p class="text-sm text-slate-500 dark:text-slate-400">Assistants</p>
-        <p class="text-2xl font-bold">{{ summary.assistants_count }}</p>
+      <div class="dashboard-stat-card">
+        <p style="font-size: 0.875rem; color: var(--muted);">Assistants</p>
+        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.assistants_count }}</p>
       </div>
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p class="text-sm text-slate-500 dark:text-slate-400">Groups</p>
-        <p class="text-2xl font-bold">{{ summary.groups_count }}</p>
-        <span class="text-xs text-slate-500 dark:text-slate-400">Active: {{ summary.active_groups }}</span>
+      <div class="dashboard-stat-card">
+        <p style="font-size: 0.875rem; color: var(--muted);">Groups</p>
+        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.groups_count }}</p>
+        <span style="font-size: 0.75rem; color: var(--muted);">Active: {{ summary.active_groups }}</span>
       </div>
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p class="text-sm text-slate-500 dark:text-slate-400">Students</p>
-        <p class="text-2xl font-bold">{{ summary.students_count }}</p>
+      <div class="dashboard-stat-card">
+        <p style="font-size: 0.875rem; color: var(--muted);">Students</p>
+        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.students_count }}</p>
       </div>
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p class="text-sm text-slate-500 dark:text-slate-400">Parents</p>
-        <p class="text-2xl font-bold">{{ summary.parents_count }}</p>
+      <div class="dashboard-stat-card">
+        <p style="font-size: 0.875rem; color: var(--muted);">Parents</p>
+        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.parents_count }}</p>
       </div>
-      <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <p class="text-sm text-slate-500 dark:text-slate-400">Lessons</p>
-        <p class="text-2xl font-bold">{{ summary.lessons_count }}</p>
+      <div class="dashboard-stat-card">
+        <p style="font-size: 0.875rem; color: var(--muted);">Lessons</p>
+        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.lessons_count }}</p>
       </div>
     </div>
   </section>
@@ -139,31 +146,31 @@
     <app-center-ai-panel></app-center-ai-panel>
   </section>
 
-  <section
-    class="rounded-2xl p-4 border border-slate-200 shadow bg-white text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+  <section class="dashboard-card" style="padding: 1.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
       <div>
-        <p class="uppercase tracking-[0.18em] text-xs text-slate-500 dark:text-slate-400">Recent activity</p>
-        <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Latest group updates</h2>
+        <p style="text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.75rem; color: var(--muted);">Recent
+          activity</p>
+        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text); margin: 0.25rem 0;">Latest group updates
+        </h2>
       </div>
-      <button routerLink="/dashboard/staff/groups"
-        class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-slate-200 bg-white text-sm font-semibold text-slate-800 shadow-sm hover:-translate-y-0.5 transition dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">Open
-        groups</button>
+      <button routerLink="/dashboard/staff/groups" class="btn-dashboard-ghost">Open groups</button>
     </div>
     <ng-container *ngIf="recent.length; else emptyRecent">
-      <ul class="divide-y divide-slate-200 dark:divide-slate-800">
+      <ul style="display: flex; flex-direction: column; gap: 0.75rem;">
         <li *ngFor="let item of recent"
-          class="flex flex-col sm:flex-row sm:items-center justify-between py-3 gap-2">
-          <div class="flex items-center gap-3 text-slate-800 dark:text-slate-200">
-            <span class="w-2.5 h-2.5 rounded-full bg-linear-to-r from-indigo-500 to-blue-500 shadow"></span>
+          style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--dashboard-sidebar-border);">
+          <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text);">
+            <span
+              style="width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(to right, #6366f1, #3b82f6);"></span>
             <span>{{ item.title || 'Activity' }}</span>
           </div>
-          <span class="text-sm text-slate-500 dark:text-slate-400">{{ item.time }}</span>
+          <span style="font-size: 0.875rem; color: var(--muted);">{{ item.time }}</span>
         </li>
       </ul>
     </ng-container>
     <ng-template #emptyRecent>
-      <div class="text-sm text-slate-500 dark:text-slate-400">No recent activity recorded.</div>
+      <div style="font-size: 0.875rem; color: var(--muted);">No recent activity recorded.</div>
     </ng-template>
   </section>
 </section>

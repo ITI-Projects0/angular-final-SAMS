@@ -1,104 +1,176 @@
-<div class="p-6 space-y-6">
-    <header class="flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">My Profile</h1>
-            <p class="text-slate-500 dark:text-slate-400">Manage your account information.</p>
-        </div>
-        @if (!isEditMode) {
-        <button (click)="toggleEditMode()"
-            class="px-4 py-2 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors">
-            Edit Profile
-        </button>
-        }
-    </header>
+<div class="px-4 md:px-6">
+  <div class="space-y-6 max-w-6xl mx-auto">
+    @if (error()) {
+    <div class="rounded-xl border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm">
+      {{ error() }}
+    </div>
+    }
+    @if (loading()) {
+    <div class="rounded-3xl bg-white/70 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800 p-8 text-slate-500 dark:text-slate-400 shadow">
+      Loading profile...
+    </div>
+    }
 
-    <div
-        class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-        <!-- Avatar Section -->
-        <div class="p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-700/30">
-            <div class="flex items-center gap-6">
-                <div
-                    class="w-24 h-24 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-4xl">
-                    {{ profile.name.charAt(0) }}
-                </div>
-                <div>
-                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">{{ profile.name }}</h2>
-                    <p class="text-slate-500 dark:text-slate-400">Parent Account</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Profile Form -->
-        <div class="p-6">
-            <form class="grid gap-6 md:grid-cols-2">
-                <!-- Name -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
-                    @if (isEditMode) {
-                    <input type="text" [(ngModel)]="profile.name" name="name"
-                        class="w-full p-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
-                    } @else {
-                    <p class="text-slate-900 dark:text-white font-medium">{{ profile.name }}</p>
-                    }
-                </div>
-
-                <!-- Email -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email
-                        Address</label>
-                    <p class="text-slate-900 dark:text-white font-medium">{{ profile.email }}</p>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Email cannot be changed</p>
-                </div>
-
-                <!-- Phone -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Phone
-                        Number</label>
-                    @if (isEditMode) {
-                    <input type="tel" [(ngModel)]="profile.phone" name="phone"
-                        class="w-full p-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
-                    } @else {
-                    <p class="text-slate-900 dark:text-white font-medium">{{ profile.phone }}</p>
-                    }
-                </div>
-
-                <!-- Address -->
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Address</label>
-                    @if (isEditMode) {
-                    <textarea [(ngModel)]="profile.address" name="address" rows="2"
-                        class="w-full p-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500"></textarea>
-                    } @else {
-                    <p class="text-slate-900 dark:text-white font-medium">{{ profile.address }}</p>
-                    }
-                </div>
-
-                <!-- Emergency Contact -->
-                <div>
-                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Emergency
-                        Contact</label>
-                    @if (isEditMode) {
-                    <input type="tel" [(ngModel)]="profile.emergencyContact" name="emergencyContact"
-                        class="w-full p-3 rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
-                    } @else {
-                    <p class="text-slate-900 dark:text-white font-medium">{{ profile.emergencyContact }}</p>
-                    }
-                </div>
-            </form>
-
-            <!-- Action Buttons -->
-            @if (isEditMode) {
-            <div class="flex gap-3 mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-                <button (click)="saveProfile()"
-                    class="px-6 py-2.5 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors">
-                    Save Changes
-                </button>
-                <button (click)="cancelEdit()"
-                    class="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                    Cancel
-                </button>
+    @if (!loading() && profile()) {
+    <section class="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xl border border-slate-100 dark:border-slate-800">
+      <div class="relative p-6 sm:p-8">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div class="flex items-center gap-4 sm:gap-6">
+            @if (profile()?.avatar) {
+            <img [src]="profile()?.avatar" alt="Avatar"
+              class="h-20 w-20 rounded-2xl border border-slate-200 dark:border-slate-700 object-cover shadow" />
+            } @else {
+            <div class="h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-2xl sm:text-3xl font-semibold uppercase">
+              {{ profile()?.name?.charAt(0) }}
             </div>
             }
+            <div>
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Account</p>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h1 class="text-3xl sm:text-4xl font-semibold leading-tight">{{ profile()?.name }}</h1>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-sm font-semibold bg-indigo-50 border-indigo-200 text-indigo-800 dark:bg-indigo-900/40 dark:border-indigo-800 dark:text-indigo-100">Parent</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-sm font-semibold bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">Verified</span>
+              </div>
+              <div class="flex flex-wrap gap-2 mt-3 text-sm text-slate-600 dark:text-slate-300">
+                <span class="inline-flex items-center px-3 py-1 rounded-full border text-xs font-medium bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">{{ profile()?.email }}</span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full border text-xs font-medium bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">{{ profile()?.phone }}</span>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mt-6">
+          <div class="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow">
+            <p class="text-xs uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">Status</p>
+            <p class="text-lg font-bold text-slate-900 dark:text-white">Active</p>
+            <p class="text-sm text-slate-600 dark:text-slate-300">Keep contact info current for alerts.</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow">
+            <p class="text-xs uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">Communication</p>
+            <p class="text-lg font-bold text-slate-900 dark:text-white">Email & Phone</p>
+            <p class="text-sm text-slate-600 dark:text-slate-300">Emergency contact: {{ profile()?.emergencyContact || 'Add one' }}</p>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow">
+            <p class="text-xs uppercase tracking-[0.08em] text-slate-500 dark:text-slate-400">Profile Completeness</p>
+            <div class="flex items-center gap-2">
+              <p class="text-lg font-bold text-slate-900 dark:text-white">82%</p>
+              <span class="inline-flex items-center px-3 py-1 rounded-full border text-xs font-medium bg-slate-100 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200">Secure & up to date</span>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300">Review address and emergency contact.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-slate-900/70 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl overflow-hidden">
+      <div class="p-6 sm:p-8 space-y-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <p class="text-xs uppercase tracking-[0.12em] font-semibold text-slate-500 dark:text-slate-400">Account details</p>
+            <h2 class="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Contact Information</h2>
+            <p class="text-slate-500 dark:text-slate-400">Keep this updated so teachers can reach you quickly.</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="inline-flex items-center px-3 py-1 rounded-full border text-xs font-medium bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200">Parent account</span>
+          </div>
+        </div>
+
+        <form class="grid gap-6 md:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Profile Photo</label>
+            <div class="flex flex-wrap items-center gap-3">
+              <input type="file" accept="image/*" (change)="handleAvatarSelected($event.target.files?.[0] ?? null)"
+                class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-white cursor-pointer" />
+              @if (avatarFile()) {
+              <span class="text-sm text-slate-600 dark:text-slate-300">Selected: {{ avatarFile()?.name }}</span>
+              }
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Upload a square image for best results.</p>
+          </div>
+          <div class="md:col-span-2 flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Full Name</label>
+            <input type="text" [ngModel]="profile()?.name" (ngModelChange)="updateProfileField('name', $event)" name="name"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" autocomplete="name">
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Email Address</label>
+            <input type="email"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-3 text-sm text-slate-500 dark:text-slate-400"
+              [ngModel]="profile()?.email" name="email" [ngModelOptions]="{standalone: true}" disabled>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Email cannot be changed.</p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Phone Number</label>
+            <input type="tel" [ngModel]="profile()?.phone" (ngModelChange)="updateProfileField('phone', $event)" name="phone"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              autocomplete="tel">
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Emergency Contact</label>
+            <input type="text"
+              class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-3 py-3 text-sm text-slate-500 dark:text-slate-400"
+              [ngModel]="profile()?.emergencyContact" name="emergencyContact" [ngModelOptions]="{standalone: true}" disabled>
+          </div>
+        </form>
+
+        <div class="flex flex-wrap gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <button type="button" (click)="saveProfile()" [disabled]="saving()"
+            class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-md disabled:opacity-60 disabled:cursor-not-allowed">
+            @if (saving()) { Saving... } @else { Save Changes }
+          </button>
+          <button type="button" (click)="cancelEdit()"
+            class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-white dark:bg-slate-900/70 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl overflow-hidden">
+      <div class="p-6 sm:p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <p class="text-xs uppercase tracking-[0.12em] font-semibold text-slate-500 dark:text-slate-400">Security</p>
+            <h2 class="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Change Password</h2>
+            <p class="text-slate-500 dark:text-slate-400">Secure your account with a strong password.</p>
+          </div>
+        </div>
+
+        <form class="space-y-4" (ngSubmit)="changePassword()" novalidate>
+          <!-- Hidden username for accessibility -->
+          <input type="text" class="hidden" [ngModel]="profile()?.email" name="username" autocomplete="username">
+          <div class="grid gap-4 md:grid-cols-3">
+            <div class="flex flex-col gap-2">
+              <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Current Password</label>
+              <input type="password"
+                class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                [ngModel]="passwordForm().current" (ngModelChange)="updatePasswordField('current', $event)" name="currentPassword" [ngModelOptions]="{standalone: true}" autocomplete="current-password">
+            </div>
+            <div class="flex flex-col gap-2">
+              <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">New Password</label>
+              <input type="password"
+                class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                [ngModel]="passwordForm().password" (ngModelChange)="updatePasswordField('password', $event)" name="newPassword" [ngModelOptions]="{standalone: true}" autocomplete="new-password">
+            </div>
+            <div class="flex flex-col gap-2">
+              <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Confirm New Password</label>
+              <input type="password"
+                class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-3 text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                [ngModel]="passwordForm().confirm" (ngModelChange)="updatePasswordField('confirm', $event)" name="confirmPassword" [ngModelOptions]="{standalone: true}" autocomplete="new-password">
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <button type="submit"
+              class="inline-flex items-center justify-center px-4 py-2.5 rounded-lg text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition shadow-md disabled:opacity-60 disabled:cursor-not-allowed"
+              [disabled]="passwordSaving()">
+              @if (passwordSaving()) { Updating... } @else { Update Password }
+            </button>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Use at least 8 characters with a mix of letters and numbers.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+    }
+  </div>
 </div>

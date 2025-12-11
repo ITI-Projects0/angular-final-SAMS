@@ -1,22 +1,27 @@
-<section class="list-wrapper">
-  <header class="list-header">
+<section class="dashboard-page">
+  <header class="dashboard-header">
     <h2>{{ isCenterAdmin ? (activeRole === 'teacher' ? 'Teachers' : 'Assistants') : 'Teachers' }}</h2>
-    <p class="muted">
+    <p>
       {{ isCenterAdmin ? 'Manage staff assigned to this center' : 'Teaching staff and their assigned centers' }}
     </p>
   </header>
 
-  <div class="toolbar">
-    <input placeholder="Search teachers..." class="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)" />
+  <div class="dashboard-toolbar">
+    <input placeholder="Search teachers..." class="dashboard-input" style="max-width: 300px;" [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange($event)" />
     <div class="toolbar-actions" *ngIf="isCenterAdmin">
       <div class="segment">
-        <button type="button" [class.active]="activeRole === 'teacher'" (click)="setRoleFilter('teacher')">Teachers</button>
-        <button type="button" [class.active]="activeRole === 'assistant'" (click)="setRoleFilter('assistant')">Assistants</button>
+        <button type="button" [class.active]="activeRole === 'teacher'"
+          (click)="setRoleFilter('teacher')">Teachers</button>
+        <button type="button" [class.active]="activeRole === 'assistant'"
+          (click)="setRoleFilter('assistant')">Assistants</button>
       </div>
-      <button class="btn-primary" type="button" (click)="openCreate('teacher')" *ngIf="activeRole === 'teacher'">
+      <button class="btn-dashboard-primary" type="button" (click)="openCreate('teacher')"
+        *ngIf="activeRole === 'teacher'">
         Add Teacher
       </button>
-      <button class="btn-primary" type="button" (click)="openCreate('assistant')" *ngIf="activeRole === 'assistant'">
+      <button class="btn-dashboard-primary" type="button" (click)="openCreate('assistant')"
+        *ngIf="activeRole === 'assistant'">
         Add Assistant
       </button>
     </div>
@@ -27,53 +32,56 @@
     <span>Loading teachers...</span>
   </div>
 
-  <ng-container *ngIf="filteredTeachers.length; else noResults">
-    <div class="cards-grid">
-      <div class="teacher-card glass" *ngFor="let t of filteredTeachers">
-        <div class="card-head">
-          <div class="avatar">{{ t.name ? t.name[0] : '?' }}</div>
-          <div>
-            <div class="name">{{ t.name }}</div>
-            <div class="muted">{{ t.email }}</div>
-          </div>
-        </div>
-        <dl class="meta">
-          <div class="meta-row">
-            <dt>Center</dt>
-            <dd>{{ t.center || '-' }}</dd>
-          </div>
-          <div class="meta-row">
-            <dt>Courses</dt>
-            <dd>{{ t.courses }}</dd>
-          </div>
-          <div class="meta-row">
-            <dt>Phone</dt>
-            <dd>{{ t.phone || '-' }}</dd>
-          </div>
-        </dl>
-        <div class="actions">
-          <button class="btn-simple" (click)="openInfo(t)">Info</button>
-          <button class="btn-simple" *ngIf="isCenterAdmin" (click)="openEdit(t)">Edit</button>
-        </div>
-      </div>
-    </div>
-  </ng-container>
+  <div class="dashboard-table-wrapper" *ngIf="filteredTeachers.length; else noResults">
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Phone</th>
+          <th>Stats</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let t of filteredTeachers">
+          <td>
+            <div class="stack">
+              <span class="strong">{{ t.name }}</span>
+              <span class="muted">{{ t.email }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-neutral">{{ activeRole | titlecase }}</span>
+          </td>
+          <td>
+            <span class="muted">{{ t.phone || '-' }}</span>
+          </td>
+          <td>
+            <span class="badge badge-neutral">{{ t.courses }} courses</span>
+          </td>
+          <td>
+            <button class="btn-dashboard-ghost" (click)="openInfo(t)">Info</button>
+            <button class="btn-dashboard-ghost" *ngIf="isCenterAdmin" (click)="openEdit(t)">Edit</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-  <div class="pagination-bar" *ngIf="filteredTeachers.length">
-    <div class="page-info">
-      <div class="dots">
-        <span class="dot" *ngFor="let i of [].constructor(totalPages); let idx = index" [class.active]="idx + 1 === page"></span>
-      </div>
-      <span class="muted">{{ pageStart }}–{{ pageEnd }} of {{ totalItems }}</span>
-    </div>
+  <div class="pagination" *ngIf="filteredTeachers.length">
+    <div class="muted small">Showing {{ pageStart }}–{{ pageEnd }} of {{ totalItems }}</div>
     <div class="page-controls">
-      <button type="button" class="btn-pill" [disabled]="page <= 1" (click)="goToPage(page - 1)">‹ Prev</button>
-      <button type="button" class="btn-pill" [disabled]="page >= totalPages" (click)="goToPage(page + 1)">Next ›</button>
+      <button type="button" class="btn-dashboard-ghost" [disabled]="page <= 1"
+        (click)="goToPage(page - 1)">Prev</button>
+      <span class="page-indicator">Page {{ page }} / {{ totalPages }}</span>
+      <button type="button" class="btn-dashboard-ghost" [disabled]="page >= totalPages"
+        (click)="goToPage(page + 1)">Next</button>
     </div>
   </div>
 
   <ng-template #noResults>
-    <div class="empty-state glass">
+    <div class="empty-state">
       <p>No staff found.</p>
     </div>
   </ng-template>
@@ -104,7 +112,8 @@
     <p class="error-banner" *ngIf="saveError">{{ saveError }}</p>
     <div class="field">
       <label><span class="required">*</span>Name</label>
-      <input list="staff-name-suggestions" class="input-control" type="text" [(ngModel)]="form.name" placeholder="Full name" />
+      <input list="staff-name-suggestions" class="input-control" type="text" [(ngModel)]="form.name"
+        placeholder="Full name" />
       <datalist id="staff-name-suggestions">
         <option *ngFor="let name of staffNames" [value]="name"></option>
       </datalist>
@@ -121,7 +130,8 @@
       <label>Role</label>
       <div class="segment">
         <button type="button" [class.active]="form.role === 'teacher'" (click)="form.role = 'teacher'">Teacher</button>
-        <button type="button" [class.active]="form.role === 'assistant'" (click)="form.role = 'assistant'">Assistant</button>
+        <button type="button" [class.active]="form.role === 'assistant'"
+          (click)="form.role = 'assistant'">Assistant</button>
       </div>
     </div>
     <p class="error-text" *ngIf="saveError">{{ saveError }}</p>
@@ -129,13 +139,8 @@
       <button class="btn-primary" type="button" (click)="submitForm()" [disabled]="processing || !canSubmitForm">
         {{ panelMode === 'create' ? 'Create' : 'Save changes' }}
       </button>
-      <button
-        class="btn-danger"
-        type="button"
-        *ngIf="panelMode === 'edit'"
-        (click)="deleteSelected()"
-        [disabled]="processing"
-      >
+      <button class="btn-danger" type="button" *ngIf="panelMode === 'edit'" (click)="deleteSelected()"
+        [disabled]="processing">
         Delete
       </button>
     </div>

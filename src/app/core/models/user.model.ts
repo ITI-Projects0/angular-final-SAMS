@@ -11,4 +11,5 @@ export interface User {
     lastName?: string;
     token?: string;
     center_id?: number;
+    avatar: string;
 }

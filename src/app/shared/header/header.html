@@ -86,8 +86,12 @@
         <div class="relative">
           <button (click)="toggleUserMenu()" class="flex items-center gap-2 focus:outline-none">
             <div
-              class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 font-bold border-2 border-transparent hover:border-gray-300 dark:hover:border-gray-700 transition-all">
+              class="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 font-bold border-2 border-transparent hover:border-gray-300 dark:hover:border-gray-700 transition-all overflow-hidden">
+              @if (user?.avatar) {
+              <img [src]="user?.avatar" alt="Avatar" class="w-full h-full object-cover" />
+              } @else {
               {{ user?.name?.charAt(0) || 'U' }}
+              }
             </div>
           </button>
 
@@ -100,7 +104,7 @@
             </div>
 
             @if (menuItems.length > 0) {
-            <a routerLink="/dashboard/parent-profile" (click)="isUserMenuOpen = false"
+            <a [routerLink]="profileRoute" (click)="isUserMenuOpen = false"
               class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
               Profile
             </a>

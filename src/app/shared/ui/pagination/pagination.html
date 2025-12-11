@@ -1,0 +1,35 @@
+<div class="pagination" *ngIf="lastPage > 1 || total">
+  <div class="pagination-info">
+    <span class="muted">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</span>
+  </div>
+  
+  <div class="pagination-controls">
+    <!-- Per-page selector -->
+    <div class="per-page-selector" *ngIf="showPerPageSelector">
+      <label class="dashboard-label">Per page</label>
+      <select 
+        class="dashboard-select" 
+        [ngModel]="perPage" 
+        (ngModelChange)="onPerPageChange($event)">
+        <option *ngFor="let opt of perPageOptions" [ngValue]="opt">{{ opt }}</option>
+      </select>
+    </div>
+
+    <!-- Page navigation -->
+    <div class="page-controls">
+      <button 
+        class="btn-dashboard-ghost" 
+        [disabled]="page === 1" 
+        (click)="goToPage(page - 1)">
+        Prev
+      </button>
+      <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
+      <button 
+        class="btn-dashboard-ghost" 
+        [disabled]="page === lastPage" 
+        (click)="goToPage(page + 1)">
+        Next
+      </button>
+    </div>
+  </div>
+</div>

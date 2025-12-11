@@ -1,0 +1,86 @@
+/* Pagination Container */
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding: 0.65rem 0.9rem;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+}
+
+/* Info section - "Showing X - Y of Z" */
+.pagination-info {
+    display: flex;
+    align-items: center;
+}
+
+.pagination-info .muted {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+/* Controls wrapper */
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Per-page selector */
+.per-page-selector {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.per-page-selector .dashboard-label {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+.per-page-selector .dashboard-select {
+    width: auto;
+    min-width: 60px;
+}
+
+/* Page navigation controls */
+.page-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.page-indicator {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .pagination {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .pagination-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .per-page-selector {
+        order: 2;
+    }
+
+    .page-controls {
+        order: 1;
+    }
+}

@@ -1,12 +1,15 @@
-<section class="list-wrapper">
-  <header class="list-header">
+<section class="dashboard-page">
+  <header class="dashboard-header">
     <h2>Centers</h2>
-    <p class="muted">All registered centers with payment status</p>
+    <p>Manage all registered centers</p>
   </header>
 
-  <div class="toolbar">
-    <input placeholder="Search centers..." class="search" [(ngModel)]="searchTerm" />
-    <button class="btn-primary" (click)="openForm()">Add center</button>
+  <div class="dashboard-toolbar">
+    <input placeholder="Search centers..." class="dashboard-input" style="max-width: 300px;" [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange()" />
+    <div class="toolbar-actions">
+      <button class="btn-dashboard-primary" (click)="openForm()">Add center</button>
+    </div>
   </div>
 
   <div class="loading-overlay" *ngIf="loading">
@@ -14,74 +17,82 @@
     <span>Loading centers...</span>
   </div>
 
-  <table class="list-table glass">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>City</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let c of filteredCenters">
-        <td>{{ c.name }}</td>
-        <td>{{ c.city }}</td>
-        <td>
-          <span
-            [class.paid]="c.paid">{{ c.paid ? 'Paid' : 'Unpaid' }}</span>
-        </td>
-        <td>
-          <button class="btn-simple" (click)="openInfo(c)">Info</button>
-          <button class="btn-simple" (click)="openForm(c)">Edit</button>
-          <button class="btn-simple muted" (click)="delete(c)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="dashboard-table-wrapper">
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>City</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of filteredCenters">
+          <td>
+            <div class="stack">
+              <span class="strong">{{ c.name }}</span>
+              <span class="muted">{{ c.phone }}</span>
+            </div>
+          </td>
+          <td><span class="badge badge-neutral">{{ c.city || '-' }}</span></td>
+          <td><span class="badge" [ngClass]="c.paid ? 'badge-success' : 'badge-neutral'">{{ c.paid ? 'Active' :
+              'Inactive' }}</span></td>
+          <td>
+            <button class="btn-dashboard-ghost" (click)="openInfo(c)">Info</button>
+            <button class="btn-dashboard-ghost" (click)="openForm(c)">Edit</button>
+            <button class="btn-dashboard-ghost text-red" (click)="delete(c)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-pagination [page]="page" [perPage]="perPage" [total]="total" [lastPage]="lastPage"
+    (pageChange)="onPageChange($event)" (perPageChange)="onPerPageChange($event)">
+  </app-pagination>
 </section>
 
 <!-- overlay form -->
 <div class="overlay" [class.open]="isFormOpen" (click)="closeForm()"></div>
-<div class="side-panel glass" [class.open]="isFormOpen" (click)="$event.stopPropagation()">
+<div class="dashboard-form-panel" [class.open]="isFormOpen" (click)="$event.stopPropagation()">
   <div class="panel-header">
-    <h3>{{ isEditMode ? 'Edit' : 'Add center' }}</h3>
+    <h3>{{ isEditMode ? 'Edit center' : 'Add center' }}</h3>
     <button class="close-btn" (click)="closeForm()">X</button>
   </div>
   <form class="panel-body" (ngSubmit)="save()">
-    <label class="label">Name</label>
-    <input class="input" name="name" [(ngModel)]="formCenter.name" required />
+    <label class="dashboard-label">Center Name</label>
+    <input class="dashboard-input" name="name" [(ngModel)]="formCenter.name" required />
 
-    <label class="label">City</label>
-    <input class="input" name="city" [(ngModel)]="formCenter.city" required />
+    <label class="dashboard-label">Subdomain (City)</label>
+    <input class="dashboard-input" name="city" [(ngModel)]="formCenter.city" required />
 
-    <label class="label">Phone</label>
-    <input class="input" name="phone" [(ngModel)]="formCenter.phone" required />
+    <label class="dashboard-label">Owner Phone</label>
+    <input class="dashboard-input" name="phone" [(ngModel)]="formCenter.phone" required />
 
-    <label class="label">Status</label>
-    <select class="input" name="paid" [(ngModel)]="formCenter.paid">
-      <option [ngValue]="true">Paid</option>
-      <option [ngValue]="false">Unpaid</option>
+    <label class="dashboard-label">Status</label>
+    <select class="dashboard-select" name="paid" [(ngModel)]="formCenter.paid">
+      <option [ngValue]="true">Active</option>
+      <option [ngValue]="false">Inactive</option>
     </select>
 
-    <button type="submit"
-      class="btn-primary full">{{ isEditMode ? 'Edit' : 'Add center' }}</button>
+    <button type="submit" class="btn-dashboard-primary full">{{ isEditMode ? 'Save Changes' : 'Create Center'
+      }}</button>
   </form>
 </div>
 
 <div class="overlay" [class.open]="infoOpen" (click)="closeInfo()"></div>
 <div class="side-panel glass" [class.open]="infoOpen" (click)="$event.stopPropagation()">
   <div class="panel-header">
-    <h3>Center info</h3>
+    <h3>Center Details</h3>
     <button class="close-btn" (click)="closeInfo()">X</button>
   </div>
   <div class="panel-body" *ngIf="selectedCenter">
     <p><strong>Name:</strong> {{ selectedCenter.name }}</p>
-    <p><strong>Subdomain:</strong> {{ selectedCenter.city || '-' }}</p>
-    <p><strong>Phone:</strong> {{ selectedCenter.phone || '-' }}</p>
-    <p><strong>Status:</strong>
-      {{ selectedCenter.paid ? 'Paid' : 'Unpaid' }}</p>
-    <p><strong>Center ID:</strong> {{ selectedCenter.id }}</p>
+    <p><strong>City:</strong> {{ selectedCenter.city }}</p>
+    <p><strong>Phone:</strong> {{ selectedCenter.phone }}</p>
+    <p><strong>Status:</strong> {{ selectedCenter.paid ? 'Active' : 'Inactive' }}</p>
+    <p><strong>ID:</strong> {{ selectedCenter.id }}</p>
     <div *ngIf="selectedCenter.courses?.length">
       <p><strong>Courses:</strong></p>
       <div class="chips">

@@ -17,8 +17,8 @@
     <!-- Search -->
     <div class="search-bar">
         <i class="fa-solid fa-search"></i>
-        <input type="text" [(ngModel)]="searchTerm" placeholder="Search by name, email, or center..."
-            class="search-input" />
+        <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()"
+            placeholder="Search by name, email, or center..." class="search-input" />
     </div>
 
     <!-- Loading State -->
@@ -85,6 +85,16 @@
         }
     </div>
     }
+
+    <!-- Pagination -->
+    <app-pagination
+        [page]="page"
+        [perPage]="perPage"
+        [total]="total"
+        [lastPage]="lastPage"
+        (pageChange)="onPageChange($event)"
+        (perPageChange)="onPerPageChange($event)">
+    </app-pagination>
 
     <!-- Reject Modal -->
     @if (rejectModalOpen()) {

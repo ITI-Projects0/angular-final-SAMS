@@ -1,17 +1,11 @@
-<div
-  class="contact-shell relative min-h-screen w-full overflow-hidden"
-  [ngClass]="isDark ? 'bg-slate-950 text-slate-50' : 'bg-slate-50 text-slate-900'"
->
+<div class="contact-shell relative min-h-screen w-full overflow-hidden"
+  [ngClass]="isDark ? 'bg-slate-950 text-slate-50' : 'bg-slate-50 text-slate-900'">
   <!-- Floating background orbs -->
   <div class="pointer-events-none absolute inset-0 overflow-hidden">
-    <div
-      class="floating-orb absolute -left-32 top-20 h-96 w-96 rounded-full"
-      [ngClass]="isDark ? 'bg-cyan-500/20' : 'bg-cyan-300/40'"
-    ></div>
-    <div
-      class="floating-orb floating-orb--secondary absolute -right-32top-1/3 h-96 w-96 rounded-full"
-      [ngClass]="isDark ? 'bg-purple-500/20' : 'bg-purple-300/40'"
-    ></div>
+    <div class="floating-orb absolute -left-32 top-20 h-96 w-96 rounded-full"
+      [ngClass]="isDark ? 'bg-cyan-500/20' : 'bg-cyan-300/40'"></div>
+    <div class="floating-orb floating-orb--secondary absolute -right-32top-1/3 h-96 w-96 rounded-full"
+      [ngClass]="isDark ? 'bg-purple-500/20' : 'bg-purple-300/40'"></div>
   </div>
 
   <app-header></app-header>
@@ -22,54 +16,36 @@
         <!-- Left Column - Info -->
         <div class="space-y-8">
           <div>
-            <p
-              class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
-              [ngClass]="
+            <p class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold" [ngClass]="
                 isDark
                   ? 'bg-cyan-500/10 text-cyan-200 ring-1 ring-cyan-500/20'
                   : 'bg-cyan-50 text-cyan-700 ring-1 ring-cyan-200'
-              "
-            >
+              ">
               Contact Us
             </p>
-            <h1
-              class="mt-4 text-4xl font-bold leading-tight sm:text-5xl"
-              [ngClass]="isDark ? 'text-white' : 'text-slate-900'"
-            >
+            <h1 class="mt-4 text-4xl font-bold leading-tight sm:text-5xl"
+              [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
               Get in Touch
             </h1>
-            <p
-              class="mt-4 text-lg leading-relaxed"
-              [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'"
-            >
+            <p class="mt-4 text-lg leading-relaxed" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-600'">
               Have questions about SAMS? We'd love to hear from you. Send us a message and we'll
               respond as soon as possible.
             </p>
           </div>
 
           <div class="space-y-4">
-            <div
-              class="rounded-2xl p-5 ring-1"
-              [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-white ring-slate-200'"
-            >
+            <div class="rounded-2xl p-5 ring-1"
+              [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-white ring-slate-200'">
               <div class="flex items-center gap-4">
                 <div
-                  class="flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 text-white"
-                >
+                  class="flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 text-white">
                   <svg class="h-full w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div>
-                  <p
-                    class="text-sm font-medium"
-                    [ngClass]="isDark ? 'text-slate-400' : 'text-slate-500'"
-                  >
+                  <p class="text-sm font-medium" [ngClass]="isDark ? 'text-slate-400' : 'text-slate-500'">
                     Email
                   </p>
                   <p class="font-semibold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
@@ -79,28 +55,18 @@
               </div>
             </div>
 
-            <div
-              class="rounded-2xl p-5 ring-1"
-              [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-white ring-slate-200'"
-            >
+            <div class="rounded-2xl p-5 ring-1"
+              [ngClass]="isDark ? 'bg-slate-900/70 ring-slate-800' : 'bg-white ring-slate-200'">
               <div class="flex items-center gap-4">
                 <div
-                  class="flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white"
-                >
+                  class="flex h-24 w-24 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white">
                   <svg class="h-full w-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
                 <div>
-                  <p
-                    class="text-sm font-medium"
-                    [ngClass]="isDark ? 'text-slate-400' : 'text-slate-500'"
-                  >
+                  <p class="text-sm font-medium" [ngClass]="isDark ? 'text-slate-400' : 'text-slate-500'">
                     Support Hours
                   </p>
                   <p class="font-semibold" [ngClass]="isDark ? 'text-white' : 'text-slate-900'">
@@ -113,39 +79,28 @@
         </div>
 
         <!-- Right Column - Form -->
-        <div
-          class="rounded-3xl p-8 ring-1"
-          [ngClass]="isDark ? 'bg-slate-900/60 ring-slate-800' : 'bg-white ring-slate-200'"
-        >
+        <div class="rounded-3xl p-8 ring-1"
+          [ngClass]="isDark ? 'bg-slate-900/60 ring-slate-800' : 'bg-white ring-slate-200'">
           <!-- Success Message -->
-          <div
-            *ngIf="successMessage"
-            class="mb-6 rounded-xl bg-green-500/10 p-4 text-green-500 ring-1 ring-green-500/20"
-          >
+          <div *ngIf="successMessage"
+            class="mb-6 rounded-xl bg-green-500/10 p-4 text-green-500 ring-1 ring-green-500/20">
             <div class="flex items-center gap-3">
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
+                <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
+                  clip-rule="evenodd" />
               </svg>
               <span>{{ successMessage }}</span>
             </div>
           </div>
 
           <!-- Error Message -->
-          <div
-            *ngIf="errorMessage"
-            class="mb-6 rounded-xl bg-red-500/10 p-4 text-red-500 ring-1 ring-red-500/20"
-          >
+          <div *ngIf="errorMessage" class="mb-6 rounded-xl bg-red-500/10 p-4 text-red-500 ring-1 ring-red-500/20">
             <div class="flex items-center gap-3">
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fill-rule="evenodd"
+                <path fill-rule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clip-rule="evenodd"
-                />
+                  clip-rule="evenodd" />
               </svg>
               <span>{{ errorMessage }}</span>
             </div>
@@ -154,151 +109,93 @@
           <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-5">
             <!-- Name -->
             <div>
-              <label
-                class="mb-2 block text-sm font-medium"
-                [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'"
-              >
+              <label class="mb-2 block text-sm font-medium" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'">
                 Name <span class="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                formControlName="name"
-                placeholder="Your name"
+              <input type="text" formControlName="name" placeholder="Your name"
                 class="w-full rounded-xl px-4 py-3 text-sm ring-1 transition-all focus:outline-none focus:ring-2"
                 [ngClass]="
                   isDark
                     ? 'bg-slate-800 text-white ring-slate-700 placeholder:text-slate-500 focus:ring-cyan-500'
                     : 'bg-slate-50 text-slate-900 ring-slate-200 placeholder:text-slate-400 focus:ring-cyan-500'
-                "
-              />
-              <p
-                *ngIf="f['name'].touched && f['name'].errors?.['required']"
-                class="mt-1 text-sm text-red-500"
-              >
+                " />
+              <p *ngIf="f['name'].touched && f['name'].errors?.['required']" class="mt-1 text-sm text-red-500">
                 Name is required
               </p>
-              <p
-                *ngIf="f['name'].touched && f['name'].errors?.['minlength']"
-                class="mt-1 text-sm text-red-500"
-              >
+              <p *ngIf="f['name'].touched && f['name'].errors?.['minlength']" class="mt-1 text-sm text-red-500">
                 Name must be at least 2 characters
               </p>
             </div>
 
             <!-- Email -->
             <div>
-              <label
-                class="mb-2 block text-sm font-medium"
-                [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'"
-              >
+              <label class="mb-2 block text-sm font-medium" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'">
                 Email <span class="text-red-500">*</span>
               </label>
-              <input
-                type="email"
-                formControlName="email"
-                placeholder="your@email.com"
+              <input type="email" formControlName="email" placeholder="your@email.com"
                 class="w-full rounded-xl px-4 py-3 text-sm ring-1 transition-all focus:outline-none focus:ring-2"
                 [ngClass]="
                   isDark
                     ? 'bg-slate-800 text-white ring-slate-700 placeholder:text-slate-500 focus:ring-cyan-500'
                     : 'bg-slate-50 text-slate-900 ring-slate-200 placeholder:text-slate-400 focus:ring-cyan-500'
-                "
-              />
-              <p
-                *ngIf="f['email'].touched && f['email'].errors?.['required']"
-                class="mt-1 text-sm text-red-500"
-              >
+                " />
+              <p *ngIf="f['email'].touched && f['email'].errors?.['required']" class="mt-1 text-sm text-red-500">
                 Email is required
               </p>
-              <p
-                *ngIf="f['email'].touched && f['email'].errors?.['email']"
-                class="mt-1 text-sm text-red-500"
-              >
+              <p *ngIf="f['email'].touched && f['email'].errors?.['email']" class="mt-1 text-sm text-red-500">
                 Please enter a valid email
               </p>
             </div>
 
             <!-- Subject -->
             <div>
-              <label
-                class="mb-2 block text-sm font-medium"
-                [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'"
-              >
+              <label class="mb-2 block text-sm font-medium" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'">
                 Subject
               </label>
-              <input
-                type="text"
-                formControlName="subject"
-                placeholder="What's this about?"
+              <input type="text" formControlName="subject" placeholder="What's this about?"
                 class="w-full rounded-xl px-4 py-3 text-sm ring-1 transition-all focus:outline-none focus:ring-2"
                 [ngClass]="
                   isDark
                     ? 'bg-slate-800 text-white ring-slate-700 placeholder:text-slate-500 focus:ring-cyan-500'
                     : 'bg-slate-50 text-slate-900 ring-slate-200 placeholder:text-slate-400 focus:ring-cyan-500'
-                "
-              />
+                " />
             </div>
 
             <!-- Message -->
             <div>
-              <label
-                class="mb-2 block text-sm font-medium"
-                [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'"
-              >
+              <label class="mb-2 block text-sm font-medium" [ngClass]="isDark ? 'text-slate-300' : 'text-slate-700'">
                 Message <span class="text-red-500">*</span>
               </label>
-              <textarea
-                formControlName="message"
-                rows="5"
-                placeholder="Tell us how we can help..."
+              <textarea formControlName="message" rows="5" placeholder="Tell us how we can help..."
                 class="w-full resize-none rounded-xl px-4 py-3 text-sm ring-1 transition-all focus:outline-none focus:ring-2"
                 [ngClass]="
                   isDark
                     ? 'bg-slate-800 text-white ring-slate-700 placeholder:text-slate-500 focus:ring-cyan-500'
                     : 'bg-slate-50 text-slate-900 ring-slate-200 placeholder:text-slate-400 focus:ring-cyan-500'
-                "
-              ></textarea>
-              <p
-                *ngIf="f['message'].touched && f['message'].errors?.['required']"
-                class="mt-1 text-sm text-red-500"
-              >
+                "></textarea>
+              <p *ngIf="f['message'].touched && f['message'].errors?.['required']" class="mt-1 text-sm text-red-500">
                 Message is required
               </p>
-              <p
-                *ngIf="f['message'].touched && f['message'].errors?.['minlength']"
-                class="mt-1 text-sm text-red-500"
-              >
+              <p *ngIf="f['message'].touched && f['message'].errors?.['minlength']" class="mt-1 text-sm text-red-500">
                 Message must be at least 10 characters
               </p>
             </div>
 
             <!-- Submit Button -->
-            <button
-              type="submit"
-              [disabled]="isSubmitting"
+            <button type="submit" [disabled]="isSubmitting"
               class="w-full rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-50"
               [ngClass]="
                 isDark
                   ? 'bg-gradient-to-r from-cyan-500 to-purple-500 hover:shadow-cyan-500/30'
                   : 'bg-gradient-to-r from-cyan-600 to-purple-600 hover:shadow-cyan-600/30'
-              "
-            >
+              ">
               <span *ngIf="!isSubmitting">Send Message</span>
               <span *ngIf="isSubmitting" class="flex items-center justify-center gap-2">
                 <svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                  </path>
                 </svg>
                 Sending...
               </span>

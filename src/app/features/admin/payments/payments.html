@@ -7,33 +7,58 @@
   <div class="toolbar">
     <input placeholder="Search..." class="search" />
     <div style="display:flex; gap:0.6rem">
-      <button class="btn-simple" (click)="filter='all'">All</button>
-      <button class="btn-simple" (click)="filter='paid'">Paid</button>
-      <button class="btn-simple" (click)="filter='unpaid'">Unpaid</button>
+      <button class="btn-simple" [class.active]="filter==='all'" (click)="filter='all'; page=1">All</button>
+      <button class="btn-simple" [class.active]="filter==='paid'" (click)="filter='paid'; page=1">Paid</button>
+      <button class="btn-simple" [class.active]="filter==='unpaid'" (click)="filter='unpaid'; page=1">Unpaid</button>
     </div>
-    <button class="btn-primary" (click)="openForm()">Add payment</button>
+    <div class="toolbar-actions">
+      <label class="muted">Per page</label>
+      <select class="select" [(ngModel)]="perPage" (ngModelChange)="changePerPage($event)">
+        <option [ngValue]="5">5</option>
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="15">15</option>
+      </select>
+      <button class="btn-primary" (click)="openForm()">Add payment</button>
+    </div>
   </div>
 
   <table class="list-table glass">
     <thead>
-      <tr><th>Center</th><th>City</th><th>Phone</th><th>Amount</th><th>Status</th><th>Actions</th></tr>
+      <tr>
+        <th>Center</th>
+        <th>City</th>
+        <th>Phone</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let c of centers">
-        <tr *ngIf="filter === 'all' || (filter === 'paid' && c.paid) || (filter === 'unpaid' && !c.paid)">
-          <td>{{ c.name }}</td>
-          <td>{{ c.city }}</td>
-          <td>{{ c.phone }}</td>
-          <td>{{ c.amount | currency:'USD' }}</td>
-          <td><strong [class.paid]="c.paid">{{ c.paid ? 'Paid' : 'Unpaid' }}</strong></td>
-          <td>
-            <button class="btn-simple" (click)="openForm(c)">Edit</button>
-            <button class="btn-simple muted" (click)="delete(c)">Delete</button>
-          </td>
-        </tr>
-      </ng-container>
+      <tr *ngFor="let c of paginatedCenters">
+        <td>{{ c.name }}</td>
+        <td>{{ c.city }}</td>
+        <td>{{ c.phone }}</td>
+        <td>{{ c.amount | currency:'USD' }}</td>
+        <td><strong [class.paid]="c.paid">{{ c.paid ? 'Paid' : 'Unpaid' }}</strong></td>
+        <td>
+          <button class="btn-simple" (click)="openForm(c)">Edit</button>
+          <button class="btn-simple muted" (click)="delete(c)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="paginatedCenters.length === 0">
+        <td colspan="6" class="text-center muted">No payments found.</td>
+      </tr>
     </tbody>
   </table>
+
+  <div class="pagination" *ngIf="lastPage > 1 || total">
+    <div class="muted small">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
+    <div class="page-controls">
+      <button class="btn-simple" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
+      <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
+      <button class="btn-simple" [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
+    </div>
+  </div>
 </section>
 
 <div class="overlay" [class.open]="isFormOpen" (click)="closeForm()"></div>

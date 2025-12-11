@@ -1,20 +1,12 @@
-<section class="list-wrapper">
-  <header class="list-header">
+<section class="dashboard-page">
+  <header class="dashboard-header">
     <h2>Students</h2>
-    <p class="muted">Enrolled students and their centers</p>
+    <p>Enrolled students and their centers</p>
   </header>
 
-  <div class="toolbar">
-    <input placeholder="Search students..." class="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" />
-    <div class="toolbar-actions">
-      <label class="muted">Per page</label>
-      <select class="select" [(ngModel)]="perPage" (ngModelChange)="changePerPage($event)">
-        <option [ngValue]="10">10</option>
-        <option [ngValue]="15">15</option>
-        <option [ngValue]="25">25</option>
-        <option [ngValue]="50">50</option>
-      </select>
-    </div>
+  <div class="dashboard-toolbar">
+    <input placeholder="Search students..." class="dashboard-input" style="max-width: 300px;" [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchChange()" />
   </div>
 
   <div class="loading-overlay" *ngIf="loading">
@@ -22,42 +14,40 @@
     <span>Loading students...</span>
   </div>
 
-  <table class="list-table glass">
-    <thead>
-      <tr>
-        <th>Student</th>
-        <th>Center</th>
-        <th>Status</th>
-        <th>Courses</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let s of filteredStudents">
-        <td>
-          <div class="stack">
-            <span class="strong">{{ s.name }}</span>
-            <span class="muted">{{ s.email }}</span>
-          </div>
-        </td>
-        <td><span class="pill">{{ s.center || '-' }}</span></td>
-        <td><span class="pill" [ngClass]="s.status === 'active' ? 'pill-success' : 'pill-muted'">{{ s.status }}</span></td>
-        <td><span class="pill pill-ghost">{{ s.courseCount }} courses</span></td>
-        <td>
-          <button class="btn-simple" (click)="openInfo(s)">Info</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="pagination" *ngIf="lastPage > 1 || total">
-    <div class="muted small">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
-    <div class="page-controls">
-      <button class="btn-simple" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
-      <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
-      <button class="btn-simple" [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
-    </div>
+  <div class="dashboard-table-wrapper">
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Center</th>
+          <th>Status</th>
+          <th>Courses</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of filteredStudents">
+          <td>
+            <div class="stack">
+              <span class="strong">{{ s.name }}</span>
+              <span class="muted">{{ s.email }}</span>
+            </div>
+          </td>
+          <td><span class="badge badge-neutral">{{ s.center || '-' }}</span></td>
+          <td><span class="badge" [ngClass]="s.status === 'active' ? 'badge-success' : 'badge-neutral'">{{ s.status
+              }}</span></td>
+          <td><span class="badge badge-ghost">{{ s.courseCount }} courses</span></td>
+          <td>
+            <button class="btn-dashboard-ghost" (click)="openInfo(s)">Info</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+
+  <app-pagination [page]="page" [perPage]="perPage" [total]="total" [lastPage]="lastPage"
+    (pageChange)="onPageChange($event)" (perPageChange)="onPerPageChange($event)">
+  </app-pagination>
 </section>
 
 <div class="overlay" [class.open]="infoOpen" (click)="closeInfo()"></div>
@@ -71,7 +61,6 @@
     <p><strong>Email:</strong> {{ selectedStudent.email }}</p>
     <p><strong>Center:</strong> {{ selectedStudent.center || '-' }}</p>
     <p><strong>Status:</strong> {{ selectedStudent.status }}</p>
-    <!-- <p><strong>Role tags:</strong> {{ selectedStudent.raw?.roles?.map((r: any) => r?.name || r).join(', ') || selectedStudent.raw?.role || 'student' }}</p> -->
     <p><strong>User ID:</strong> {{ selectedStudent.id }}</p>
     <div *ngIf="selectedStudent.courses?.length">
       <p><strong>Courses:</strong></p>
