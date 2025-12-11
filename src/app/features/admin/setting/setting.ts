@@ -6,6 +6,7 @@ import { ThemePreference, ThemeService } from '../../../core/services/theme.serv
 import { ApiService } from '../../../core/services/api.service';
 import { TokenStorageService } from '../../../core/auth/token-storage.service';
 import { User } from '../../../core/models/user.model';
+import { FeedbackService } from '../../../core/services/feedback.service';
 
 type Theme = ThemePreference;
 
@@ -40,12 +41,15 @@ export class Setting implements OnInit, OnDestroy {
   private themeSub?: Subscription;
   password = { current: '', new: '', confirm: '' };
   passwordVisibility = { current: false, new: false, confirm: false };
+  passwordFieldErrors = { current: '', password: '', confirm: '' };
+  passwordError = '';
 
   constructor(
     private themeService: ThemeService,
     private api: ApiService,
     private tokenStorage: TokenStorageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private feedback: FeedbackService
   ) { }
 
 
@@ -105,8 +109,12 @@ export class Setting implements OnInit, OnDestroy {
           const updated = { ...cached, name: this.user.name, avatar: this.user.avatar };
           this.tokenStorage.updateStoredUser(updated as any);
         }
+        this.feedback.showToast({ title: 'Settings', message: 'Account updated.', tone: 'success', timeout: 4000 });
       },
-      error: () => { },
+      error: (err) => {
+        const msg = err?.error?.message || 'Failed to update account.';
+        this.feedback.showToast({ title: 'Settings', message: msg, tone: 'error', timeout: 4000 });
+      },
       complete: () => {
         this.loading = false;
         this.cdr.detectChanges();
@@ -115,7 +123,41 @@ export class Setting implements OnInit, OnDestroy {
   }
 
   changePassword() {
-    if (!this.password.current || !this.password.new || this.password.new !== this.password.confirm) return;
+    this.passwordError = '';
+    this.passwordFieldErrors = { current: '', password: '', confirm: '' };
+
+    if (!this.password.current || !this.password.new || !this.password.confirm) {
+      this.passwordError = 'Please fill in all password fields.';
+      this.passwordFieldErrors = {
+        current: this.password.current ? '' : 'Current password is required.',
+        password: this.password.new ? '' : 'New password is required.',
+        confirm: this.password.confirm ? '' : 'Confirm password is required.',
+      };
+      this.feedback.showToast({ title: 'Settings', message: this.passwordError, tone: 'error', timeout: 4000 });
+      return;
+    }
+
+    if (this.password.new !== this.password.confirm) {
+      this.passwordError = 'New passwords do not match.';
+      this.passwordFieldErrors = { ...this.passwordFieldErrors, confirm: 'New passwords do not match.' };
+      this.feedback.showToast({ title: 'Settings', message: this.passwordError, tone: 'error', timeout: 4000 });
+      return;
+    }
+
+    const pwd = this.password.new;
+    const strong =
+      pwd.length >= 8 &&
+      /[a-z]/.test(pwd) &&
+      /[A-Z]/.test(pwd) &&
+      /\d/.test(pwd) &&
+      /[^A-Za-z0-9]/.test(pwd);
+
+    if (!strong) {
+      this.passwordError = 'Password must be at least 8 chars with upper, lower, number, and symbol.';
+      this.passwordFieldErrors = { ...this.passwordFieldErrors, password: this.passwordError };
+      this.feedback.showToast({ title: 'Settings', message: this.passwordError, tone: 'error', timeout: 4000 });
+      return;
+    }
 
     const payload = {
       current_password: this.password.current,
@@ -128,10 +170,16 @@ export class Setting implements OnInit, OnDestroy {
       next: () => {
         this.password = { current: '', new: '', confirm: '' };
         this.passwordVisibility = { current: false, new: false, confirm: false };
-        alert('Password updated successfully.');
+        this.passwordFieldErrors = { current: '', password: '', confirm: '' };
+        this.passwordError = '';
+        this.feedback.showToast({ title: 'Settings', message: 'Password updated successfully.', tone: 'success', timeout: 4000 });
       },
       error: (err) => {
-        alert(err.error?.message || 'Failed to update password.');
+        this.loading = false;
+        const msg = err || 'Failed to update password.';
+        this.passwordError = msg;
+        this.passwordFieldErrors = { ...this.passwordFieldErrors, current: msg };
+        this.feedback.showToast({ title: 'Settings', message: msg, tone: 'error', timeout: 4000 });
       },
       complete: () => {
         this.loading = false;
