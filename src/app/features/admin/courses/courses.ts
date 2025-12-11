@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { ApiService } from '../../../core/services/api.service';
 })
 export class Courses implements OnInit {
 
-  constructor(private api: ApiService, private cdr: ChangeDetectorRef) { }
+  constructor(private api: ApiService, private cdr: ChangeDetectorRef, private zone: NgZone) { }
 
   courses: any[] = [];
   loading = false;
@@ -55,33 +55,39 @@ export class Courses implements OnInit {
 
     this.api.get<any>('/groups', params).subscribe({
       next: (res) => {
-        const payload = res?.data ?? res;
-        const items = payload?.data ?? payload ?? [];
+        this.zone.run(() => {
+          const payload = res?.data ?? res;
+          const items = payload?.data ?? payload ?? [];
 
-        this.courses = items.map((g: any) => ({
-          id: g.id,
-          title: g.name,
-          center: g.center?.name || '',
-          teacher: g.teacher?.name || '',
-          status: g.is_active ? 'Active' : 'Inactive',
-          studentsCount: g.students_count ?? g.studentsCount ?? g.students?.length ?? 0,
-          raw: g,
-        }));
+          this.courses = items.map((g: any) => ({
+            id: g.id,
+            title: g.name,
+            center: g.center?.name || '',
+            teacher: g.teacher?.name || '',
+            status: g.is_active ? 'Active' : 'Inactive',
+            studentsCount: g.students_count ?? g.studentsCount ?? g.students?.length ?? 0,
+            raw: g,
+          }));
 
-        const pagination = res?.meta?.pagination ?? payload?.meta ?? {};
-        this.page = pagination.current_page ?? page;
-        this.perPage = pagination.per_page ?? this.perPage;
-        this.total = pagination.total ?? this.courses.length;
-        this.lastPage = pagination.last_page ?? this.lastPage ?? 1;
-        this.cdr.detectChanges();
+          const pagination = res?.meta?.pagination ?? payload?.meta ?? {};
+          this.page = pagination.current_page ?? page;
+          this.perPage = pagination.per_page ?? this.perPage;
+          this.total = pagination.total ?? this.courses.length;
+          this.lastPage = pagination.last_page ?? this.lastPage ?? 1;
+          this.cdr.detectChanges();
+        });
       },
       error: () => {
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.zone.run(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        });
       },
       complete: () => {
-        this.loading = false;
-        this.cdr.detectChanges();
+        this.zone.run(() => {
+          this.loading = false;
+          this.cdr.detectChanges();
+        });
       },
     });
   }

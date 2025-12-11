@@ -1,14 +1,19 @@
-<section class="list-wrapper">
-  <header class="list-header">
-    <h2>Courses</h2>
-    <p class="muted">Available courses and their instructors</p>
+<section
+  class="max-w-[1100px] mx-auto my-6 p-5 max-[400px]:p-3 bg-[var(--card)] rounded-2xl border border-[var(--glass-border)] shadow-[0_18px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl text-[var(--text)]">
+  <header class="mb-4">
+    <h2 class="text-2xl font-bold">Courses</h2>
+    <p class="text-[var(--muted)] text-sm">Available courses and their instructors</p>
   </header>
 
-  <div class="toolbar">
-    <input placeholder="Search courses..." class="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" />
-    <div class="toolbar-actions">
-      <label class="muted">Per page</label>
-      <select class="select" [(ngModel)]="perPage" (ngModelChange)="changePerPage($event)">
+  <div class="flex justify-between items-center my-3 gap-3 max-[500px]:flex-col max-[500px]:items-stretch">
+    <input placeholder="Search courses..."
+      class="px-3 py-2 rounded-lg border border-[var(--glass-border)] w-[260px] bg-[var(--glass)] text-[var(--text)] max-[500px]:w-full focus:outline-none focus:border-[var(--primary)] transition-colors"
+      [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" />
+    <div class="inline-flex items-center max-[500px]:justify-between gap-2">
+      <label class="text-[var(--muted)] text-sm">Per page</label>
+      <select
+        class="px-2.5 py-1.5 rounded-lg border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none"
+        [(ngModel)]="perPage" (ngModelChange)="changePerPage($event)">
         <option [ngValue]="10">10</option>
         <option [ngValue]="15">15</option>
         <option [ngValue]="25">25</option>
@@ -17,56 +22,113 @@
     </div>
   </div>
 
-  <div class="loading-overlay" *ngIf="loading">
-    <div class="spinner"></div>
+  <div class="flex items-center gap-2.5 p-3 bg-[var(--glass)] border border-[var(--glass-border)] rounded-xl mb-2"
+    *ngIf="loading">
+    <div class="w-[18px] h-[18px] border-[3px] border-black/10 border-t-[var(--primary)] rounded-full animate-spin">
+    </div>
     <span>Loading courses...</span>
   </div>
 
-  <table class="list-table glass">
-    <thead>
-      <tr><th>Course title</th><th>Center</th><th>Teacher</th><th>Status</th><th>Students</th><th>Actions</th></tr>
+  <table
+    class="w-full border-collapse mt-2.5 bg-[var(--card)] border border-[var(--glass-border)] rounded-xl overflow-hidden shadow-sm max-[1200px]:block max-[1200px]:bg-transparent max-[1200px]:border-none max-[1200px]:shadow-none">
+    <thead class="max-[1200px]:hidden">
+      <tr>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Course title</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Center</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Teacher</th>
+        <!-- <th>Status</th> -->
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Students</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Actions</th>
+      </tr>
     </thead>
-    <tbody>
-      <tr *ngFor="let c of filteredCourses">
-        <td class="strong"><span class="truncate" title="{{ c.title }}">{{ c.title }}</span></td>
-        <td><span class="pill truncate" title="{{ c.center || '-' }}">{{ c.center || '-' }}</span></td>
-        <td><span class="pill truncate" title="{{ c.teacher || '-' }}">{{ c.teacher || '-' }}</span></td>
-        <td><span class="pill" [ngClass]="c.status === 'Active' ? 'pill-success' : 'pill-muted'">{{ c.status }}</span></td>
-        <td><span class="pill pill-ghost">{{ c.studentsCount }} students</span></td>
-        <td>
-          <button class="btn-simple" (click)="openInfo(c)">Info</button>
+    <tbody
+      class="max-[1200px]:grid max-[1200px]:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] max-[1200px]:gap-4 max-[1200px]:w-full">
+      <tr *ngFor="let c of filteredCourses"
+        class="max-[1200px]:flex max-[1200px]:flex-col max-[1200px]:bg-[var(--card)] max-[1200px]:border max-[1200px]:border-[var(--glass-border)] max-[1200px]:rounded-2xl max-[1200px]:p-4 max-[400px]:p-3 max-[1200px]:shadow-sm max-[1200px]:h-full">
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle font-bold text-[var(--text)] max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Course title">
+          <span
+            class="truncate inline-block max-w-[220px] align-bottom max-[1200px]:max-w-full max-[1200px]:whitespace-normal"
+            title="{{ c.title }}">{{ c.title }}</span>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Center">
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--glass)] border border-[var(--glass-border)] text-sm truncate max-w-[220px] max-[1200px]:max-w-full"
+            title="{{ c.center || '-' }}">{{ c.center || '-' }}</span>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Teacher">
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--glass)] border border-[var(--glass-border)] text-sm truncate max-w-[220px] max-[1200px]:max-w-full"
+            title="{{ c.teacher || '-' }}">{{ c.teacher || '-' }}</span>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Students">
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-transparent text-[var(--text)] border border-dashed border-[var(--glass-border)] text-sm">{{
+            c.studentsCount }} students</span>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-center max-[1200px]:items-center max-[1200px]:w-full max-[1200px]:pt-4 max-[1200px]:pb-0 max-[1200px]:mt-auto max-[1200px]:border-none"
+          data-label="Actions">
+          <button
+            class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200"
+            (click)="openInfo(c)">Info</button>
         </td>
       </tr>
     </tbody>
   </table>
 
 </section>
-<div class="pagination" *ngIf="lastPage > 1 || total">
-  <div class="muted small">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
-  <div class="page-controls">
-    <button class="btn-simple" [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
-    <span class="page-indicator">Page {{ page }} / {{ lastPage }}</span>
-    <button class="btn-simple" [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
+
+<div
+  class="max-w-[1100px] mx-auto flex justify-between items-center mt-4 gap-3 bg-[var(--glass)] border border-[var(--glass-border)] p-2.5 rounded-xl max-[450px]:flex-col max-[450px]:items-center"
+  *ngIf="lastPage > 1 || total">
+  <div class="text-[var(--muted)] text-sm">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
+  <div class="inline-flex items-center gap-2.5">
+    <button
+      class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+      [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
+    <span class="font-bold">Page {{ page }} / {{ lastPage }}</span>
+    <button
+      class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+      [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
   </div>
 </div>
 
-<div class="overlay" [class.open]="infoOpen" (click)="closeInfo()"></div>
-<div class="side-panel glass" [class.open]="infoOpen" (click)="$event.stopPropagation()">
-  <div class="panel-header">
+<div
+  class="fixed inset-y-0 right-0 w-[min(420px,90vw)] bg-[var(--card)] border-l border-[var(--glass-border)] shadow-[-8px_0_24px_rgba(0,0,0,0.18)] transition-transform duration-300 p-5 flex flex-col gap-3.5 z-[999]"
+  [ngClass]="infoOpen ? 'translate-x-0' : 'translate-x-full'" (click)="$event.stopPropagation()">
+  <div class="flex justify-between items-center font-bold">
     <h3>Course info</h3>
-    <button class="close-btn" (click)="closeInfo()">X</button>
+    <button class="border-none bg-transparent text-2xl cursor-pointer text-[var(--text)]"
+      (click)="closeInfo()">X</button>
   </div>
-  <div class="panel-body" *ngIf="selectedCourse">
-    <p class="strong">{{ selectedCourse.title }}</p>
-    <div class="chips">
-      <div class="chip">Center: {{ selectedCourse.center || '-' }}</div>
-      <div class="chip">Teacher: {{ selectedCourse.teacher || '-' }}</div>
-      <div class="chip">Students: {{ selectedCourse.studentsCount }}</div>
-      <div class="chip" [ngClass]="selectedCourse.status === 'Active' ? 'pill-success' : 'pill-muted'">
-        Status: {{ selectedCourse.status }}
-      </div>
-      <div class="chip">Group ID: {{ selectedCourse.id }}</div>
-      <div class="chip">Approval required: {{ selectedCourse.raw?.is_approval_required ? 'Yes' : 'No' }}</div>
+  <div class="flex flex-col gap-2.5" *ngIf="selectedCourse">
+    <p class="font-bold text-[var(--text)]">{{ selectedCourse.title }}</p>
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-2 mt-2">
+      <div class="p-2.5 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">Group ID: {{ selectedCourse.id
+        }}</div>
+      <div class="p-2.5 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">Center: {{
+        selectedCourse.center || '-' }}</div>
+      <div class="p-2.5 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">Teacher: {{
+        selectedCourse.teacher || '-' }}</div>
+      <div class="p-2.5 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">Students: {{
+        selectedCourse.studentsCount }}</div>
+      <div class="p-2.5 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">Approval required: {{
+        selectedCourse.raw?.is_approval_required ? 'Yes' : 'No' }}</div>
     </div>
   </div>
 </div>
+<div class="fixed inset-0 bg-black/20 opacity-0 pointer-events-none transition-opacity duration-250"
+  [class.opacity-100]="infoOpen" [class.pointer-events-auto]="infoOpen" (click)="closeInfo()"></div>

@@ -112,7 +112,8 @@
 }
 
 .nav-link.active {
-    background: var(--dashboard-link-active-bg);
+    background: linear-gradient(128deg, var(--primary),
+            color-mix(in srgb, var(--primary) 60%, white));
     box-shadow: var(--dashboard-link-active-shadow);
     color: white;
     border-color: transparent;
