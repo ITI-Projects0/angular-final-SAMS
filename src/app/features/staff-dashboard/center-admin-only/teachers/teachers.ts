@@ -30,6 +30,7 @@ export class Teachers implements OnInit {
   selectedTeacher: any = null;
   panelMode: 'info' | 'create' | 'edit' = 'info';
   form = { name: '', email: '', phone: '', role: 'teacher' as 'teacher' | 'assistant' };
+  formErrors = { name: '', email: '', phone: '' };
   processing = false;
   saveError = '';
   page = 1;
@@ -61,9 +62,9 @@ export class Teachers implements OnInit {
   }
 
   get canSubmitForm(): boolean {
-    const name = this.form.name?.trim();
-    const email = this.form.email?.trim();
-    return !!name && !!email;
+    const name = this.form.name?.trim() ?? '';
+    const email = this.form.email?.trim() ?? '';
+    return !!name && !!email && !this.formErrors.name && !this.formErrors.email && !this.formErrors.phone;
   }
 
   private loadTeachers() {
@@ -202,6 +203,7 @@ export class Teachers implements OnInit {
   openCreate(role: 'teacher' | 'assistant'): void {
     if (!this.isCenterAdmin) return;
     this.form = { name: '', email: '', phone: '', role };
+    this.formErrors = { name: '', email: '', phone: '' };
     this.selectedTeacher = null;
     this.panelMode = 'create';
     this.panelOpen = true;
@@ -257,6 +259,7 @@ export class Teachers implements OnInit {
       phone: teacher.phone ?? '',
       role: this.activeRole
     };
+    this.formErrors = { name: '', email: '', phone: '' };
     this.panelMode = 'edit';
     this.panelOpen = true;
     this.saveError = '';
@@ -278,19 +281,20 @@ export class Teachers implements OnInit {
     if (!this.isCenterAdmin || this.processing) {
       return;
     }
-    const name = this.form.name?.trim();
-    const email = this.form.email?.trim();
-    if (!name || !email) {
-      this.saveError = 'Name and email are required.';
+    if (!this.validateForm()) {
+      this.cdr.detectChanges();
       return;
     }
+    const name = this.form.name.trim();
+    const email = this.form.email.trim();
+    const phone = this.form.phone.trim();
 
     this.processing = true;
     this.saveError = '';
     const payload: any = {
       name,
       email,
-      phone: this.form.phone,
+      phone: phone || null,
       role: this.form.role
     };
 
@@ -300,7 +304,7 @@ export class Teachers implements OnInit {
         : this.staffService.updateManagementUser(this.selectedTeacher.id, {
           name,
           email,
-          phone: this.form.phone
+          phone: phone || null
         });
 
     request$
@@ -386,5 +390,42 @@ export class Teachers implements OnInit {
   private finishLoading(): void {
     this.loading = false;
     this.cdr.detectChanges();
+  }
+
+  onFormChange(): void {
+    this.validateForm();
+  }
+
+  private validateForm(updateErrors: boolean = true): boolean {
+    const errors = { name: '', email: '', phone: '' };
+    const name = this.form.name?.trim() ?? '';
+    const email = this.form.email?.trim() ?? '';
+    const phone = this.form.phone?.trim() ?? '';
+
+    if (!name) {
+      errors.name = 'Name is required.';
+    } else if (name.length < 3) {
+      errors.name = 'Name must be at least 3 characters.';
+    }
+
+    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!email) {
+      errors.email = 'Email is required.';
+    } else if (!emailPattern.test(email)) {
+      errors.email = 'Enter a valid email.';
+    }
+
+    if (phone) {
+      const phonePattern = /^(010|011|012|015)[0-9]{8}$/;
+      if (!phonePattern.test(phone)) {
+        errors.phone = 'Phone must start with 010, 011, 012, or 015 and be 11 digits.';
+      }
+    }
+
+    if (updateErrors) {
+      this.formErrors = errors;
+    }
+
+    return !errors.name && !errors.email && !errors.phone;
   }
 }

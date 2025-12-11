@@ -8,7 +8,18 @@
   <div class="flex justify-between items-center my-3 gap-3 md:flex-col md:items-stretch md:gap-4">
     <input placeholder="Search groups..."
       class="px-3 py-2 rounded-lg border border-(--glass-border) w-[260px] bg-(--glass) text-(--text) md:w-full focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
-      [(ngModel)]="searchTerm" />
+      [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" />
+    <div class="flex items-center gap-2 md:w-full md:justify-between">
+      <label class="text-(--muted) text-sm">Per page</label>
+      <select
+        class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--glass) text-(--text) focus:outline-none"
+        [(ngModel)]="perPage" (ngModelChange)="changePerPage($event)">
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="15">15</option>
+        <option [ngValue]="25">25</option>
+        <option [ngValue]="50">50</option>
+      </select>
+    </div>
     <button
       class="bg-linear-to-br from-(--primary) to-[#7c3aed] text-white rounded-full px-4 py-2 shadow-lg hover:-translate-y-0.5 hover:brightness-105 transition-all md:w-full font-semibold"
       type="button" *ngIf="canCreateGroup" (click)="openCreate()">Add group</button>
@@ -100,16 +111,19 @@
   </div>
 
   <!-- Pagination -->
-  <div class="flex justify-center items-center gap-4 mt-6 text-sm" *ngIf="meta && meta.last_page > 1">
-    <button (click)="changePage(meta.current_page - 1)" [disabled]="meta.current_page === 1"
-        class="px-3 py-1 rounded-lg border border-(--glass-border) bg-(--glass) hover:bg-(--primary) hover:text-white disabled:opacity-50 disabled:hover:bg-(--glass) disabled:hover:text-(--text) transition-all">
-        Previous
-    </button>
-    <span class="text-(--muted)">Page {{ meta.current_page }} of {{ meta.last_page }}</span>
-    <button (click)="changePage(meta.current_page + 1)" [disabled]="meta.current_page === meta.last_page"
-        class="px-3 py-1 rounded-lg border border-(--glass-border) bg-(--glass) hover:bg-(--primary) hover:text-white disabled:opacity-50 disabled:hover:bg-(--glass) disabled:hover:text-(--text) transition-all">
-        Next
-    </button>
+  <div
+    class="max-w-[1100px] mx-auto flex justify-between items-center mt-4 gap-3 bg-(--glass) border border-(--glass-border) p-2.5 rounded-xl max-[450px]:flex-col max-[450px]:items-center"
+    *ngIf="lastPage > 1 || total">
+    <div class="text-(--muted) text-sm">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
+    <div class="inline-flex items-center gap-2.5">
+      <button
+        class="bg-(--glass) border border-(--glass-border) px-3.5 py-1.5 rounded-full cursor-pointer text-(--text) shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+        [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
+      <span class="font-bold">Page {{ page }} / {{ lastPage }}</span>
+      <button
+        class="bg-(--glass) border border-(--glass-border) px-3.5 py-1.5 rounded-full cursor-pointer text-(--text) shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+        [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
+    </div>
   </div>
 
 </section>
@@ -163,7 +177,9 @@
           class="text-red-500 mr-1">*</span>Name</label>
       <input
         class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
-        type="text" [(ngModel)]="groupForm.name" placeholder="Group name" />
+        [class.border-red-500]="groupErrors.name"
+        type="text" [(ngModel)]="groupForm.name" placeholder="Group name" (ngModelChange)="onGroupInputChange('name')" />
+      <p class="text-sm text-red-500 mt-1" *ngIf="groupErrors.name">{{ groupErrors.name }}</p>
     </div>
 
     <div class="block">
@@ -171,14 +187,18 @@
           class="text-red-500 mr-1">*</span>Subject</label>
       <input
         class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
-        type="text" [(ngModel)]="groupForm.subject" placeholder="Subject" />
+        [class.border-red-500]="groupErrors.subject"
+        type="text" [(ngModel)]="groupForm.subject" placeholder="Subject" (ngModelChange)="onGroupInputChange('subject')" />
+      <p class="text-sm text-red-500 mt-1" *ngIf="groupErrors.subject">{{ groupErrors.subject }}</p>
     </div>
 
     <div class="block">
       <label class="block mb-2 text-sm font-medium text-(--muted)">Description</label>
       <textarea
         class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
-        rows="3" [(ngModel)]="groupForm.description" placeholder="Optional description"></textarea>
+        [class.border-red-500]="groupErrors.description"
+        rows="3" [(ngModel)]="groupForm.description" placeholder="Optional description" (ngModelChange)="onGroupInputChange('description')"></textarea>
+      <p class="text-sm text-red-500 mt-1" *ngIf="groupErrors.description">{{ groupErrors.description }}</p>
     </div>
 
     <div class="block" *ngIf="panelMode === 'create'">
@@ -220,7 +240,7 @@
       <button
         class="bg-linear-to-br from-(--primary) to-[#7c3aed] text-white rounded-full px-4 py-2 shadow-lg hover:-translate-y-0.5 hover:brightness-105 transition-all font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
         type="button" (click)="submitGroup()"
-        [disabled]="processing || !groupForm.name || !groupForm.subject || (panelMode === 'create' && !groupForm.scheduleDays.length)">
+        [disabled]="processing || groupErrors.name || groupErrors.subject || groupErrors.description || !groupForm.name || !groupForm.subject || (panelMode === 'create' && !groupForm.scheduleDays.length)">
         {{ panelMode === 'edit' ? 'Save changes' : 'Create' }}
       </button>
     </div>

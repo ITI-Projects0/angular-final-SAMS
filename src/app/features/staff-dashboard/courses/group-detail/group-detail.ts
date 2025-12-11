@@ -61,6 +61,7 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
   panelMode: 'lesson' | null = null;
   processing = false;
   lessonForm = { title: '', description: '', scheduled_at: '' };
+  lessonErrors = { title: '', description: '', scheduled_at: '' };
   lessonError = '';
 
   // Pagination
@@ -118,6 +119,7 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
       description: '',
       scheduled_at: this.defaultDateTime()
     };
+    this.lessonErrors = { title: '', description: '', scheduled_at: '' };
     this.lessonError = '';
     this.panelMode = 'lesson';
     this.panelOpen = true;
@@ -135,6 +137,7 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
     this.panelMode = null;
     this.processing = false;
     this.lessonError = '';
+    this.lessonErrors = { title: '', description: '', scheduled_at: '' };
   }
 
   @HostListener('document:keydown.escape')
@@ -145,25 +148,18 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
   }
 
   submitLesson(): void {
-    if (!this.groupId || this.processing || !this.lessonForm.title || !this.lessonForm.description) {
+    if (!this.groupId || this.processing) {
+      return;
+    }
+
+    if (!this.validateLessonForm()) {
+      this.cdr.detectChanges();
       return;
     }
 
     const trimmedTitle = this.lessonForm.title.trim();
     const trimmedDesc = this.lessonForm.description.trim();
     const scheduledAt = this.lessonForm.scheduled_at;
-
-    if (!trimmedTitle || !trimmedDesc) {
-      this.lessonError = 'Title and description are required.';
-      this.cdr.detectChanges();
-      return;
-    }
-
-    if (!scheduledAt || !this.isScheduleValid(scheduledAt)) {
-      this.lessonError = 'Please choose a date/time that is today or later.';
-      this.cdr.detectChanges();
-      return;
-    }
 
     this.lessonError = '';
     this.processing = true;
@@ -265,28 +261,37 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (res) => {
-          // LessonResource collection usually returns { data: [...], meta: { ... } }
-          // But if wrapped in success: { data: { data: [...], meta: ... } } ?
-          // Let's assume standard Laravel Resource response structure
-          // If res is the full response body
+          // Normalize possible response shapes and pagination meta
+          const payload = res?.data ?? res;
+          const lessonsWrapper = payload?.data ?? payload ?? [];
+          const lessonsList = Array.isArray(lessonsWrapper) ? lessonsWrapper : (lessonsWrapper.data ?? []);
 
-          const data = res.data || res; // Outer wrapper
-
-          // Check for pagination meta
-          const meta = res.meta || (res.data && res.data.meta);
-          if (meta) {
+          const paginationSource =
+            res?.meta?.pagination ??
+            res?.pagination ??
+            res?.meta ??
+            payload?.meta?.pagination ??
+            payload?.meta ??
+            null;
+          if (paginationSource) {
+            const total = paginationSource.total ?? lessonsList.length;
+            const perPage = paginationSource.per_page ?? 10;
+            const lastPage = paginationSource.last_page ?? Math.max(Math.ceil(total / perPage) || 1, 1);
             this.lessonsMeta = {
-              current_page: meta.current_page,
-              last_page: meta.last_page,
-              total: meta.total,
-              per_page: meta.per_page
+              current_page: paginationSource.current_page ?? page,
+              last_page: lastPage,
+              total,
+              per_page: perPage
             };
           } else {
-            // Fallback if meta is missing (e.g. not paginated or different structure)
-            this.lessonsMeta = null;
+            // Fallback: no meta; treat as single page
+            this.lessonsMeta = {
+              current_page: page,
+              last_page: 1,
+              total: lessonsList.length,
+              per_page: lessonsList.length || 1
+            };
           }
-
-          const lessonsList = Array.isArray(data) ? data : (data.data || []);
 
           this.lessons = lessonsList.map((lesson: any) => ({
             id: lesson.id,
@@ -315,6 +320,10 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
     this.loadLessons(page);
   }
 
+  onLessonInputChange(field: 'title' | 'description' | 'scheduled_at'): void {
+    this.validateLessonForm();
+  }
+
   private defaultDateTime(): string {
     const now = new Date();
     now.setMinutes(0);
@@ -336,6 +345,38 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
     return !!this.lessonForm.title.trim() &&
       !!this.lessonForm.description.trim() &&
       !!this.lessonForm.scheduled_at &&
+      !this.lessonErrors.title &&
+      !this.lessonErrors.description &&
+      !this.lessonErrors.scheduled_at &&
       this.isScheduleValid(this.lessonForm.scheduled_at);
+  }
+
+  private validateLessonForm(): boolean {
+    this.lessonErrors = { title: '', description: '', scheduled_at: '' };
+    const title = this.lessonForm.title?.trim() ?? '';
+    const description = this.lessonForm.description?.trim() ?? '';
+    const scheduledAt = this.lessonForm.scheduled_at;
+
+    this.lessonForm = { ...this.lessonForm, title, description };
+
+    if (!title) {
+      this.lessonErrors.title = 'Title is required.';
+    } else if (title.length < 3) {
+      this.lessonErrors.title = 'Title must be at least 3 characters.';
+    }
+
+    if (!description) {
+      this.lessonErrors.description = 'Description is required.';
+    } else if (description.length < 5) {
+      this.lessonErrors.description = 'Description must be at least 5 characters.';
+    }
+
+    if (!scheduledAt) {
+      this.lessonErrors.scheduled_at = 'Schedule date/time is required.';
+    } else if (!this.isScheduleValid(scheduledAt)) {
+      this.lessonErrors.scheduled_at = 'Please choose a date/time that is today or later.';
+    }
+
+    return !this.lessonErrors.title && !this.lessonErrors.description && !this.lessonErrors.scheduled_at;
   }
 }

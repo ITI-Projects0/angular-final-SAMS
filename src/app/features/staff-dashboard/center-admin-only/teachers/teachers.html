@@ -114,18 +114,23 @@
     <div class="field">
       <label><span class="required">*</span>Name</label>
       <input list="staff-name-suggestions" class="input-control" type="text" [(ngModel)]="form.name"
-        placeholder="Full name" />
+        placeholder="Full name" (ngModelChange)="onFormChange()" [class.input-error]="formErrors.name" />
+      <p class="error-text" *ngIf="formErrors.name">{{ formErrors.name }}</p>
       <datalist id="staff-name-suggestions">
         <option *ngFor="let name of staffNames" [value]="name"></option>
       </datalist>
     </div>
     <div class="field">
       <label><span class="required">*</span>Email</label>
-      <input class="input-control" type="email" [(ngModel)]="form.email" placeholder="Email address" />
+      <input class="input-control" type="email" [(ngModel)]="form.email" placeholder="Email address"
+        (ngModelChange)="onFormChange()" [class.input-error]="formErrors.email" />
+      <p class="error-text" *ngIf="formErrors.email">{{ formErrors.email }}</p>
     </div>
     <div class="field">
       <label>Phone</label>
-      <input class="input-control" type="text" [(ngModel)]="form.phone" placeholder="Optional phone" />
+      <input class="input-control" type="text" [(ngModel)]="form.phone" placeholder="Optional phone"
+        (ngModelChange)="onFormChange()" [class.input-error]="formErrors.phone" />
+      <p class="error-text" *ngIf="formErrors.phone">{{ formErrors.phone }}</p>
     </div>
     <div class="field" *ngIf="panelMode === 'create'">
       <label>Role</label>
@@ -137,7 +142,8 @@
     </div>
     <p class="error-text" *ngIf="saveError">{{ saveError }}</p>
     <div class="panel-actions sticky-footer">
-      <button class="btn-primary" type="button" (click)="submitForm()" [disabled]="processing || !canSubmitForm">
+      <button class="btn-primary" type="button" (click)="submitForm()"
+        [disabled]="processing || !canSubmitForm">
         {{ panelMode === 'create' ? 'Create' : 'Save changes' }}
       </button>
       <button class="btn-danger" type="button" *ngIf="panelMode === 'edit'" (click)="deleteSelected()"

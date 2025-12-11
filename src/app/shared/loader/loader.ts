@@ -53,7 +53,7 @@ export class LoaderComponent {
           @if (loaderService.message()) {
             <p class="loader-message">{{ loaderService.message() }}</p>
           } @else {
-            <p class="loader-message">جاري التحميل...</p>
+            <p class="loader-message">Loading...</p>
           }
 
           <!-- Animated Dots -->

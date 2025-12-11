@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AiService } from '../../core/services/ai.service';
 import { TeacherService } from '../../core/services/teacher.service';
@@ -28,7 +28,8 @@ export class CenterAiPanelComponent implements OnInit {
   constructor(
     private ai: AiService,
     private teacherService: TeacherService,
-    private tokenStorage: TokenStorageService
+    private tokenStorage: TokenStorageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -54,9 +55,11 @@ export class CenterAiPanelComponent implements OnInit {
               name: g.name || g.title || `Group #${g.id}`
             }))
           : [];
+        this.safeDetectChanges();
       },
       error: () => {
         this.groups = [];
+        this.safeDetectChanges();
       }
     });
   }
@@ -64,14 +67,17 @@ export class CenterAiPanelComponent implements OnInit {
   fetchInsights(): void {
     this.insightsError = '';
     this.loadingInsights = true;
+    this.safeDetectChanges();
     this.ai.centerInsights(this.cleanScope()).subscribe({
       next: (res) => {
         this.insights = res.insights || '';
         this.loadingInsights = false;
+        this.safeDetectChanges();
       },
       error: () => {
         this.insightsError = 'Failed to fetch insights. Try adjusting the filters.';
         this.loadingInsights = false;
+        this.safeDetectChanges();
       }
     });
   }
@@ -79,14 +85,17 @@ export class CenterAiPanelComponent implements OnInit {
   fetchForecast(): void {
     this.forecastError = '';
     this.loadingForecast = true;
+    this.safeDetectChanges();
     this.ai.attendanceForecast(this.cleanScope()).subscribe({
       next: (res) => {
         this.forecast = res.forecast || '';
         this.loadingForecast = false;
+        this.safeDetectChanges();
       },
       error: () => {
         this.forecastError = 'Failed to generate forecast. Try again.';
         this.loadingForecast = false;
+        this.safeDetectChanges();
       }
     });
   }
@@ -97,5 +106,13 @@ export class CenterAiPanelComponent implements OnInit {
       class_id: class_id || undefined,
       group_id: group_id || undefined
     };
+  }
+
+  private safeDetectChanges(): void {
+    try {
+      this.cdr.detectChanges();
+    } catch {
+      // view might be destroyed; ignore
+    }
   }
 }

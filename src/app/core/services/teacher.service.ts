@@ -39,8 +39,16 @@ export class TeacherService {
   // Groups
   // ========================================
 
-  getGroups(page: number = 1): Observable<any> {
-    return this.api.get(`/groups?page=${page}`);
+  getGroups(page: number = 1, params?: Record<string, string | number | null | undefined>): Observable<any> {
+    let httpParams = new HttpParams().set('page', page);
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && key !== 'page') {
+          httpParams = httpParams.set(key, String(value));
+        }
+      });
+    }
+    return this.api.get('/groups', httpParams);
   }
 
   getGroup(id: number): Observable<any> {
@@ -134,8 +142,16 @@ export class TeacherService {
     return this.api.get('/center-admin/management/stats');
   }
 
-  getCenterGroups(page: number = 1): Observable<any> {
-    return this.api.get(`/center-admin/groups?page=${page}`);
+  getCenterGroups(page: number = 1, params?: Record<string, string | number | null | undefined>): Observable<any> {
+    let httpParams = new HttpParams().set('page', page);
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== null && value !== undefined && key !== 'page') {
+          httpParams = httpParams.set(key, String(value));
+        }
+      });
+    }
+    return this.api.get('/center-admin/groups', httpParams);
   }
 
   createTeacherManagedGroup(data: any): Observable<any> {

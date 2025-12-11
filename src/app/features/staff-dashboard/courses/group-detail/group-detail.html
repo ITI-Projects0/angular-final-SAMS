@@ -1,79 +1,79 @@
 <section
-  class="max-w-[1200px] p-8 bg-[var(--card)] rounded-3xl border border-[var(--glass-border)] shadow-2xl text-[var(--text)] animate-[fadeIn_0.4s_ease-out] md:p-5 mx-auto"
+  class="max-w-[1200px] p-8 bg-(--card) rounded-3xl border border-(--glass-border) shadow-2xl text-(--text) animate-[fadeIn_0.4s_ease-out] md:p-5 mx-auto"
   *ngIf="group; else loadingOrError">
-  <header class="flex flex-col gap-6 mb-10 pb-8 border-b border-[var(--glass-border)]">
+  <header class="flex flex-col gap-6 mb-10 pb-8 border-b border-(--glass-border)">
     <div>
-      <p class="uppercase tracking-[0.15em] text-xs font-semibold text-[var(--primary)]">Class overview</p>
+      <p class="uppercase tracking-[0.15em] text-xs font-semibold text-(--primary)">Class overview</p>
       <h1
-        class="text-[2.5rem] font-extrabold my-2 bg-gradient-to-br from-[var(--text)] to-[var(--muted)] bg-clip-text text-transparent md:text-3xl">
+        class="text-[2.5rem] font-extrabold my-2 bg-linear-to-br from-(--text) to-(--muted) bg-clip-text text-transparent md:text-3xl">
         {{ group.name }}</h1>
-      <p class="text-[var(--muted)] text-lg leading-relaxed">{{ group.description || 'No description provided.' }}</p>
+      <p class="text-(--muted) text-lg leading-relaxed">{{ group.description || 'No description provided.' }}</p>
     </div>
     <div class="flex gap-4 mt-4 md:flex-col md:w-full" *ngIf="canManageGroup">
       <button
-        class="bg-gradient-to-br from-[var(--primary)] to-[#7c3aed] text-white rounded-full px-6 py-2.5 shadow-lg hover:-translate-y-0.5 hover:brightness-110 transition-all font-semibold "
+        class="bg-linear-to-br from-(--primary) to-[#7c3aed] text-white rounded-full px-6 py-2.5 shadow-lg hover:-translate-y-0.5 hover:brightness-110 transition-all font-semibold "
         type="button" (click)="openLessonForm()">Add Lesson</button>
     </div>
-    <div class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6 mt-4 md:grid-cols-2 sm:grid-cols-1">
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr)) gap-6 mt-4 md:grid-cols-2 sm:grid-cols-1">
       <div
-        class="p-5 border border-[var(--glass-border)] rounded-2xl bg-[var(--glass)] hover:-translate-y-0.5 hover:shadow-md transition-all">
-        <p class="text-xs uppercase tracking-widest text-[var(--muted)] mb-2 block">Subject</p>
-        <span class="text-lg font-semibold text-[var(--text)]">{{ group.subject || 'General' }}</span>
+        class="p-5 border border-(--glass-border) rounded-2xl bg-(--glass) hover:-translate-y-0.5 hover:shadow-md transition-all">
+        <p class="text-xs uppercase tracking-widest text-(--muted) mb-2 block">Subject</p>
+        <span class="text-lg font-semibold text-(--text)">{{ group.subject || 'General' }}</span>
       </div>
       <div
-        class="p-5 border border-[var(--glass-border)] rounded-2xl bg-[var(--glass)] hover:-translate-y-0.5 hover:shadow-md transition-all">
-        <p class="text-xs uppercase tracking-widest text-[var(--muted)] mb-2 block">Teacher</p>
-        <span class="text-lg font-semibold text-[var(--text)]">{{ group.teacher?.name || 'Unassigned' }}</span>
+        class="p-5 border border-(--glass-border) rounded-2xl bg-(--glass) hover:-translate-y-0.5 hover:shadow-md transition-all">
+        <p class="text-xs uppercase tracking-widest text-(--muted) mb-2 block">Teacher</p>
+        <span class="text-lg font-semibold text-(--text)">{{ group.teacher?.name || 'Unassigned' }}</span>
       </div>
       <div
-        class="p-5 border border-[var(--glass-border)] rounded-2xl bg-[var(--glass)] hover:-translate-y-0.5 hover:shadow-md transition-all">
-        <p class="text-xs uppercase tracking-widest text-[var(--muted)] mb-2 block">Center</p>
-        <span class="text-lg font-semibold text-[var(--text)]">{{ group.center?.name || 'N/A' }}</span>
+        class="p-5 border border-(--glass-border) rounded-2xl bg-(--glass) hover:-translate-y-0.5 hover:shadow-md transition-all">
+        <p class="text-xs uppercase tracking-widest text-(--muted) mb-2 block">Center</p>
+        <span class="text-lg font-semibold text-(--text)">{{ group.center?.name || 'N/A' }}</span>
       </div>
       <div
-        class="p-5 border border-[var(--glass-border)] rounded-2xl bg-[var(--glass)] hover:-translate-y-0.5 hover:shadow-md transition-all">
-        <p class="text-xs uppercase tracking-widest text-[var(--muted)] mb-2 block">Schedule</p>
-        <span class="text-lg font-semibold text-[var(--text)]">{{ scheduleLabel }}</span>
+        class="p-5 border border-(--glass-border) rounded-2xl bg-(--glass) hover:-translate-y-0.5 hover:shadow-md transition-all">
+        <p class="text-xs uppercase tracking-widest text-(--muted) mb-2 block">Schedule</p>
+        <span class="text-lg font-semibold text-(--text)">{{ scheduleLabel }}</span>
       </div>
     </div>
   </header>
 
   <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
     <section
-      class="border border-[var(--glass-border)] rounded-[1.25rem] bg-[var(--card)] shadow-sm p-6 min-h-[300px] flex flex-col overflow-x-auto">
-      <header class="flex justify-between items-center mb-6 pb-4 border-b border-[var(--glass-border)]">
-        <h2 class="text-xl font-bold m-0 text-[var(--text)]">Students</h2>
+      class="border border-(--glass-border) rounded-[1.25rem] bg-(--card) shadow-sm p-6 min-h-[300px] flex flex-col overflow-x-auto">
+      <header class="flex justify-between items-center mb-6 pb-4 border-b border-(--glass-border)">
+        <h2 class="text-xl font-bold m-0 text-(--text)">Students</h2>
         <span
-          class="px-3 py-1 rounded-full bg-[var(--glass)] border border-[var(--glass-border)] text-sm font-semibold text-[var(--primary)]">{{
+          class="px-3 py-1 rounded-full bg-(--glass) border border-(--glass-border) text-sm font-semibold text-(--primary)">{{
           students.length }}</span>
       </header>
       <div *ngIf="loadingStudents"
-        class="p-12 rounded-2xl bg-[var(--glass)] border-2 border-dashed border-[var(--glass-border)] text-[var(--muted)] text-center text-base">
+        class="p-12 rounded-2xl bg-(--glass) border-2 border-dashed border-(--glass-border) text-(--muted) text-center text-base">
         Loading students...</div>
       <div *ngIf="!loadingStudents && !students.length"
-        class="p-12 rounded-2xl bg-[var(--glass)] border-2 border-dashed border-[var(--glass-border)] text-[var(--muted)] text-center text-base">
+        class="p-12 rounded-2xl bg-(--glass) border-2 border-dashed border-(--glass-border) text-(--muted) text-center text-base">
         No students assigned.</div>
       <div *ngIf="students.length" class="hidden md:block">
         <table class="w-full border-separate border-spacing-y-2">
           <thead>
             <tr>
-              <th class="px-4 py-3 text-left text-sm uppercase tracking-wider text-[var(--muted)] font-semibold">Name
+              <th class="px-4 py-3 text-left text-sm uppercase tracking-wider text-(--muted) font-semibold">Name
               </th>
-              <th class="px-4 py-3 text-left text-sm uppercase tracking-wider text-[var(--muted)] font-semibold">Email
+              <th class="px-4 py-3 text-left text-sm uppercase tracking-wider text-(--muted) font-semibold">Email
               </th>
-              <th class="px-4 py-3 text-left text-sm uppercase tracking-wider text-[var(--muted)] font-semibold">Joined
+              <th class="px-4 py-3 text-left text-sm uppercase tracking-wider text-(--muted) font-semibold">Joined
               </th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let student of students">
               <td
-                class="p-4 bg-[var(--glass)] border-y border-[var(--glass-border)] text-[var(--text)] text-[0.95rem] first:border-l first:rounded-l-xl first:font-medium">
+                class="p-4 bg-(--glass) border-y border-(--glass-border) text-(--text) text-[0.95rem] first:border-l first:rounded-l-xl first:font-medium">
                 {{ student.name }}</td>
-              <td class="p-4 bg-[var(--glass)] border-y border-[var(--glass-border)] text-[var(--text)] text-[0.95rem]">
+              <td class="p-4 bg-(--glass) border-y border-(--glass-border) text-(--text) text-[0.95rem]">
                 {{ student.email }}</td>
               <td
-                class="p-4 bg-[var(--glass)] border-y border-[var(--glass-border)] text-[var(--text)] text-[0.95rem] last:border-r last:rounded-r-xl">
+                class="p-4 bg-(--glass) border-y border-(--glass-border) text-(--text) text-[0.95rem] last:border-r last:rounded-r-xl">
                 {{ student.joined_at ? (student.joined_at | date:'mediumDate') : '—' }}</td>
             </tr>
           </tbody>
@@ -81,17 +81,17 @@
       </div>
       <div *ngIf="students.length" class="flex flex-col gap-3 md:hidden">
         <article *ngFor="let student of students"
-          class="p-4 bg-[var(--glass)] border border-[var(--glass-border)] rounded-xl text-[var(--text)]">
+          class="p-4 bg-(--glass) border border-(--glass-border) rounded-xl text-(--text)">
           <div class="flex justify-between items-start gap-3">
             <div>
               <p class="font-semibold text-base m-0">{{ student.name }}</p>
-              <p class="text-sm text-[var(--muted)] break-words">{{ student.email }}</p>
+              <p class="text-sm text-(--muted) wrap-break-word">{{ student.email }}</p>
             </div>
-            <span class="text-xs uppercase tracking-wide text-[var(--muted)]">{{ student.status }}</span>
+            <span class="text-xs uppercase tracking-wide text-(--muted)">{{ student.status }}</span>
           </div>
-          <div class="flex justify-between text-sm text-[var(--muted)] mt-3">
+          <div class="flex justify-between text-sm text-(--muted) mt-3">
             <span>Joined</span>
-            <span class="text-[var(--text)] font-medium">{{ student.joined_at ? (student.joined_at | date:'mediumDate')
+            <span class="text-(--text) font-medium">{{ student.joined_at ? (student.joined_at | date:'mediumDate')
               : '—' }}</span>
           </div>
         </article>
@@ -101,38 +101,38 @@
       <div class="flex justify-center items-center gap-4 mt-4 text-sm"
         *ngIf="studentsMeta && studentsMeta.last_page > 1">
         <button (click)="changeStudentPage(studentsMeta.current_page - 1)" [disabled]="studentsMeta.current_page === 1"
-          class="px-3 py-1 rounded-lg border border-[var(--glass-border)] bg-[var(--glass)] hover:bg-[var(--primary)] hover:text-white disabled:opacity-50 disabled:hover:bg-[var(--glass)] disabled:hover:text-[var(--text)] transition-all">
+          class="px-3 py-1 rounded-lg border border-(--glass-border) bg-(--glass) hover:bg-(--primary) hover:text-white disabled:opacity-50 disabled:hover:bg-(--glass) disabled:hover:text-(--text) transition-all">
           Previous
         </button>
-        <span class="text-[var(--muted)]">Page {{ studentsMeta.current_page }} of {{ studentsMeta.last_page }}</span>
+        <span class="text-(--muted)">Page {{ studentsMeta.current_page }} of {{ studentsMeta.last_page }}</span>
         <button (click)="changeStudentPage(studentsMeta.current_page + 1)"
           [disabled]="studentsMeta.current_page === studentsMeta.last_page"
-          class="px-3 py-1 rounded-lg border border-[var(--glass-border)] bg-[var(--glass)] hover:bg-[var(--primary)] hover:text-white disabled:opacity-50 disabled:hover:bg-[var(--glass)] disabled:hover:text-[var(--text)] transition-all">
+          class="px-3 py-1 rounded-lg border border-(--glass-border) bg-(--glass) hover:bg-(--primary) hover:text-white disabled:opacity-50 disabled:hover:bg-(--glass) disabled:hover:text-(--text) transition-all">
           Next
         </button>
       </div>
     </section>
 
     <section
-      class="border border-[var(--glass-border)] rounded-[1.25rem] bg-[var(--card)] shadow-sm p-6 min-h-[300px] flex flex-col overflow-x-auto">
-      <header class="flex justify-between items-center mb-6 pb-4 border-b border-[var(--glass-border)]">
-        <h2 class="text-xl font-bold m-0 text-[var(--text)]">Lessons</h2>
+      class="border border-(--glass-border) rounded-[1.25rem] bg-(--card) shadow-sm p-6 min-h-[300px] flex flex-col overflow-x-auto">
+      <header class="flex justify-between items-center mb-6 pb-4 border-b border-(--glass-border)">
+        <h2 class="text-xl font-bold m-0 text-(--text)">Lessons</h2>
         <span
-          class="px-3 py-1 rounded-full bg-[var(--glass)] border border-[var(--glass-border)] text-sm font-semibold text-[var(--primary)]">{{
+          class="px-3 py-1 rounded-full bg-(--glass) border border-(--glass-border) text-sm font-semibold text-(--primary)">{{
           lessonsMeta?.total || lessons.length }}</span>
       </header>
       <div *ngIf="loadingLessons"
-        class="p-12 rounded-2xl bg-[var(--glass)] border-2 border-dashed border-[var(--glass-border)] text-[var(--muted)] text-center text-base">
+        class="p-12 rounded-2xl bg-(--glass) border-2 border-dashed border-(--glass-border) text-(--muted) text-center text-base">
         Loading lessons...</div>
       <div *ngIf="!loadingLessons && !lessons.length"
-        class="p-12 rounded-2xl bg-[var(--glass)] border-2 border-dashed border-[var(--glass-border)] text-[var(--muted)] text-center text-base">
+        class="p-12 rounded-2xl bg-(--glass) border-2 border-dashed border-(--glass-border) text-(--muted) text-center text-base">
         No lessons scheduled.</div>
       <ul *ngIf="lessons.length" class="list-none m-0 p-0 flex flex-col gap-4">
         <li *ngFor="let lesson of lessons"
-          class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-[var(--glass)] border border-[var(--glass-border)] rounded-xl transition-all hover:translate-x-1 hover:border-[var(--primary)]">
+          class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between p-4 bg-(--glass) border border-(--glass-border) rounded-xl transition-all hover:translate-x-1 hover:border-(--primary)">
           <div>
-            <p class="font-semibold m-0 text-base text-[var(--text)]">{{ lesson.title }}</p>
-            <p class="text-[var(--muted)] text-[0.95rem]">{{ lesson.scheduled_at ? (lesson.scheduled_at | date:'medium')
+            <p class="font-semibold m-0 text-base text-(--text)">{{ lesson.title }}</p>
+            <p class="text-(--muted) text-[0.95rem]">{{ lesson.scheduled_at ? (lesson.scheduled_at | date:'medium')
               : 'Not scheduled' }}</p>
           </div>
           <div class="flex flex-col gap-2 sm:items-end sm:text-right w-full sm:w-auto">
@@ -140,7 +140,7 @@
               class="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-xs font-medium text-indigo-500 self-start sm:self-end">{{
               lesson.resources_count }} resources</span>
             <button type="button"
-              class="bg-[var(--card)] border border-[var(--glass-border)] px-4 py-1.5 rounded-full text-sm font-semibold text-[var(--text)] hover:border-[var(--primary)] hover:-translate-y-0.5 transition-all"
+              class="bg-(--card) border border-(--glass-border) px-4 py-1.5 rounded-full text-sm font-semibold text-(--text) hover:border-(--primary) hover:-translate-y-0.5 transition-all"
               (click)="viewLesson(lesson.id)">
               Open
             </button>
@@ -151,13 +151,13 @@
       <!-- Lessons Pagination -->
       <div class="flex justify-center items-center gap-4 mt-4 text-sm" *ngIf="lessonsMeta && lessonsMeta.last_page > 1">
         <button (click)="changeLessonPage(lessonsMeta.current_page - 1)" [disabled]="lessonsMeta.current_page === 1"
-          class="px-3 py-1 rounded-lg border border-[var(--glass-border)] bg-[var(--glass)] hover:bg-[var(--primary)] hover:text-white disabled:opacity-50 disabled:hover:bg-[var(--glass)] disabled:hover:text-[var(--text)] transition-all">
+          class="px-3 py-1 rounded-lg border border-(--glass-border) bg-(--glass) hover:bg-(--primary) hover:text-white disabled:opacity-50 disabled:hover:bg-(--glass) disabled:hover:text-(--text) transition-all">
           Previous
         </button>
-        <span class="text-[var(--muted)]">Page {{ lessonsMeta.current_page }} of {{ lessonsMeta.last_page }}</span>
+        <span class="text-(--muted)">Page {{ lessonsMeta.current_page }} of {{ lessonsMeta.last_page }}</span>
         <button (click)="changeLessonPage(lessonsMeta.current_page + 1)"
           [disabled]="lessonsMeta.current_page === lessonsMeta.last_page"
-          class="px-3 py-1 rounded-lg border border-[var(--glass-border)] bg-[var(--glass)] hover:bg-[var(--primary)] hover:text-white disabled:opacity-50 disabled:hover:bg-[var(--glass)] disabled:hover:text-[var(--text)] transition-all">
+          class="px-3 py-1 rounded-lg border border-(--glass-border) bg-(--glass) hover:bg-(--primary) hover:text-white disabled:opacity-50 disabled:hover:bg-(--glass) disabled:hover:text-(--text) transition-all">
           Next
         </button>
       </div>
@@ -168,52 +168,58 @@
 
 <ng-template #loadingOrError>
   <div
-    class="p-12 rounded-2xl bg-[var(--glass)] border-2 border-dashed border-[var(--glass-border)] text-[var(--muted)] text-center text-base"
+    class="p-12 rounded-2xl bg-(--glass) border-2 border-dashed border-(--glass-border) text-(--muted) text-center text-base"
     *ngIf="loadingGroup">Loading group...</div>
   <div
-    class="p-12 rounded-2xl bg-[var(--glass)] border-2 border-dashed border-[var(--glass-border)] text-[var(--muted)] text-center text-base"
+    class="p-12 rounded-2xl bg-(--glass) border-2 border-dashed border-(--glass-border) text-(--muted) text-center text-base"
     *ngIf="!loadingGroup">{{ errorMessage || 'Group not found.' }}</div>
 </ng-template>
 
 <div
   *ngIf="panelOpen"
-  class="fixed inset-0 bg-black/40 opacity-100 pointer-events-auto transition-opacity duration-200 z-[50] backdrop-blur-sm"
+  class="fixed inset-0 bg-black/40 opacity-100 pointer-events-auto transition-opacity duration-200 z-50 backdrop-blur-sm"
   (click)="closePanel()"></div>
 <div
-  class="fixed inset-y-0 right-0 w-full md:w-[min(420px,90vw)] bg-[var(--card)] border-l border-[var(--glass-border)] shadow-2xl transition-transform duration-300 p-6 flex flex-col gap-4 z-[70] h-screen"
+  class="fixed inset-y-0 right-0 w-[min(420px,90vw)] max-w-full bg-(--card) border-l border-(--glass-border) shadow-2xl transition-transform duration-300 p-6 flex flex-col gap-4 z-70 h-screen"
   [class.translate-x-full]="!panelOpen" [class.translate-x-0]="panelOpen" (click)="$event.stopPropagation()"
   *ngIf="panelMode">
-  <div class="flex justify-between items-center mb-6 pb-4 border-b border-[var(--glass-border)]">
+  <div class="flex justify-between items-center mb-6 pb-4 border-b border-(--glass-border)">
     <h3 class="m-0 text-xl font-bold">{{ panelTitle }}</h3>
     <button
-      class="border-none bg-white/5 w-8 h-8 rounded-full flex items-center justify-center text-base cursor-pointer text-[var(--text)] transition-all hover:bg-white/10"
+      class="border-none bg-white/5 w-8 h-8 rounded-full flex items-center justify-center text-base cursor-pointer text-(--text) transition-all hover:bg-white/10"
       type="button" (click)="closePanel()">X</button>
   </div>
 
   <div class="flex flex-col gap-5 flex-1 overflow-y-auto pb-4" *ngIf="panelMode === 'lesson'">
     <div class="block">
-      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Title <span class="text-red-500">*</span></label>
+      <label class="block mb-2 text-sm font-medium text-(--muted)">Title <span class="text-red-500">*</span></label>
       <input
-        class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all text-[0.95rem]"
-        type="text" [(ngModel)]="lessonForm.title" placeholder="Lesson title" />
+        class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all text-[0.95rem]"
+        [class.border-red-500]="lessonErrors.title"
+        type="text" [(ngModel)]="lessonForm.title" placeholder="Lesson title" (ngModelChange)="onLessonInputChange('title')" />
+      <p class="text-sm text-red-500 mt-1" *ngIf="lessonErrors.title">{{ lessonErrors.title }}</p>
     </div>
     <div class="block">
-      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Description <span class="text-red-500">*</span></label>
+      <label class="block mb-2 text-sm font-medium text-(--muted)">Description <span class="text-red-500">*</span></label>
       <textarea
-        class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all text-[0.95rem]"
-        [(ngModel)]="lessonForm.description" rows="3" placeholder="Optional description"></textarea>
+        class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all text-[0.95rem]"
+        [class.border-red-500]="lessonErrors.description"
+        [(ngModel)]="lessonForm.description" rows="3" placeholder="Optional description" (ngModelChange)="onLessonInputChange('description')"></textarea>
+      <p class="text-sm text-red-500 mt-1" *ngIf="lessonErrors.description">{{ lessonErrors.description }}</p>
     </div>
     <div class="block">
-      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Scheduled at <span class="text-red-500">*</span></label>
+      <label class="block mb-2 text-sm font-medium text-(--muted)">Scheduled at <span class="text-red-500">*</span></label>
       <input
-        class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all text-[0.95rem]"
-        type="datetime-local" [(ngModel)]="lessonForm.scheduled_at" [min]="minDateTime" />
+        class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all text-[0.95rem]"
+        [class.border-red-500]="lessonErrors.scheduled_at"
+        type="datetime-local" [(ngModel)]="lessonForm.scheduled_at" [min]="minDateTime" (ngModelChange)="onLessonInputChange('scheduled_at')" />
+      <p class="text-sm text-red-500 mt-1" *ngIf="lessonErrors.scheduled_at">{{ lessonErrors.scheduled_at }}</p>
     </div>
     <p class="text-sm text-red-500 m-0" *ngIf="lessonError">{{ lessonError }}</p>
     <div
-      class="mt-auto sticky bottom-0 pt-4 bg-gradient-to-t from-[var(--card)] via-[var(--card)] to-transparent border-t border-[var(--glass-border)] flex justify-end">
+      class="mt-auto sticky bottom-0 pt-4 bg-linear-to-t from-(--card) via-(--card) to-transparent border-t border-(--glass-border) flex justify-end">
       <button
-        class="bg-gradient-to-br from-[var(--primary)] to-[#7c3aed] text-white rounded-full px-6 py-2.5 shadow-lg hover:-translate-y-0.5 hover:brightness-110 transition-all font-semibold disabled:opacity-60 disabled:cursor-not-allowed disabled:grayscale-[0.5]"
+        class="bg-linear-to-br from-(--primary) to-[#7c3aed] text-white rounded-full px-6 py-2.5 shadow-lg hover:-translate-y-0.5 hover:brightness-110 transition-all font-semibold disabled:opacity-60 disabled:cursor-not-allowed disabled:grayscale-[0.5]"
         type="button" (click)="submitLesson()" [disabled]="processing || !lessonFormValid">Create Lesson</button>
     </div>
   </div>

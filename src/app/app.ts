@@ -35,7 +35,7 @@ export class App implements OnInit, OnDestroy {
       if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
         // Calculate remaining time to reach minimum 1 second
         const elapsed = Date.now() - this.navigationStartTime;
-        const minDuration = 1000; // 1 second minimum
+        const minDuration = 2000; // 1 second minimum
         const remainingTime = Math.max(0, minDuration - elapsed);
 
         // Hide loader after minimum duration for dashboard routes

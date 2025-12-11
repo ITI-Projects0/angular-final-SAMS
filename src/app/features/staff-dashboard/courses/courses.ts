@@ -36,12 +36,17 @@ export class StaffGroups implements OnInit {
 
   loading = false;
   searchTerm = '';
+  page = 1;
+  perPage = 10;
+  total = 0;
+  lastPage = 1;
   panelOpen = false;
   panelMode: 'info' | 'create' | 'edit' = 'info';
   selectedGroup: StaffGroupRow | null = null;
   groups: StaffGroupRow[] = [];
   processing = false;
   saveError = '';
+  groupErrors = { name: '', subject: '', description: '' };
   groupForm = {
     name: '',
     subject: '',
@@ -67,14 +72,15 @@ export class StaffGroups implements OnInit {
     return this.roles.some((role) => role === 'teacher' || role === 'assistant' || role === 'center_admin');
   }
 
-  // Pagination
-  meta: any = null;
-
   private loadGroups(page: number = 1): void {
     this.loading = true;
+    const params = {
+      per_page: this.perPage,
+      search: this.searchTerm.trim() || undefined
+    };
 
     if (this.isCenterAdmin && !this.centerAccessUnavailable) {
-      this.staffService.getCenterGroups(page).subscribe({
+      this.staffService.getCenterGroups(page, params).subscribe({
         next: (res) => {
           this.groups = this.mapGroups(res);
           this.finishLoading();
@@ -91,11 +97,11 @@ export class StaffGroups implements OnInit {
       return;
     }
 
-    this.loadTeacherGroups(page);
+    this.loadTeacherGroups(page, params);
   }
 
-  private loadTeacherGroups(page: number = 1): void {
-    this.staffService.getGroups(page).subscribe({
+  private loadTeacherGroups(page: number = 1, params?: any): void {
+    this.staffService.getGroups(page, params).subscribe({
       next: (res) => {
         this.groups = this.mapGroups(res);
         this.finishLoading();
@@ -105,29 +111,32 @@ export class StaffGroups implements OnInit {
   }
 
   changePage(page: number): void {
-    if (page < 1 || (this.meta && page > this.meta.last_page)) return;
+    if (page < 1 || page > this.lastPage) return;
+    this.page = page;
     this.loadGroups(page);
+  }
+
+  changePerPage(value: number): void {
+    this.perPage = value;
+    this.page = 1;
+    this.loadGroups(1);
+  }
+
+  onSearchChange(): void {
+    this.page = 1;
+    this.loadGroups(1);
   }
 
   private mapGroups(response: any): StaffGroupRow[] {
     const payload = response?.data ?? response; // The paginator object or wrapper
-    
-    // If payload is the paginator (has current_page), use it for meta
-    if (payload && payload.current_page) {
-        this.meta = {
-            current_page: payload.current_page,
-            last_page: payload.last_page,
-            total: payload.total,
-            per_page: payload.per_page
-        };
-    } else if (payload.meta) {
-        // Sometimes meta is separate
-        this.meta = payload.meta;
-    } else {
-        this.meta = null;
-    }
-
+    const pagination = response?.meta?.pagination ?? response?.pagination ?? payload?.meta ?? {};
     const items = payload?.data ?? payload ?? [];
+
+    const totalFromResponse = pagination.total ?? payload?.total ?? (Array.isArray(items) ? items.length : this.groups.length);
+    this.page = pagination.current_page ?? this.page;
+    this.perPage = pagination.per_page ?? this.perPage;
+    this.total = totalFromResponse;
+    this.lastPage = pagination.last_page ?? payload?.last_page ?? Math.max(Math.ceil(this.total / this.perPage) || 1, 1);
 
     return Array.isArray(items) ? items.map((g: any) => ({
       id: g.id,
@@ -154,16 +163,7 @@ export class StaffGroups implements OnInit {
   }
 
   get filteredGroups(): StaffGroupRow[] {
-    const q = this.searchTerm.toLowerCase().trim();
-    if (!q) {
-      return this.groups;
-    }
-
-    return this.groups.filter((group) =>
-      [group.title, group.subject, group.teacher, group.center]
-        .filter(Boolean)
-        .some((value) => value.toLowerCase().includes(q))
-    );
+    return this.groups;
   }
 
   openInfo(group: StaffGroupRow): void {
@@ -177,6 +177,7 @@ export class StaffGroups implements OnInit {
     this.selectedGroup = null;
     this.panelMode = 'info';
     this.processing = false;
+    this.safeDetectChanges();
   }
 
   @HostListener('document:keydown.escape')
@@ -196,6 +197,7 @@ export class StaffGroups implements OnInit {
       schedule_time: '16:00',
       sessions_count: 8
     };
+    this.groupErrors = { name: '', subject: '', description: '' };
     this.panelMode = 'create';
     this.panelOpen = true;
   }
@@ -219,6 +221,7 @@ export class StaffGroups implements OnInit {
       schedule_time: raw.schedule_time ?? '16:00',
       sessions_count: raw.sessions_count ?? 8
     };
+    this.groupErrors = { name: '', subject: '', description: '' };
     this.selectedGroup = target;
     this.panelMode = 'edit';
     this.panelOpen = true;
@@ -236,7 +239,12 @@ export class StaffGroups implements OnInit {
   }
 
   submitGroup(): void {
-    if (!this.canCreateGroup || this.processing || !this.groupForm.name || !this.groupForm.subject) {
+    if (!this.canCreateGroup || this.processing) {
+      return;
+    }
+
+    if (!this.validateGroupForm()) {
+      this.cdr.detectChanges();
       return;
     }
 
@@ -331,6 +339,7 @@ export class StaffGroups implements OnInit {
               message: `${target.title} has been removed.`,
               tone: 'success'
             });
+            this.safeDetectChanges();
           },
           error: (err) => {
             this.processing = false;
@@ -355,5 +364,56 @@ export class StaffGroups implements OnInit {
   private finishLoading(): void {
     this.loading = false;
     this.cdr.detectChanges();
+  }
+
+  onGroupInputChange(field: 'name' | 'subject' | 'description'): void {
+    this.validateGroupForm();
+  }
+
+  private validateGroupForm(): boolean {
+    this.groupErrors = { name: '', subject: '', description: '' };
+    const name = this.groupForm.name?.trim() ?? '';
+    const subject = this.groupForm.subject?.trim() ?? '';
+    const description = this.groupForm.description?.trim() ?? '';
+
+    this.groupForm = { ...this.groupForm, name, subject, description };
+
+    if (!name) {
+      this.groupErrors.name = 'Name is required.';
+    } else if (name.length < 3) {
+      this.groupErrors.name = 'Name must be at least 3 characters.';
+    }
+
+    if (!subject) {
+      this.groupErrors.subject = 'Subject is required.';
+    } else if (subject.length < 2) {
+      this.groupErrors.subject = 'Subject must be at least 2 characters.';
+    }
+
+    if (description) {
+      if (description.length < 10) {
+        this.groupErrors.description = 'Description must be at least 10 characters.';
+      } else if (description.length > 500) {
+        this.groupErrors.description = 'Description must be 500 characters or less.';
+      }
+    }
+
+    return !this.groupErrors.name && !this.groupErrors.subject && !this.groupErrors.description;
+  }
+
+  private safeDetectChanges(): void {
+    try {
+      this.cdr.detectChanges();
+    } catch {
+      // View might be destroyed; ignore
+    }
+  }
+
+  get rangeStart(): number {
+    return this.total === 0 ? 0 : (this.page - 1) * this.perPage + 1;
+  }
+
+  get rangeEnd(): number {
+    return Math.min(this.rangeStart + this.groups.length - 1, this.total);
   }
 }

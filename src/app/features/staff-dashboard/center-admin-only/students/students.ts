@@ -31,6 +31,8 @@ export class Students implements OnInit {
   panelMode: 'info' | 'create-student' | 'create-parent' | 'edit-student' = 'info';
   studentForm = { name: '', email: '', phone: '', groupId: '' };
   parentForm = { name: '', email: '', phone: '', studentId: '' };
+  studentErrors = { name: '', email: '', phone: '', groupId: '' };
+  parentErrors = { name: '', email: '', phone: '', studentId: '' };
   processing = false;
   saveError = '';
   page = 1;
@@ -215,6 +217,8 @@ export class Students implements OnInit {
     this.panelOpen = false;
     this.selectedStudent = null;
     this.panelMode = 'info';
+    this.studentErrors = { name: '', email: '', phone: '', groupId: '' };
+    this.parentErrors = { name: '', email: '', phone: '', studentId: '' };
   }
 
   onSearchChange(value: string): void {
@@ -332,6 +336,7 @@ export class Students implements OnInit {
   openCreateStudent(): void {
     this.groupFilter = '';
     this.studentForm = { name: '', email: '', phone: '', groupId: this.filteredGroupsForSelect[0]?.id ?? '' };
+    this.studentErrors = { name: '', email: '', phone: '', groupId: '' };
     this.panelMode = 'create-student';
     this.panelOpen = true;
   }
@@ -339,6 +344,7 @@ export class Students implements OnInit {
   openCreateParent(): void {
     this.studentFilter = '';
     this.parentForm = { name: '', email: '', phone: '', studentId: this.filteredStudentsForSelect[0]?.id ?? '' };
+    this.parentErrors = { name: '', email: '', phone: '', studentId: '' };
     this.panelMode = 'create-parent';
     this.panelOpen = true;
   }
@@ -352,19 +358,24 @@ export class Students implements OnInit {
       phone: student.phone ?? '',
       groupId: ''
     };
+    this.studentErrors = { name: '', email: '', phone: '', groupId: '' };
     this.panelMode = 'edit-student';
     this.panelOpen = true;
   }
 
   submitStudent(): void {
-    if (this.processing || !this.studentForm.name || !this.studentForm.email) {
+    if (this.processing) {
+      return;
+    }
+    if (!this.validateStudentForm()) {
+      this.cdr.detectChanges();
       return;
     }
     this.saveError = '';
     const payload: any = {
-      name: this.studentForm.name,
-      email: this.studentForm.email,
-      phone: this.studentForm.phone,
+      name: this.studentForm.name.trim(),
+      email: this.studentForm.email.trim(),
+      phone: this.studentForm.phone.trim() || null,
       role: 'student',
       group_id: this.studentForm.groupId
     };
@@ -374,7 +385,7 @@ export class Students implements OnInit {
         ? this.staffService.updateManagementUser(this.selectedStudent.id, {
           name: this.studentForm.name,
           email: this.studentForm.email,
-          phone: this.studentForm.phone
+          phone: this.studentForm.phone.trim() || null
         })
         : this.isCenterAdmin
           ? this.staffService.createManagementUser(payload)
@@ -409,14 +420,18 @@ export class Students implements OnInit {
   }
 
   submitParent(): void {
-    if (this.processing || !this.parentForm.name || !this.parentForm.email || !this.parentForm.studentId) {
+    if (this.processing) {
+      return;
+    }
+    if (!this.validateParentForm()) {
+      this.cdr.detectChanges();
       return;
     }
     this.saveError = '';
     const payload = {
-      name: this.parentForm.name,
-      email: this.parentForm.email,
-      phone: this.parentForm.phone,
+      name: this.parentForm.name.trim(),
+      email: this.parentForm.email.trim(),
+      phone: this.parentForm.phone.trim() || null,
       role: 'parent',
       student_id: this.parentForm.studentId
     };
@@ -499,5 +514,97 @@ export class Students implements OnInit {
       },
       onSecondary: () => this.feedback.closeModal()
     });
+  }
+
+  onStudentInputChange(): void {
+    this.validateStudentForm();
+  }
+
+  onParentInputChange(): void {
+    this.validateParentForm();
+  }
+
+  get canSubmitStudent(): boolean {
+    return this.validateStudentForm(false);
+  }
+
+  get canSubmitParent(): boolean {
+    return this.validateParentForm(false);
+  }
+
+  private validateStudentForm(updateErrors: boolean = true): boolean {
+    const errors = { name: '', email: '', phone: '', groupId: '' };
+    const name = this.studentForm.name?.trim() ?? '';
+    const email = this.studentForm.email?.trim() ?? '';
+    const phone = this.studentForm.phone?.trim() ?? '';
+    const groupId = this.studentForm.groupId;
+
+    if (!name) {
+      errors.name = 'Name is required.';
+    } else if (name.length < 3) {
+      errors.name = 'Name must be at least 3 characters.';
+    }
+
+    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!email) {
+      errors.email = 'Email is required.';
+    } else if (!emailPattern.test(email)) {
+      errors.email = 'Enter a valid email.';
+    }
+
+    if (phone) {
+      const phonePattern = /^(010|011|012|015)[0-9]{8}$/;
+      if (!phonePattern.test(phone)) {
+        errors.phone = 'Phone must start with 010, 011, 012, or 015 and be 11 digits.';
+      }
+    }
+
+    if (this.panelMode === 'create-student' && !groupId) {
+      errors.groupId = 'Group is required.';
+    }
+
+    if (updateErrors) {
+      this.studentErrors = errors;
+    }
+
+    return !errors.name && !errors.email && !errors.phone && !errors.groupId;
+  }
+
+  private validateParentForm(updateErrors: boolean = true): boolean {
+    const errors = { name: '', email: '', phone: '', studentId: '' };
+    const name = this.parentForm.name?.trim() ?? '';
+    const email = this.parentForm.email?.trim() ?? '';
+    const phone = this.parentForm.phone?.trim() ?? '';
+    const studentId = this.parentForm.studentId;
+
+    if (!name) {
+      errors.name = 'Name is required.';
+    } else if (name.length < 3) {
+      errors.name = 'Name must be at least 3 characters.';
+    }
+
+    const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!email) {
+      errors.email = 'Email is required.';
+    } else if (!emailPattern.test(email)) {
+      errors.email = 'Enter a valid email.';
+    }
+
+    if (phone) {
+      const phonePattern = /^(010|011|012|015)[0-9]{8}$/;
+      if (!phonePattern.test(phone)) {
+        errors.phone = 'Phone must start with 010, 011, 012, or 015 and be 11 digits.';
+      }
+    }
+
+    if (!studentId) {
+      errors.studentId = 'Linked student is required.';
+    }
+
+    if (updateErrors) {
+      this.parentErrors = errors;
+    }
+
+    return !errors.name && !errors.email && !errors.phone && !errors.studentId;
   }
 }

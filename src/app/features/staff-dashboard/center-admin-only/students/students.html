@@ -78,15 +78,21 @@
     <p class="field-hint">Fields marked with * are required.</p>
     <div class="field">
       <label><span class="required">*</span>Name</label>
-      <input class="input-control" type="text" [(ngModel)]="studentForm.name" placeholder="Full name" />
+      <input class="input-control" type="text" [(ngModel)]="studentForm.name" placeholder="Full name"
+        (ngModelChange)="onStudentInputChange()" [class.input-error]="studentErrors.name" />
+      <p class="error-text" *ngIf="studentErrors.name">{{ studentErrors.name }}</p>
     </div>
     <div class="field">
       <label><span class="required">*</span>Email</label>
-      <input class="input-control" type="email" [(ngModel)]="studentForm.email" placeholder="Email address" />
+      <input class="input-control" type="email" [(ngModel)]="studentForm.email" placeholder="Email address"
+        (ngModelChange)="onStudentInputChange()" [class.input-error]="studentErrors.email" />
+      <p class="error-text" *ngIf="studentErrors.email">{{ studentErrors.email }}</p>
     </div>
     <div class="field">
       <label>Phone</label>
-      <input class="input-control" type="text" [(ngModel)]="studentForm.phone" placeholder="Optional phone" />
+      <input class="input-control" type="text" [(ngModel)]="studentForm.phone" placeholder="Optional phone"
+        (ngModelChange)="onStudentInputChange()" [class.input-error]="studentErrors.phone" />
+      <p class="error-text" *ngIf="studentErrors.phone">{{ studentErrors.phone }}</p>
     </div>
     <div class="field" *ngIf="panelMode === 'create-student'">
       <label>Group</label>
@@ -97,14 +103,16 @@
         [(ngModel)]="groupFilter"
         style="margin-bottom: 0.5rem;"
       />
-      <select class="input-control" [(ngModel)]="studentForm.groupId">
+      <select class="input-control" [(ngModel)]="studentForm.groupId" (ngModelChange)="onStudentInputChange()"
+        [class.input-error]="studentErrors.groupId">
         <option *ngFor="let group of filteredGroupsForSelect" [value]="group.id">
           {{ group.name }}{{ group.subject ? ' (' + group.subject + ')' : '' }}
         </option>
       </select>
+      <p class="error-text" *ngIf="studentErrors.groupId">{{ studentErrors.groupId }}</p>
     </div>
     <div class="panel-actions sticky-footer">
-      <button class="btn-primary" type="button" (click)="submitStudent()" [disabled]="processing || !studentForm.name || !studentForm.email">
+      <button class="btn-primary" type="button" (click)="submitStudent()" [disabled]="processing || !canSubmitStudent">
         {{ panelMode === 'create-student' ? 'Create' : 'Save changes' }}
       </button>
       <button
@@ -123,15 +131,21 @@
     <p class="field-hint">Fields marked with * are required.</p>
     <div class="field">
       <label><span class="required">*</span>Name</label>
-      <input class="input-control" type="text" [(ngModel)]="parentForm.name" placeholder="Full name" />
+      <input class="input-control" type="text" [(ngModel)]="parentForm.name" placeholder="Full name"
+        (ngModelChange)="onParentInputChange()" [class.input-error]="parentErrors.name" />
+      <p class="error-text" *ngIf="parentErrors.name">{{ parentErrors.name }}</p>
     </div>
     <div class="field">
       <label><span class="required">*</span>Email</label>
-      <input class="input-control" type="email" [(ngModel)]="parentForm.email" placeholder="Email address" />
+      <input class="input-control" type="email" [(ngModel)]="parentForm.email" placeholder="Email address"
+        (ngModelChange)="onParentInputChange()" [class.input-error]="parentErrors.email" />
+      <p class="error-text" *ngIf="parentErrors.email">{{ parentErrors.email }}</p>
     </div>
     <div class="field">
       <label>Phone</label>
-      <input class="input-control" type="text" [(ngModel)]="parentForm.phone" placeholder="Optional phone" />
+      <input class="input-control" type="text" [(ngModel)]="parentForm.phone" placeholder="Optional phone"
+        (ngModelChange)="onParentInputChange()" [class.input-error]="parentErrors.phone" />
+      <p class="error-text" *ngIf="parentErrors.phone">{{ parentErrors.phone }}</p>
     </div>
     <div class="field">
       <label><span class="required">*</span>Linked student</label>
@@ -142,14 +156,16 @@
         [(ngModel)]="studentFilter"
         style="margin-bottom: 0.5rem;"
       />
-      <select class="input-control" [(ngModel)]="parentForm.studentId">
+      <select class="input-control" [(ngModel)]="parentForm.studentId" (ngModelChange)="onParentInputChange()"
+        [class.input-error]="parentErrors.studentId">
         <option *ngFor="let student of filteredStudentsForSelect" [value]="student.id">
           {{ student.name }} - {{ student.email }}
         </option>
       </select>
+      <p class="error-text" *ngIf="parentErrors.studentId">{{ parentErrors.studentId }}</p>
     </div>
     <div class="panel-actions sticky-footer">
-      <button class="btn-primary" type="button" (click)="submitParent()" [disabled]="processing || !parentForm.name || !parentForm.email || !parentForm.studentId">Create</button>
+      <button class="btn-primary" type="button" (click)="submitParent()" [disabled]="processing || !canSubmitParent">Create</button>
     </div>
   </div>
 </div>
