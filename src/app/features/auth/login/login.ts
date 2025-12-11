@@ -125,7 +125,7 @@ export class Login implements OnInit {
 
     this.loadingService.show();
     const { email, password, rememberMe } = this.loginForm.value;
-    this.authService.login({ email, password }, rememberMe).subscribe({
+    this.authService.login({ email, password }, rememberMe, true).subscribe({
       next: (response) => {
         this.loadingService.hide();
 
