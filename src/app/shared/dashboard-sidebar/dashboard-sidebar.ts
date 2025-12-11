@@ -56,7 +56,7 @@ export class DashboardSidebar {
   ];
 
   get settingsRoute(): string {
-    return this.menuType === 'admin' ? '/dashboard/admin/setting' : '/dashboard/staff/setting';
+    return this.menuType === 'admin' ? '/dashboard/admin/settings' : '/dashboard/staff/settings';
   }
 
   logout(): void {

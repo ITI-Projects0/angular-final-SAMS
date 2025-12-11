@@ -172,6 +172,14 @@
     font-weight: 600;
 }
 
+.avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--dashboard-nav-border);
+}
+
 .chevron {
     width: 16px;
     height: 16px;

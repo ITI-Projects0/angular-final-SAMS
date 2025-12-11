@@ -9,7 +9,7 @@ import { StaffGroupDetail } from './courses/group-detail/group-detail';
 import { LessonDetailComponent } from './courses/lesson-detail/lesson-detail';
 import { Teachers as StaffTeamPage } from './center-admin-only/teachers/teachers';
 import { Students as StaffStudentsPage } from './center-admin-only/students/students';
-import { Setting as StaffSettingPage } from './setting/setting';
+import { Setting as StaffSettingPage } from '../shared-dashboard-pages/setting/setting';
 import { OutletComponent } from '../../shared/ui/outlet/outlet.component';
 
 export const StaffRoutes: Routes = [
@@ -48,7 +48,7 @@ export const StaffRoutes: Routes = [
       },
       { path: 'staff', component: StaffTeamPage, data: { breadcrumb: 'Staff' } },
       { path: 'students', component: StaffStudentsPage, data: { breadcrumb: 'Students' } },
-      { path: 'setting', component: StaffSettingPage, data: { breadcrumb: 'Settings' } }
+      { path: 'settings', component: StaffSettingPage, data: { breadcrumb: 'Settings' } }
     ]
   }
 ];
