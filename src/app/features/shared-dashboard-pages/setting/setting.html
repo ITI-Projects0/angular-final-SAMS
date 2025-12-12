@@ -16,8 +16,9 @@
     <!-- Profile Header Card -->
     <section
       class="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xl border border-slate-100 dark:border-slate-800">
-      <div class="relative p-6 sm:p-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div class="flex items-center gap-4 sm:gap-6">
+      <div
+        class="relative p-6 sm:p-8 max-[400px]:p-4 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex items-center gap-4 sm:gap-6 max-[400px]:flex-col">
           @if (profile()?.avatar) {
           <img [src]="profile()?.avatar" alt="Avatar"
             class="h-20 w-20 rounded-2xl border border-slate-200 dark:border-slate-700 object-cover shadow" />
@@ -54,7 +55,7 @@
 
     <!-- Personal Information Card -->
     <section class="bg-white dark:bg-slate-900/70 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl">
-      <div class="p-6 sm:p-8 space-y-8">
+      <div class="p-6 sm:p-8 max-[400px]:p-4 space-y-8">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <p class="text-xs uppercase tracking-[0.12em] font-semibold text-slate-500 dark:text-slate-400">Account
@@ -130,7 +131,7 @@
 
     <!-- Password Change Card -->
     <section class="bg-white dark:bg-slate-900/70 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-xl">
-      <div class="p-6 sm:p-8 space-y-6">
+      <div class="p-6 sm:p-8 max-[400px]:p-4 space-y-6">
         <div>
           <p class="text-xs uppercase tracking-[0.12em] font-semibold text-slate-500 dark:text-slate-400">Security</p>
           <h2 class="text-xl sm:text-2xl font-semibold text-slate-900 dark:text-white">Change Password</h2>

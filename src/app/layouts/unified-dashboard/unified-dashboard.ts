@@ -41,11 +41,14 @@ export class UnifiedDashboard implements OnInit {
         // Generate initial breadcrumbs
         this.breadcrumbs = this.createBreadcrumbs(this.route.root);
 
-        // Listen for route changes to update breadcrumbs
+        // Listen for route changes to update breadcrumbs and close sidebar on mobile
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd)
         ).subscribe(() => {
             this.breadcrumbs = this.createBreadcrumbs(this.route.root);
+            if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+                this.isSidebarCollapsed = true;
+            }
         });
 
         this.onResize();

@@ -42,7 +42,6 @@ export class DashboardSidebar {
     { label: 'Students', route: '/dashboard/admin/students', icon: 'students', exact: true },
     { label: 'Parents', route: '/dashboard/admin/parents', icon: 'parents', exact: true },
     { label: 'Centers', route: '/dashboard/admin/centers', icon: 'centers', exact: true },
-    { label: 'Pending Approvals', route: '/dashboard/admin/pending-centers', icon: 'pending', exact: true, highlight: true },
     { label: 'Courses', route: '/dashboard/admin/courses', icon: 'courses', exact: true },
     { label: 'Teachers', route: '/dashboard/admin/teachers', icon: 'teachers', exact: true },
     { label: 'Contact', route: '/dashboard/admin/contacts', icon: 'contact', exact: true },

@@ -168,6 +168,15 @@
     margin: 0 0.5rem;
 }
 
+/* Theme Toggle Wrapper */
+.theme-toggle-wrapper {
+    cursor: default;
+}
+
+.theme-toggle-wrapper app-theme-toggle {
+    display: flex;
+}
+
 /* Mobile Responsive */
 @media (max-width: 1024px) {
     :host {
@@ -185,5 +194,12 @@
 
     :host(.open) .sidebar {
         transform: translateX(0);
+    }
+}
+
+@media (max-width: 640px) {
+    .sidebar {
+        width: 100%;
+        max-width: 100%;
     }
 }

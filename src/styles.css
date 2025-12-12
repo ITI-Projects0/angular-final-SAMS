@@ -348,3 +348,48 @@ body {
 .card-accent-rose {
   border-top: 4px solid #f43f5e;
 }
+
+/* =========================
+   Text Overflow Utilities
+   Prevent content from breaking out of containers
+   ========================= */
+
+/* Email and long text word-breaking */
+.break-word {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* For emails specifically */
+.email-text {
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+/* Prevent any overflow from cards */
+.overflow-safe {
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Apply overflow safety to all cards and table cells */
+td,
+th {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.dashboard-card,
+.dashboard-stat-card,
+.card,
+section[class*="rounded"],
+div[class*="rounded"] {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Ensure content within flex items doesn't overflow */
+[class*="flex"]>* {
+  min-width: 0;
+}

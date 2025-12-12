@@ -239,6 +239,12 @@ export class Students implements OnInit {
     this.loadStudents();
   }
 
+  onPerPageChange(newPerPage: number): void {
+    this.perPage = newPerPage;
+    this.page = 1;
+    this.loadStudents();
+  }
+
   private extractErrorMessage(err: any, fallback: string): string {
     if (!err) return fallback;
     if (typeof err === 'string') return err;
