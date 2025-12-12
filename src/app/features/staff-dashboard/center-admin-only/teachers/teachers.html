@@ -1,153 +1,258 @@
-<section class="dashboard-page">
-  <header class="dashboard-header">
-    <h2>{{ isCenterAdmin ? (activeRole === 'teacher' ? 'Teachers' : 'Assistants') : 'Teachers' }}</h2>
-    <p>
+<section
+  class="max-w-[1100px] mx-auto my-6 p-5 max-[400px]:p-3 bg-[var(--card)] rounded-2xl border border-[var(--glass-border)] shadow-[0_18px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl text-[var(--text)]">
+  <header class="mb-4">
+    <h2 class="text-2xl font-bold">{{ isCenterAdmin ? (activeRole === 'teacher' ? 'Teachers' : 'Assistants') : 'Teachers' }}</h2>
+    <p class="text-[var(--muted)] text-sm">
       {{ isCenterAdmin ? 'Manage staff assigned to this center' : 'Teaching staff and their assigned centers' }}
     </p>
   </header>
 
-  <div class="dashboard-toolbar">
-    <input placeholder="Search teachers..." class="dashboard-input" style="max-width: 300px;" [(ngModel)]="searchTerm"
-      (ngModelChange)="onSearchChange($event)" />
-    <div class="toolbar-actions" *ngIf="isCenterAdmin">
-      <div class="segment">
-        <button type="button" [class.active]="activeRole === 'teacher'"
-          (click)="setRoleFilter('teacher')">Teachers</button>
-        <button type="button" [class.active]="activeRole === 'assistant'"
-          (click)="setRoleFilter('assistant')">Assistants</button>
+  <div class="flex flex-col gap-3 my-3">
+    <div class="flex justify-between items-center gap-3 max-[640px]:flex-col max-[640px]:items-stretch">
+      <input placeholder="Search teachers..."
+        class="px-3 py-2 rounded-lg border border-[var(--glass-border)] w-[260px] bg-[var(--glass)] text-[var(--text)] max-[640px]:w-full focus:outline-none focus:border-[var(--primary)] transition-colors"
+        [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)" />
+      
+      <div class="flex items-center gap-2 max-[640px]:justify-between max-[640px]:flex-col max-[640px]:items-stretch gap-3" *ngIf="isCenterAdmin">
+        <!-- Role Toggle -->
+        <div class="flex bg-[var(--glass)] p-1 rounded-lg border border-[var(--glass-border)] max-[640px]:w-full max-[640px]:justify-between">
+          <button type="button" 
+            class="px-3 py-1.5 rounded-md text-sm font-medium transition-all flex-1 text-center justify-center"
+            [class.bg-[var(--card)]]="activeRole === 'teacher'"
+            [class.shadow-sm]="activeRole === 'teacher'"
+            [class.text-[var(--text)]]="activeRole === 'teacher'"
+            [class.text-[var(--muted)]]="activeRole !== 'teacher'"
+            (click)="setRoleFilter('teacher')">Teachers</button>
+          <button type="button" 
+            class="px-3 py-1.5 rounded-md text-sm font-medium transition-all flex-1 text-center justify-center"
+            [class.bg-[var(--card)]]="activeRole === 'assistant'"
+            [class.shadow-sm]="activeRole === 'assistant'"
+            [class.text-[var(--text)]]="activeRole === 'assistant'"
+            [class.text-[var(--muted)]]="activeRole !== 'assistant'"
+            (click)="setRoleFilter('assistant')">Assistants</button>
+        </div>
+
+        <button class="btn-primary px-4 py-2 rounded-full text-sm font-medium shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 text-center justify-center" 
+          type="button" (click)="openCreate('teacher')" *ngIf="activeRole === 'teacher'">
+          <i class="fa-solid fa-plus mr-2"></i>Add Teacher
+        </button>
+        <button class="btn-primary px-4 py-2 rounded-full text-sm font-medium shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 text-center justify-center" 
+          type="button" (click)="openCreate('assistant')" *ngIf="activeRole === 'assistant'">
+          <i class="fa-solid fa-plus mr-2"></i>Add Assistant
+        </button>
       </div>
-      <button class="btn-dashboard-primary" type="button" (click)="openCreate('teacher')"
-        *ngIf="activeRole === 'teacher'">
-        Add Teacher
-      </button>
-      <button class="btn-dashboard-primary" type="button" (click)="openCreate('assistant')"
-        *ngIf="activeRole === 'assistant'">
-        Add Assistant
-      </button>
     </div>
   </div>
 
-  <div class="loading-overlay" *ngIf="loading">
-    <div class="spinner"></div>
-    <span>Loading teachers...</span>
-  </div>
-
-  <div class="dashboard-table-wrapper" *ngIf="filteredTeachers.length; else noResults">
-    <table class="dashboard-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Role</th>
-          <th>Phone</th>
-          <th>Stats</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let t of filteredTeachers">
-          <td>
-            <div class="stack">
-              <span class="strong">{{ t.name }}</span>
-              <br>
-              <span class="muted">{{ t.email }}</span>
-            </div>
-          </td>
-          <td>
-            <span class="badge badge-neutral">{{ activeRole | titlecase }}</span>
-          </td>
-          <td>
-            <span class="muted">{{ t.phone || '-' }}</span>
-          </td>
-          <td>
-            <span class="badge badge-neutral">{{ t.courses }} courses</span>
-          </td>
-          <td>
-            <button class="btn-dashboard-ghost" (click)="openInfo(t)">Info</button>
-            <button class="btn-dashboard-ghost" *ngIf="isCenterAdmin" (click)="openEdit(t)">Edit</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="pagination" *ngIf="filteredTeachers.length">
-    <div class="muted small">Showing {{ pageStart }}–{{ pageEnd }} of {{ totalItems }}</div>
-    <div class="page-controls">
-      <button type="button" class="btn-dashboard-ghost" [disabled]="page <= 1"
-        (click)="goToPage(page - 1)">Prev</button>
-      <span class="page-indicator">Page {{ page }} / {{ totalPages }}</span>
-      <button type="button" class="btn-dashboard-ghost" [disabled]="page >= totalPages"
-        (click)="goToPage(page + 1)">Next</button>
+  <div class="flex items-center gap-2.5 p-3 bg-[var(--glass)] border border-[var(--glass-border)] rounded-xl mb-2"
+    *ngIf="loading">
+    <div class="w-[18px] h-[18px] border-[3px] border-black/10 border-t-[var(--primary)] rounded-full animate-spin">
     </div>
+    <span>Loading staff...</span>
   </div>
+
+  <table
+    class="w-full border-collapse mt-2.5 bg-[var(--card)] border border-[var(--glass-border)] rounded-xl overflow-hidden shadow-sm max-[1200px]:block max-[1200px]:bg-transparent max-[1200px]:border-none max-[1200px]:shadow-none"
+    *ngIf="filteredTeachers.length; else noResults">
+    <thead class="max-[1200px]:hidden">
+      <tr>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Name</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Role</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Phone</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Stats</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Actions</th>
+      </tr>
+    </thead>
+    <tbody
+      class="max-[1200px]:grid max-[1200px]:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] max-[1200px]:gap-4 max-[1200px]:w-full">
+      <tr *ngFor="let t of filteredTeachers"
+        class="max-[1200px]:flex max-[1200px]:flex-col max-[1200px]:bg-[var(--card)] max-[1200px]:border max-[1200px]:border-[var(--glass-border)] max-[1200px]:rounded-2xl max-[1200px]:p-4 max-[400px]:p-3 max-[1200px]:shadow-sm max-[1200px]:h-full transition-colors hover:bg-[var(--card-strong)]">
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle font-bold text-[var(--text)] max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Name">
+          <div class="flex flex-col">
+            <span class="font-bold text-[var(--text)]">{{ t.name }}</span>
+            <small class="text-[var(--muted)] font-normal break-all">{{ t.email }}</small>
+          </div>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Role">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--glass)] border border-[var(--glass-border)] text-sm capitalize">
+            {{ activeRole }}
+          </span>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Phone">
+          <span class="text-[var(--text)] text-sm">{{ t.phone || '-' }}</span>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Stats">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--glass)] border border-[var(--glass-border)] text-sm">
+            {{ t.courses }} courses
+          </span>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-end max-[1200px]:items-center max-[1200px]:gap-2 max-[1200px]:w-full max-[1200px]:pt-4 max-[1200px]:pb-0 max-[1200px]:mt-auto max-[1200px]:border-none"
+          data-label="Actions">
+          <div class="flex items-center gap-2">
+            <button
+              class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-blue-500/10 hover:border-blue-500/30 hover:shadow-md transition-all duration-200"
+              (click)="openInfo(t)">Info</button>
+            <button
+              class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200"
+              *ngIf="isCenterAdmin" (click)="openEdit(t)">Edit</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <ng-template #noResults>
-    <div class="empty-state">
+    <div class="flex flex-col items-center justify-center py-10 text-[var(--muted)]">
+      <i class="fa-solid fa-users-slash text-4xl mb-3 opacity-50"></i>
       <p>No staff found.</p>
     </div>
   </ng-template>
+
 </section>
 
-<div class="overlay" [class.open]="panelOpen" (click)="closeInfo()"></div>
-<div class="side-panel glass" [class.open]="panelOpen" (click)="$event.stopPropagation()">
-  <div class="panel-header">
-    <h3>{{ panelTitle }}</h3>
-    <button class="close-btn" (click)="closeInfo()">X</button>
+<div
+  class="max-w-[1100px] mx-auto flex justify-between items-center mt-4 gap-3 bg-[var(--glass)] border border-[var(--glass-border)] p-2.5 rounded-xl max-[450px]:flex-col max-[450px]:items-center"
+  *ngIf="filteredTeachers.length">
+  <div class="text-[var(--muted)] text-sm">Showing {{ pageStart }} - {{ pageEnd }} of {{ totalItems }}</div>
+  <div class="inline-flex items-center gap-2.5">
+    <button
+      class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+      [disabled]="page <= 1" (click)="goToPage(page - 1)">Prev</button>
+    
+    <div class="flex items-center gap-1">
+      <span class="font-bold text-sm">Page {{ page }} / {{ totalPages }}</span>
+    </div>
+
+    <button
+      class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200"
+      [disabled]="page >= totalPages" (click)="goToPage(page + 1)">Next</button>
   </div>
-  <div class="panel-body" *ngIf="panelMode === 'info' && selectedTeacher">
-    <p><strong>Name:</strong> {{ selectedTeacher.name }}</p>
-    <p><strong>Email:</strong> {{ selectedTeacher.email }}</p>
-    <p><strong>Center:</strong> {{ selectedTeacher.center || '-' }}</p>
-    <p><strong>Courses taught:</strong> {{ selectedTeacher.courses }}</p>
-    <p><strong>Phone:</strong> {{ selectedTeacher.phone || '-' }}</p>
-    <p><strong>User ID:</strong> {{ selectedTeacher.id }}</p>
-    <p class="error-text" *ngIf="saveError">{{ saveError }}</p>
-    <div class="panel-actions" *ngIf="isCenterAdmin">
-      <button class="btn-primary" type="button" (click)="openEdit(selectedTeacher)">Edit</button>
-      <button class="btn-danger" type="button" (click)="deleteSelected()" [disabled]="processing">Delete</button>
+</div>
+
+<div class="fixed inset-0 bg-black/20 opacity-0 pointer-events-none transition-opacity duration-250"
+  [class.opacity-100]="panelOpen" [class.pointer-events-auto]="panelOpen" (click)="closeInfo()"></div>
+
+<div
+  class="fixed inset-y-0 right-0 w-[min(420px,90vw)] max-[640px]:w-full bg-[var(--card)] border-l border-[var(--glass-border)] shadow-[-8px_0_24px_rgba(0,0,0,0.18)] transition-transform duration-300 p-5 flex flex-col gap-3.5 z-[999]"
+  [ngClass]="panelOpen ? 'translate-x-0' : 'translate-x-full'" (click)="$event.stopPropagation()">
+  
+  <div class="flex justify-between items-center font-bold">
+    <h3>{{ panelTitle }}</h3>
+    <button class="border-none bg-transparent text-2xl cursor-pointer text-[var(--text)] hover:text-[var(--primary)] transition-colors"
+      (click)="closeInfo()">X</button>
+  </div>
+
+  <!-- Info Mode -->
+  <div class="flex flex-col gap-2.5 overflow-y-auto" *ngIf="panelMode === 'info' && selectedTeacher">
+    <p class="font-bold text-[var(--text)] text-lg">{{ selectedTeacher.name }}</p>
+    <div class="grid grid-cols-1 gap-3 mt-2">
+      <div class="p-3 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">
+        <span class="text-[var(--muted)] text-sm block mb-1">Email</span>
+        <span class="text-[var(--text)] break-all">{{ selectedTeacher.email }}</span>
+      </div>
+      <div class="p-3 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">
+        <span class="text-[var(--muted)] text-sm block mb-1">Center</span>
+        <span class="text-[var(--text)]">{{ selectedTeacher.center || '-' }}</span>
+      </div>
+      <div class="p-3 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">
+        <span class="text-[var(--muted)] text-sm block mb-1">Courses Taught</span>
+        <span class="text-[var(--text)]">{{ selectedTeacher.courses }}</span>
+      </div>
+      <div class="p-3 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">
+        <span class="text-[var(--muted)] text-sm block mb-1">Phone</span>
+        <span class="text-[var(--text)]">{{ selectedTeacher.phone || '-' }}</span>
+      </div>
+      <div class="p-3 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">
+        <span class="text-[var(--muted)] text-sm block mb-1">User ID</span>
+        <span class="text-[var(--text)] font-mono">{{ selectedTeacher.id }}</span>
+      </div>
+    </div>
+
+    <p class="text-xs text-red-500 mt-2" *ngIf="saveError">{{ saveError }}</p>
+    
+    <div class="flex gap-3 mt-4" *ngIf="isCenterAdmin">
+      <button class="flex-1 btn-primary py-2.5 rounded-xl font-medium shadow-lg shadow-blue-500/20" type="button" (click)="openEdit(selectedTeacher)">Edit</button>
+      <button class="flex-1 bg-red-500/10 text-red-500 border border-red-500/20 py-2.5 rounded-xl font-medium hover:bg-red-500/20 transition-colors" type="button" (click)="deleteSelected()" [disabled]="processing">Delete</button>
     </div>
   </div>
 
-  <div class="panel-body" *ngIf="panelMode !== 'info'">
-    <p class="field-hint">Fields marked with * are required.</p>
-    <p class="error-banner" *ngIf="saveError">{{ saveError }}</p>
-    <div class="field">
-      <label><span class="required">*</span>Name</label>
-      <input list="staff-name-suggestions" class="input-control" type="text" [(ngModel)]="form.name"
-        placeholder="Full name" (ngModelChange)="onFormChange()" [class.input-error]="formErrors.name" />
-      <p class="error-text" *ngIf="formErrors.name">{{ formErrors.name }}</p>
+  <!-- Create/Edit Mode -->
+  <div class="flex flex-col gap-4 overflow-y-auto" *ngIf="panelMode !== 'info'">
+    <p class="text-sm text-[var(--muted)]">Fields marked with <span class="text-red-500">*</span> are required.</p>
+    <p class="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-bold" *ngIf="saveError">{{ saveError }}</p>
+    
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]"><span class="text-red-500 mr-1">*</span>Name</label>
+      <input list="staff-name-suggestions" class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors" 
+        type="text" [(ngModel)]="form.name" placeholder="Full name"
+        (ngModelChange)="onFormChange()" [class.border-red-500]="formErrors.name" />
+      <p class="text-xs text-red-500" *ngIf="formErrors.name">{{ formErrors.name }}</p>
       <datalist id="staff-name-suggestions">
         <option *ngFor="let name of staffNames" [value]="name"></option>
       </datalist>
     </div>
-    <div class="field">
-      <label><span class="required">*</span>Email</label>
-      <input class="input-control" type="email" [(ngModel)]="form.email" placeholder="Email address"
-        (ngModelChange)="onFormChange()" [class.input-error]="formErrors.email" />
-      <p class="error-text" *ngIf="formErrors.email">{{ formErrors.email }}</p>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]"><span class="text-red-500 mr-1">*</span>Email</label>
+      <input class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors" 
+        type="email" [(ngModel)]="form.email" placeholder="Email address"
+        (ngModelChange)="onFormChange()" [class.border-red-500]="formErrors.email" />
+      <p class="text-xs text-red-500" *ngIf="formErrors.email">{{ formErrors.email }}</p>
     </div>
-    <div class="field">
-      <label>Phone</label>
-      <input class="input-control" type="text" [(ngModel)]="form.phone" placeholder="Optional phone"
-        (ngModelChange)="onFormChange()" [class.input-error]="formErrors.phone" />
-      <p class="error-text" *ngIf="formErrors.phone">{{ formErrors.phone }}</p>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]">Phone</label>
+      <input class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors" 
+        type="text" [(ngModel)]="form.phone" placeholder="Optional phone"
+        (ngModelChange)="onFormChange()" [class.border-red-500]="formErrors.phone" />
+      <p class="text-xs text-red-500" *ngIf="formErrors.phone">{{ formErrors.phone }}</p>
     </div>
-    <div class="field" *ngIf="panelMode === 'create'">
-      <label>Role</label>
-      <div class="segment">
-        <button type="button" [class.active]="form.role === 'teacher'" (click)="form.role = 'teacher'">Teacher</button>
-        <button type="button" [class.active]="form.role === 'assistant'"
+
+    <div class="flex flex-col gap-1.5" *ngIf="panelMode === 'create'">
+      <label class="text-sm font-medium text-[var(--text)]">Role</label>
+      <div class="flex bg-[var(--glass)] p-1 rounded-lg border border-[var(--glass-border)]">
+        <button type="button" 
+          class="flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all"
+          [class.bg-[var(--card)]]="form.role === 'teacher'"
+          [class.shadow-sm]="form.role === 'teacher'"
+          [class.text-[var(--text)]]="form.role === 'teacher'"
+          [class.text-[var(--muted)]]="form.role !== 'teacher'"
+          (click)="form.role = 'teacher'">Teacher</button>
+        <button type="button" 
+          class="flex-1 px-3 py-1.5 rounded-md text-sm font-medium transition-all"
+          [class.bg-[var(--card)]]="form.role === 'assistant'"
+          [class.shadow-sm]="form.role === 'assistant'"
+          [class.text-[var(--text)]]="form.role === 'assistant'"
+          [class.text-[var(--muted)]]="form.role !== 'assistant'"
           (click)="form.role = 'assistant'">Assistant</button>
       </div>
     </div>
-    <p class="error-text" *ngIf="saveError">{{ saveError }}</p>
-    <div class="panel-actions sticky-footer">
-      <button class="btn-primary" type="button" (click)="submitForm()"
-        [disabled]="processing || !canSubmitForm">
+
+    <div class="mt-auto pt-4 flex flex-col gap-3 sticky bottom-0 bg-[var(--card)] border-t border-[var(--glass-border)]">
+      <button class="btn-primary w-full py-2.5 rounded-xl font-medium shadow-lg shadow-blue-500/20" type="button" (click)="submitForm()" [disabled]="processing || !canSubmitForm">
         {{ panelMode === 'create' ? 'Create' : 'Save changes' }}
       </button>
-      <button class="btn-danger" type="button" *ngIf="panelMode === 'edit'" (click)="deleteSelected()"
-        [disabled]="processing">
+      <button
+        class="w-full bg-red-500/10 text-red-500 border border-red-500/20 py-2.5 rounded-xl font-medium hover:bg-red-500/20 transition-colors"
+        type="button"
+        *ngIf="panelMode === 'edit'"
+        (click)="deleteSelected()"
+        [disabled]="processing"
+      >
         Delete
       </button>
     </div>

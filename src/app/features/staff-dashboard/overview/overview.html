@@ -1,176 +1,183 @@
-<section class="dashboard-page">
-  <div *ngIf="loading" class="dashboard-card" style="padding: 1rem; text-align: center; color: var(--muted);">
+<section
+  class="w-full max-w-7xl mx-auto px-4 lg:px-0 py-4 space-y-4 text-[var(--text)] max-[400px]:px-3 max-[320px]:px-2 overflow-x-hidden">
+  <div *ngIf="loading"
+    class="p-4 text-center text-[var(--muted)] bg-[var(--card)] border border-[var(--glass-border)] rounded-2xl shadow-sm">
     Loading dashboard...
   </div>
 
-  <div class="dashboard-card"
-    style="padding: 1.5rem; display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; align-items: center;">
-    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-      <p style="text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.75rem; color: var(--muted);">Teaching
-        pulse</p>
-      <h1 style="font-size: 1.875rem; font-weight: 800; color: var(--text);">Staff Overview</h1>
-      <p style="color: var(--muted);">Snapshot of your groups, students, lessons, and attendance.</p>
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-        <button routerLink="/dashboard/staff/groups" class="btn-dashboard-primary">View groups</button>
-        <button routerLink="/dashboard/staff/students" class="btn-dashboard-ghost">View students</button>
+  <div
+    class="rounded-2xl p-6 grid lg:grid-cols-[1.4fr_1fr] gap-6 items-center bg-[var(--card)] border border-[var(--glass-border)] shadow-xl max-[768px]:grid-cols-1 max-[768px]:gap-4 max-[400px]:p-4">
+    <div class="flex flex-col gap-3">
+      <p class="uppercase tracking-[0.18em] text-xs text-[var(--muted)]">Teaching pulse</p>
+      <h1 class="text-3xl font-extrabold text-[var(--text-strong)] max-[400px]:text-2xl">Staff Overview</h1>
+      <p class="text-[var(--text)] opacity-80">Snapshot of your groups, students, lessons, and attendance.</p>
+      <div class="flex gap-2 flex-wrap">
+        <button routerLink="/dashboard/staff/groups"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-semibold shadow-lg shadow-indigo-500/30 hover:-translate-y-0.5 transition-all duration-200">View
+          groups</button>
+        <button routerLink="/dashboard/staff/students"
+          class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--glass)] border border-[var(--glass-border)] text-[var(--text)] font-semibold hover:bg-[var(--card-strong)] transition-colors">View
+          students</button>
       </div>
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
-        <span class="badge badge-neutral">Students: {{ stats.students }}</span>
-        <span class="badge badge-success">Attendance today: {{ stats.attendanceToday }}</span>
-        <span class="badge badge-neutral">Lessons scheduled: {{ stats.lessons }}</span>
+      <div class="flex gap-2 flex-wrap mt-2">
+        <span
+          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--glass)] text-[var(--text)] border border-[var(--glass-border)]">Students:
+          {{ stats.students }}</span>
+        <span
+          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">Attendance
+          today: {{ stats.attendanceToday }}</span>
+        <span
+          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--glass)] text-[var(--text)] border border-[var(--glass-border)]">Lessons
+          scheduled: {{ stats.lessons }}</span>
       </div>
     </div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-      <div class="dashboard-stat-card">
-        <p style="font-size: 0.875rem; color: var(--muted);">Groups</p>
-        <p style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.groups }}</p>
-        <span style="font-size: 0.875rem; color: var(--muted);">Active classes under your care</span>
+    <div class="grid grid-cols-2 gap-4 max-[400px]:grid-cols-1">
+      <div class="p-4 rounded-xl bg-[var(--card-strong)] border border-[var(--glass-border)]">
+        <p class="text-sm text-[var(--muted)]">Groups</p>
+        <p class="text-3xl font-extrabold text-[var(--text-strong)]">{{ stats.groups }}</p>
+        <span class="text-sm text-[var(--muted)]">Active classes under your care</span>
       </div>
-      <div class="dashboard-stat-card">
-        <p style="font-size: 0.875rem; color: var(--muted);">Lessons</p>
-        <p style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.lessons }}</p>
-        <span style="font-size: 0.875rem; color: var(--muted);">Total scheduled lessons</span>
+      <div class="p-4 rounded-xl bg-[var(--card-strong)] border border-[var(--glass-border)]">
+        <p class="text-sm text-[var(--muted)]">Lessons</p>
+        <p class="text-3xl font-extrabold text-[var(--text-strong)]">{{ stats.lessons }}</p>
+        <span class="text-sm text-[var(--muted)]">Total scheduled lessons</span>
       </div>
     </div>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-    <article class="dashboard-stat-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-        <div
-          style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--muted);">
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #6366f1;"></span>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <article
+      class="p-4 rounded-2xl bg-[var(--card)] border border-[var(--glass-border)] shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-center mb-2">
+        <div class="flex items-center gap-2 text-sm font-semibold text-[var(--muted)]">
+          <span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>
           Students
         </div>
-        <span style="font-size: 0.75rem; color: var(--muted);">Enrolled</span>
+        <span class="text-xs text-[var(--muted)]">Enrolled</span>
       </div>
-      <div style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.students }}</div>
-      <p style="font-size: 0.875rem; color: var(--muted);">
+      <div class="text-3xl font-extrabold text-[var(--text-strong)]">{{ stats.students }}</div>
+      <p class="text-sm text-[var(--muted)]">
         Attendance today: {{ stats.attendanceToday }}
       </p>
-      <div
-        style="margin-top: 0.75rem; width: 100%; height: 8px; border-radius: 9999px; background: var(--dashboard-sidebar-border); overflow: hidden;">
-        <span
-          style="display: block; height: 100%; border-radius: 9999px; background: linear-gradient(to right, #6366f1, #0ea5e9);"
+      <div class="mt-3 w-full h-2 rounded-full bg-[var(--card-strong)] overflow-hidden">
+        <span class="block h-full rounded-full bg-gradient-to-r from-indigo-500 to-sky-500"
           [style.width.%]="stats.students ? (stats.attendanceToday / stats.students) * 100 : 0"></span>
       </div>
     </article>
 
-    <article class="dashboard-stat-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-        <div
-          style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--muted);">
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></span>
+    <article
+      class="p-4 rounded-2xl bg-[var(--card)] border border-[var(--glass-border)] shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-center mb-2">
+        <div class="flex items-center gap-2 text-sm font-semibold text-[var(--muted)]">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
           Lessons
         </div>
-        <span style="font-size: 0.75rem; color: var(--muted);">Upcoming</span>
+        <span class="text-xs text-[var(--muted)]">Upcoming</span>
       </div>
-      <div style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.lessons }}</div>
-      <p style="font-size: 0.875rem; color: var(--muted);">Total sessions scheduled for all groups</p>
-      <div
-        style="margin-top: 0.75rem; width: 100%; height: 8px; border-radius: 9999px; background: var(--dashboard-sidebar-border); overflow: hidden;">
-        <span
-          style="display: block; height: 100%; border-radius: 9999px; background: linear-gradient(to right, #34d399, #2dd4bf);"></span>
+      <div class="text-3xl font-extrabold text-[var(--text-strong)]">{{ stats.lessons }}</div>
+      <p class="text-sm text-[var(--muted)]">Total sessions scheduled for all groups</p>
+      <div class="mt-3 w-full h-2 rounded-full bg-[var(--card-strong)] overflow-hidden">
+        <span class="block h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-400"
+          style="width: 100%"></span>
       </div>
     </article>
 
-    <article class="dashboard-stat-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-        <div
-          style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--muted);">
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #fbbf24;"></span>
+    <article
+      class="p-4 rounded-2xl bg-[var(--card)] border border-[var(--glass-border)] shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-center mb-2">
+        <div class="flex items-center gap-2 text-sm font-semibold text-[var(--muted)]">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
           Groups
         </div>
-        <span style="font-size: 0.75rem; color: var(--muted);">Active</span>
+        <span class="text-xs text-[var(--muted)]">Active</span>
       </div>
-      <div style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.groups }}</div>
-      <p style="font-size: 0.875rem; color: var(--muted);">Classes you're teaching or managing</p>
-      <div
-        style="margin-top: 0.75rem; width: 100%; height: 8px; border-radius: 9999px; background: var(--dashboard-sidebar-border); overflow: hidden;">
-        <span
-          style="display: block; height: 100%; border-radius: 9999px; background: linear-gradient(to right, #fbbf24, #fb923c);"></span>
+      <div class="text-3xl font-extrabold text-[var(--text-strong)]">{{ stats.groups }}</div>
+      <p class="text-sm text-[var(--muted)]">Classes you're teaching or managing</p>
+      <div class="mt-3 w-full h-2 rounded-full bg-[var(--card-strong)] overflow-hidden">
+        <span class="block h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-400"
+          style="width: 100%"></span>
       </div>
     </article>
 
-    <article class="dashboard-stat-card">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-        <div
-          style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--muted);">
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: #f43f5e;"></span>
+    <article
+      class="p-4 rounded-2xl bg-[var(--card)] border border-[var(--glass-border)] shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-center mb-2">
+        <div class="flex items-center gap-2 text-sm font-semibold text-[var(--muted)]">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
           Attendance
         </div>
-        <span style="font-size: 0.75rem; color: var(--muted);">Today</span>
+        <span class="text-xs text-[var(--muted)]">Today</span>
       </div>
-      <div style="font-size: 1.875rem; font-weight: 800; color: var(--text);">{{ stats.attendanceToday }}</div>
-      <p style="font-size: 0.875rem; color: var(--muted);">Attendance entries submitted today</p>
+      <div class="text-3xl font-extrabold text-[var(--text-strong)]">{{ stats.attendanceToday }}</div>
+      <p class="text-sm text-[var(--muted)]">Attendance entries submitted today</p>
     </article>
   </div>
 
-  <section *ngIf="isCenterAdmin && centerStats as summary" class="dashboard-card" style="padding: 1.5rem;">
-    <div style="margin-bottom: 1rem;">
-      <p style="text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.75rem; color: var(--muted);">Center
-        snapshot</p>
-      <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text); margin: 0.25rem 0;">Members & lessons</h2>
-      <p style="font-size: 0.875rem; color: var(--muted);">High level overview across the entire center.</p>
+  <section *ngIf="isCenterAdmin && centerStats as summary"
+    class="p-6 rounded-2xl bg-[var(--card)] border border-[var(--glass-border)] shadow-sm max-[400px]:p-4">
+    <div class="mb-4">
+      <p class="uppercase tracking-[0.18em] text-xs text-[var(--muted)]">Center snapshot</p>
+      <h2 class="text-xl font-extrabold text-[var(--text-strong)] my-1">Members & lessons</h2>
+      <p class="text-sm text-[var(--muted)]">High level overview across the entire center.</p>
     </div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-      <div class="dashboard-stat-card">
-        <p style="font-size: 0.875rem; color: var(--muted);">Teachers</p>
-        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.teachers_count }}</p>
+    <div
+      class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 max-[450px]:grid-cols-2 max-[320px]:grid-cols-1">
+      <div class="p-4 rounded-xl bg-[var(--card-strong)] border border-[var(--glass-border)]">
+        <p class="text-sm text-[var(--muted)]">Teachers</p>
+        <p class="text-2xl font-bold text-[var(--text-strong)]">{{ summary.teachers_count }}</p>
       </div>
-      <div class="dashboard-stat-card">
-        <p style="font-size: 0.875rem; color: var(--muted);">Assistants</p>
-        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.assistants_count }}</p>
+      <div class="p-4 rounded-xl bg-[var(--card-strong)] border border-[var(--glass-border)]">
+        <p class="text-sm text-[var(--muted)]">Assistants</p>
+        <p class="text-2xl font-bold text-[var(--text-strong)]">{{ summary.assistants_count }}</p>
       </div>
-      <div class="dashboard-stat-card">
-        <p style="font-size: 0.875rem; color: var(--muted);">Groups</p>
-        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.groups_count }}</p>
-        <span style="font-size: 0.75rem; color: var(--muted);">Active: {{ summary.active_groups }}</span>
+      <div class="p-4 rounded-xl bg-[var(--card-strong)] border border-[var(--glass-border)]">
+        <p class="text-sm text-[var(--muted)]">Groups</p>
+        <p class="text-2xl font-bold text-[var(--text-strong)]">{{ summary.groups_count }}</p>
+        <span class="text-xs text-[var(--muted)]">Active: {{ summary.active_groups }}</span>
       </div>
-      <div class="dashboard-stat-card">
-        <p style="font-size: 0.875rem; color: var(--muted);">Students</p>
-        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.students_count }}</p>
+      <div class="p-4 rounded-xl bg-[var(--card-strong)] border border-[var(--glass-border)]">
+        <p class="text-sm text-[var(--muted)]">Students</p>
+        <p class="text-2xl font-bold text-[var(--text-strong)]">{{ summary.students_count }}</p>
       </div>
-      <div class="dashboard-stat-card">
-        <p style="font-size: 0.875rem; color: var(--muted);">Parents</p>
-        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.parents_count }}</p>
+      <div class="p-4 rounded-xl bg-[var(--card-strong)] border border-[var(--glass-border)]">
+        <p class="text-sm text-[var(--muted)]">Parents</p>
+        <p class="text-2xl font-bold text-[var(--text-strong)]">{{ summary.parents_count }}</p>
       </div>
-      <div class="dashboard-stat-card">
-        <p style="font-size: 0.875rem; color: var(--muted);">Lessons</p>
-        <p style="font-size: 1.5rem; font-weight: 700; color: var(--text);">{{ summary.lessons_count }}</p>
+      <div class="p-4 rounded-xl bg-[var(--card-strong)] border border-[var(--glass-border)]">
+        <p class="text-sm text-[var(--muted)]">Lessons</p>
+        <p class="text-2xl font-bold text-[var(--text-strong)]">{{ summary.lessons_count }}</p>
       </div>
     </div>
   </section>
 
-  <section *ngIf="isCenterAdmin">
+  <section *ngIf="isCenterAdmin" class="overflow-hidden min-w-0">
     <app-center-ai-panel></app-center-ai-panel>
   </section>
 
-  <section class="dashboard-card" style="padding: 1.5rem;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+  <section class="p-6 rounded-2xl bg-[var(--card)] border border-[var(--glass-border)] shadow-sm max-[400px]:p-4">
+    <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
       <div>
-        <p style="text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.75rem; color: var(--muted);">Recent
-          activity</p>
-        <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text); margin: 0.25rem 0;">Latest group updates
-        </h2>
+        <p class="uppercase tracking-[0.18em] text-xs text-[var(--muted)]">Recent activity</p>
+        <h2 class="text-xl font-extrabold text-[var(--text-strong)] my-1">Latest group updates</h2>
       </div>
-      <button routerLink="/dashboard/staff/groups" class="btn-dashboard-ghost">Open groups</button>
+      <button routerLink="/dashboard/staff/groups"
+        class="px-4 py-2 rounded-full border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] font-medium hover:bg-[var(--card-strong)] transition-colors">Open
+        groups</button>
     </div>
     <ng-container *ngIf="recent.length; else emptyRecent">
-      <ul style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <ul class="flex flex-col gap-3">
         <li *ngFor="let item of recent"
-          style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--dashboard-sidebar-border);">
-          <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text);">
-            <span
-              style="width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(to right, #6366f1, #3b82f6);"></span>
-            <span>{{ item.title || 'Activity' }}</span>
+          class="flex justify-between items-center py-3 border-b border-[var(--glass-border)] last:border-0 flex-wrap gap-2">
+          <div class="flex items-center gap-3 text-[var(--text)]">
+            <span class="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 flex-shrink-0"></span>
+            <span class="font-medium break-words">{{ item.title || 'Activity' }}</span>
           </div>
-          <span style="font-size: 0.875rem; color: var(--muted);">{{ item.time }}</span>
+          <span class="text-sm text-[var(--muted)] whitespace-nowrap">{{ item.time }}</span>
         </li>
       </ul>
     </ng-container>
     <ng-template #emptyRecent>
-      <div style="font-size: 0.875rem; color: var(--muted);">No recent activity recorded.</div>
+      <div class="text-sm text-[var(--muted)] py-4 text-center">No recent activity recorded.</div>
     </ng-template>
   </section>
 </section>

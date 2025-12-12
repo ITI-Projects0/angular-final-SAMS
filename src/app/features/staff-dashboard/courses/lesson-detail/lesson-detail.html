@@ -1,5 +1,5 @@
 <div
-  class="max-w-[1000px] mx-auto p-8 bg-[var(--card)] rounded-3xl border border-[var(--glass-border)] shadow-2xl text-[var(--text)] animate-[fadeIn_0.4s_ease-out] md:p-5"
+  class="max-w-[1000px] mx-auto p-8 bg-[var(--card)] rounded-3xl border border-[var(--glass-border)] shadow-2xl text-[var(--text)] animate-[fadeIn_0.4s_ease-out] md:p-5 max-[400px]:p-3"
   *ngIf="!loading && lesson; else loadingTpl">
 
   <!-- Header -->
@@ -12,23 +12,24 @@
     <div class="flex justify-between items-start md:flex-col md:gap-4">
       <div>
         <h1
-          class="text-3xl font-extrabold mb-2 bg-gradient-to-br from-[var(--text)] to-[var(--muted)] bg-clip-text text-transparent">
+          class="text-3xl font-extrabold mb-2 bg-gradient-to-br from-[var(--text)] to-[var(--muted)] bg-clip-text text-transparent max-[400px]:text-2xl">
           {{ lesson.title }}</h1>
-        <p class="text-[var(--muted)] text-lg">{{ lesson.scheduled_at ? (lesson.scheduled_at | date:'medium') : 'Not
+        <p class="text-[var(--muted)] text-lg max-[400px]:text-base">{{ lesson.scheduled_at ? (lesson.scheduled_at |
+          date:'medium') : 'Not
           scheduled' }}</p>
       </div>
 
-      <div class="flex gap-3">
+      <div class="flex gap-3 flex-wrap max-[400px]:w-full">
         <button (click)="openEditLesson()"
-          class="bg-[var(--glass)] border border-[var(--glass-border)] text-[var(--text)] rounded-full px-4 py-2.5 shadow-sm hover:bg-[var(--glass-hover)] transition-all font-semibold text-sm">
+          class="bg-[var(--glass)] border border-[var(--glass-border)] text-[var(--text)] rounded-full px-4 py-2.5 shadow-sm hover:bg-[var(--glass-hover)] transition-all font-semibold text-sm flex-1 whitespace-nowrap justify-center">
           Edit
         </button>
         <button (click)="deleteLesson()"
-          class="bg-red-500/10 border border-red-500/20 text-red-500 rounded-full px-4 py-2.5 shadow-sm hover:bg-red-500/20 transition-all font-semibold text-sm">
+          class="bg-red-500/10 border border-red-500/20 text-red-500 rounded-full px-4 py-2.5 shadow-sm hover:bg-red-500/20 transition-all font-semibold text-sm flex-1 whitespace-nowrap justify-center">
           Delete
         </button>
         <button (click)="openAttendancePanel()"
-          class="bg-gradient-to-br from-[var(--primary)] to-[#7c3aed] text-white rounded-full px-6 py-2.5 shadow-lg hover:-translate-y-0.5 hover:brightness-110 transition-all font-semibold">
+          class="bg-gradient-to-br from-[var(--primary)] to-[#7c3aed] text-white rounded-full px-6 py-2.5 shadow-lg hover:-translate-y-0.5 hover:brightness-110 transition-all font-semibold w-full sm:w-auto justify-center">
           Take Attendance
         </button>
       </div>
@@ -43,11 +44,11 @@
   <section class="mb-8">
     <h2 class="text-xl font-bold mb-4">Lesson Video</h2>
 
-    <div class="flex gap-2 mb-4">
+    <div class="flex gap-2 mb-4 max-[400px]:flex-col">
       <input type="text" [(ngModel)]="videoUrlInput" placeholder="Paste YouTube Link here..."
         class="flex-1 px-4 py-2 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-all">
       <button (click)="saveVideoUrl()" [disabled]="processing"
-        class="bg-[var(--card)] border border-[var(--glass-border)] px-6 py-2 rounded-xl font-semibold hover:bg-[var(--glass)] transition-all disabled:opacity-50">
+        class="bg-[var(--card)] border border-[var(--glass-border)] px-6 py-2 rounded-xl font-semibold hover:bg-[var(--glass)] transition-all disabled:opacity-50 max-[400px]:w-full">
         {{ processing ? 'Saving...' : 'Save Video' }}
       </button>
     </div>
@@ -70,7 +71,8 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     <!-- Attendance Summary -->
-    <section class="border border-[var(--glass-border)] rounded-[1.25rem] bg-[var(--card)] shadow-sm p-6">
+    <section
+      class="border border-[var(--glass-border)] rounded-[1.25rem] bg-[var(--card)] shadow-sm p-6 max-[400px]:p-4">
       <h2 class="text-xl font-bold mb-4">Attendance Summary</h2>
       <div class="flex flex-col gap-4">
         <div
@@ -79,7 +81,7 @@
           <span class="font-bold text-lg">{{ students.length }}</span>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-3 max-[350px]:grid-cols-1">
           <div class="p-3 bg-green-500/10 border border-green-500/20 rounded-xl flex flex-col items-center">
             <span class="text-green-500 font-bold text-xl">{{ attendanceStats.present }}</span>
             <span class="text-xs text-[var(--muted)] uppercase tracking-wider">Present</span>
@@ -107,7 +109,8 @@
     </section>
 
     <!-- Assessments Section -->
-    <section class="border border-[var(--glass-border)] rounded-[1.25rem] bg-[var(--card)] shadow-sm p-6">
+    <section
+      class="border border-[var(--glass-border)] rounded-[1.25rem] bg-[var(--card)] shadow-sm p-6 max-[400px]:p-4">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold m-0">Assessments</h2>
         <button (click)="openAssessmentPanel()"
@@ -122,13 +125,13 @@
       </div>
       <ul *ngIf="lesson.assessments?.length" class="flex flex-col gap-3">
         <li *ngFor="let exam of lesson.assessments" (click)="viewAssessment(exam.id)"
-          class="p-4 bg-[var(--glass)] border border-[var(--glass-border)] rounded-xl flex justify-between items-center cursor-pointer hover:bg-[var(--glass-hover)] transition-all group">
+          class="p-4 bg-[var(--glass)] border border-[var(--glass-border)] rounded-xl flex justify-between items-center cursor-pointer hover:bg-[var(--glass-hover)] transition-all group max-[400px]:flex-col max-[400px]:items-start max-[400px]:gap-3">
           <div>
             <p class="font-semibold">{{ exam.title }}</p>
             <p class="text-xs text-[var(--muted)]">Scheduled: {{ exam.scheduled_at | date:'medium' }}</p>
           </div>
 
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 max-[400px]:w-full max-[400px]:justify-between">
             <span class="text-xs px-2 py-1 rounded font-medium" [ngClass]="{
                           'bg-green-500/10 text-green-500': getAssessmentStatus(exam.scheduled_at) === 'Completed',
                           'bg-blue-500/10 text-blue-500': getAssessmentStatus(exam.scheduled_at) === 'Upcoming'
@@ -136,7 +139,7 @@
               {{ getAssessmentStatus(exam.scheduled_at) }}
             </span>
 
-            <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity max-[400px]:opacity-100">
               <button (click)="openEditAssessment(exam, $event)"
                 class="p-1.5 hover:bg-[var(--primary)]/10 text-[var(--muted)] hover:text-[var(--primary)] rounded-lg transition-colors"
                 title="Edit">
@@ -289,19 +292,22 @@
   <!-- Edit Lesson Form in Sidebar -->
   <div class="flex flex-col gap-5 flex-1 overflow-y-auto pb-4" *ngIf="panelMode === 'edit-lesson'">
     <div class="block">
-      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Title <span class="text-red-500">*</span></label>
+      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Title <span
+          class="text-red-500">*</span></label>
       <input
         class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all text-[0.95rem]"
         type="text" [(ngModel)]="lessonForm.title" placeholder="Lesson Title" />
     </div>
     <div class="block">
-      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Scheduled at <span class="text-red-500">*</span></label>
+      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Scheduled at <span
+          class="text-red-500">*</span></label>
       <input
         class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all text-[0.95rem]"
         type="datetime-local" [(ngModel)]="lessonForm.scheduled_at" [min]="minDateTime" />
     </div>
     <div class="block">
-      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Description <span class="text-red-500">*</span></label>
+      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Description <span
+          class="text-red-500">*</span></label>
       <textarea
         class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all text-[0.95rem] min-h-[100px]"
         [(ngModel)]="lessonForm.description" placeholder="Lesson Description"></textarea>
@@ -312,8 +318,7 @@
       class="mt-auto sticky bottom-0 pt-4 bg-gradient-to-t from-[var(--card)] via-[var(--card)] to-transparent border-t border-[var(--glass-border)] flex justify-end">
       <button
         class="bg-gradient-to-br from-[var(--primary)] to-[#7c3aed] text-white rounded-full px-6 py-2.5 shadow-lg hover:-translate-y-0.5 hover:brightness-110 transition-all font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
-        type="button" (click)="saveLesson()"
-        [disabled]="processing || !lessonFormValid">
+        type="button" (click)="saveLesson()" [disabled]="processing || !lessonFormValid">
         {{ processing ? 'Saving...' : 'Save Changes' }}
       </button>
     </div>

@@ -1,171 +1,266 @@
-<section class="list-wrapper">
-  <header class="list-header">
-    <h2>Students</h2>
-    <p class="muted">Enrolled students and their centers</p>
+<section
+  class="max-w-[1100px] mx-auto my-6 p-5 max-[400px]:p-3 bg-[var(--card)] rounded-2xl border border-[var(--glass-border)] shadow-[0_18px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl text-[var(--text)]">
+  <header class="mb-4">
+    <h2 class="text-2xl font-bold">Students</h2>
+    <p class="text-[var(--muted)] text-sm">Enrolled students and their centers</p>
   </header>
 
-  <div class="toolbar">
-    <input placeholder="Search students..." class="search" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)" />
-    <div class="toolbar-actions" *ngIf="canAddMembers">
-      <button class="btn-primary" type="button" (click)="openCreateStudent()">Add Student</button>
-      <button class="btn-secondary" type="button" (click)="openCreateParent()">Add Parent</button>
+  <div class="flex justify-between items-center my-3 gap-3 max-[640px]:flex-col max-[640px]:items-stretch">
+    <input placeholder="Search students..."
+      class="px-3 py-2 rounded-lg border border-[var(--glass-border)] w-[260px] bg-[var(--glass)] text-[var(--text)] max-[640px]:w-full focus:outline-none focus:border-[var(--primary)] transition-colors"
+      [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange($event)" />
+
+    <div class="flex items-center gap-2 max-[640px]:justify-between max-[350px]:flex-col max-[350px]:items-stretch"
+      *ngIf="canAddMembers">
+      <button
+        class="btn-primary px-4 py-2 rounded-full text-sm font-medium shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 text-center justify-center"
+        type="button" (click)="openCreateStudent()">
+        <i class="fa-solid fa-plus mr-2"></i>Add Student
+      </button>
+      <button
+        class="bg-[var(--glass)] border border-[var(--glass-border)] px-4 py-2 rounded-full text-[var(--text)] text-sm font-medium hover:bg-[var(--card-strong)] transition-colors text-center justify-center"
+        type="button" (click)="openCreateParent()">
+        <i class="fa-solid fa-user-plus mr-2"></i>Add Parent
+      </button>
     </div>
   </div>
 
-  <div class="loading-overlay" *ngIf="loading">
-    <div class="spinner"></div>
+  <div class="flex items-center gap-2.5 p-3 bg-[var(--glass)] border border-[var(--glass-border)] rounded-xl mb-2"
+    *ngIf="loading">
+    <div class="w-[18px] h-[18px] border-[3px] border-black/10 border-t-[var(--primary)] rounded-full animate-spin">
+    </div>
     <span>Loading students...</span>
   </div>
 
-  <table class="list-table glass">
-    <thead>
+  <table
+    class="w-full border-collapse mt-2.5 bg-[var(--card)] border border-[var(--glass-border)] rounded-xl overflow-hidden shadow-sm max-[1200px]:block max-[1200px]:bg-transparent max-[1200px]:border-none max-[1200px]:shadow-none">
+    <thead class="max-[1200px]:hidden">
       <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Center</th>
-        <th>Actions</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Name</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Email</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Center</th>
+        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Actions</th>
       </tr>
     </thead>
-    <tbody>
-      <tr *ngFor="let s of paginatedStudents">
-        <td>
-          <div class="font-semibold">{{ s.name }}</div>
-          <small class="muted">{{ s.phone }}</small>
+    <tbody
+      class="max-[1200px]:grid max-[1200px]:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] max-[1200px]:gap-4 max-[1200px]:w-full">
+      <tr *ngFor="let s of paginatedStudents"
+        class="max-[1200px]:flex max-[1200px]:flex-col max-[1200px]:bg-[var(--card)] max-[1200px]:border max-[1200px]:border-[var(--glass-border)] max-[1200px]:rounded-2xl max-[1200px]:p-4 max-[400px]:p-3 max-[1200px]:shadow-sm max-[1200px]:h-full transition-colors hover:bg-[var(--card-strong)]">
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle font-bold text-[var(--text)] max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Name">
+          <div class="flex flex-col">
+            <span class="font-bold text-[var(--text)]">{{ s.name }}</span>
+            <small class="text-[var(--muted)] font-normal">{{ s.phone }}</small>
+          </div>
         </td>
-        <td>{{ s.email }}</td>
-        <td>{{ s.center }}</td>
-        <td>
-          <button class="btn-simple" (click)="openInfo(s)">Info</button>
-          <button class="btn-simple" *ngIf="canEditStudents" (click)="openEditStudent(s)">Edit</button>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Email">
+          <span class="text-[var(--text)] text-sm break-all">{{ s.email }}</span>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Center">
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--glass)] border border-[var(--glass-border)] text-sm truncate max-w-[220px] max-[1200px]:max-w-full"
+            title="{{ s.center || '-' }}">{{ s.center || '-' }}</span>
+        </td>
+        <td
+          class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-end max-[1200px]:items-center max-[1200px]:gap-2 max-[1200px]:w-full max-[1200px]:pt-4 max-[1200px]:pb-0 max-[1200px]:mt-auto max-[1200px]:border-none"
+          data-label="Actions">
+          <div class="flex items-center gap-2">
+            <button
+              class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-blue-500/10 hover:border-blue-500/30 hover:shadow-md transition-all duration-200"
+              (click)="openInfo(s)">Info</button>
+            <button
+              class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200"
+              *ngIf="canEditStudents" (click)="openEditStudent(s)">Edit</button>
+          </div>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <div class="pagination-bar" *ngIf="filteredStudents.length">
-    <div class="page-info">
-      <div class="dots">
-        <span class="dot" *ngFor="let i of [].constructor(totalPages); let idx = index" [class.active]="idx + 1 === page"></span>
-      </div>
-      <span class="muted">{{ pageStart }}–{{ pageEnd }} of {{ totalItems }}</span>
-    </div>
-    <div class="page-controls">
-      <button type="button" class="btn-pill" [disabled]="page <= 1" (click)="goToPage(page - 1)">‹ Prev</button>
-      <button type="button" class="btn-pill" [disabled]="page >= totalPages" (click)="goToPage(page + 1)">Next ›</button>
-    </div>
-  </div>
 </section>
 
-<div class="overlay" [class.open]="panelOpen" (click)="closeInfo()"></div>
-<div class="side-panel glass" [class.open]="panelOpen" (click)="$event.stopPropagation()">
-  <div class="panel-header">
-    <h3>{{ panelTitle }}</h3>
-    <button class="close-btn" (click)="closeInfo()">X</button>
+<div
+  class="max-w-[1100px] mx-auto flex justify-between items-center mt-4 gap-3 bg-[var(--glass)] border border-[var(--glass-border)] p-2.5 rounded-xl max-[450px]:flex-col max-[450px]:items-center"
+  *ngIf="filteredStudents.length">
+  <div class="text-[var(--muted)] text-sm">Showing {{ pageStart }} - {{ pageEnd }} of {{ totalItems }}</div>
+  <div class="inline-flex items-center gap-2.5">
+    <button
+      class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+      [disabled]="page <= 1" (click)="goToPage(page - 1)">Prev</button>
+    <span class="font-bold">Page {{ page }} / {{ totalPages }}</span>
+    <button
+      class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+      [disabled]="page >= totalPages" (click)="goToPage(page + 1)">Next</button>
   </div>
-  <div class="panel-body" *ngIf="panelMode === 'info' && selectedStudent">
-    <p><strong>Name:</strong> {{ selectedStudent.name }}</p>
-    <p><strong>Email:</strong> {{ selectedStudent.email }}</p>
-    <p><strong>Center:</strong> {{ selectedStudent.center || '-' }}</p>
-    <p><strong>Phone:</strong> {{ selectedStudent.phone || '—' }}</p>
-    <p><strong>User ID:</strong> {{ selectedStudent.id }}</p>
-    <div class="panel-actions" *ngIf="canEditStudents">
-      <button class="btn-primary" type="button" (click)="openEditStudent(selectedStudent)">Edit</button>
-      <button class="btn-danger" type="button" (click)="deleteStudent()" [disabled]="processing">Delete</button>
+</div>
+
+<div class="fixed inset-0 bg-black/20 opacity-0 pointer-events-none transition-opacity duration-250"
+  [class.opacity-100]="panelOpen" [class.pointer-events-auto]="panelOpen" (click)="closeInfo()"></div>
+
+<div
+  class="fixed inset-y-0 right-0 w-[min(420px,90vw)] max-[640px]:w-full bg-[var(--card)] border-l border-[var(--glass-border)] shadow-[-8px_0_24px_rgba(0,0,0,0.18)] transition-transform duration-300 p-5 flex flex-col gap-3.5 z-[999]"
+  [ngClass]="panelOpen ? 'translate-x-0' : 'translate-x-full'" (click)="$event.stopPropagation()">
+
+  <div class="flex justify-between items-center font-bold">
+    <h3>{{ panelTitle }}</h3>
+    <button
+      class="border-none bg-transparent text-2xl cursor-pointer text-[var(--text)] hover:text-[var(--primary)] transition-colors"
+      (click)="closeInfo()">X</button>
+  </div>
+
+  <!-- Info Mode -->
+  <div class="flex flex-col gap-2.5 overflow-y-auto" *ngIf="panelMode === 'info' && selectedStudent">
+    <p class="font-bold text-[var(--text)] text-lg">{{ selectedStudent.name }}</p>
+    <div class="grid grid-cols-1 gap-3 mt-2">
+      <div class="p-3 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">
+        <span class="text-[var(--muted)] text-sm block mb-1">Email</span>
+        <span class="text-[var(--text)] break-all">{{ selectedStudent.email }}</span>
+      </div>
+      <div class="p-3 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">
+        <span class="text-[var(--muted)] text-sm block mb-1">Center</span>
+        <span class="text-[var(--text)]">{{ selectedStudent.center || '-' }}</span>
+      </div>
+      <div class="p-3 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">
+        <span class="text-[var(--muted)] text-sm block mb-1">Phone</span>
+        <span class="text-[var(--text)]">{{ selectedStudent.phone || '—' }}</span>
+      </div>
+      <div class="p-3 border border-[var(--glass-border)] rounded-xl bg-[var(--glass)]">
+        <span class="text-[var(--muted)] text-sm block mb-1">User ID</span>
+        <span class="text-[var(--text)] font-mono">{{ selectedStudent.id }}</span>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-4" *ngIf="canEditStudents">
+      <button class="flex-1 btn-primary py-2.5 rounded-xl font-medium shadow-lg shadow-blue-500/20" type="button"
+        (click)="openEditStudent(selectedStudent)">Edit</button>
+      <button
+        class="flex-1 bg-red-500/10 text-red-500 border border-red-500/20 py-2.5 rounded-xl font-medium hover:bg-red-500/20 transition-colors"
+        type="button" (click)="deleteStudent()" [disabled]="processing">Delete</button>
     </div>
   </div>
 
-  <div class="panel-body" *ngIf="panelMode === 'create-student' || panelMode === 'edit-student'">
-    <p class="field-hint">Fields marked with * are required.</p>
-    <div class="field">
-      <label><span class="required">*</span>Name</label>
-      <input class="input-control" type="text" [(ngModel)]="studentForm.name" placeholder="Full name"
-        (ngModelChange)="onStudentInputChange()" [class.input-error]="studentErrors.name" />
-      <p class="error-text" *ngIf="studentErrors.name">{{ studentErrors.name }}</p>
-    </div>
-    <div class="field">
-      <label><span class="required">*</span>Email</label>
-      <input class="input-control" type="email" [(ngModel)]="studentForm.email" placeholder="Email address"
-        (ngModelChange)="onStudentInputChange()" [class.input-error]="studentErrors.email" />
-      <p class="error-text" *ngIf="studentErrors.email">{{ studentErrors.email }}</p>
-    </div>
-    <div class="field">
-      <label>Phone</label>
-      <input class="input-control" type="text" [(ngModel)]="studentForm.phone" placeholder="Optional phone"
-        (ngModelChange)="onStudentInputChange()" [class.input-error]="studentErrors.phone" />
-      <p class="error-text" *ngIf="studentErrors.phone">{{ studentErrors.phone }}</p>
-    </div>
-    <div class="field" *ngIf="panelMode === 'create-student'">
-      <label>Group</label>
+  <!-- Create/Edit Student Mode -->
+  <div class="flex flex-col gap-4 overflow-y-auto"
+    *ngIf="panelMode === 'create-student' || panelMode === 'edit-student'">
+    <p class="text-sm text-[var(--muted)]">Fields marked with <span class="text-red-500">*</span> are required.</p>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]"><span class="text-red-500 mr-1">*</span>Name</label>
       <input
-        class="input-control"
-        type="text"
-        placeholder="Filter groups..."
-        [(ngModel)]="groupFilter"
-        style="margin-bottom: 0.5rem;"
-      />
-      <select class="input-control" [(ngModel)]="studentForm.groupId" (ngModelChange)="onStudentInputChange()"
-        [class.input-error]="studentErrors.groupId">
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors"
+        type="text" [(ngModel)]="studentForm.name" placeholder="Full name" (ngModelChange)="onStudentInputChange()"
+        [class.border-red-500]="studentErrors.name" />
+      <p class="text-xs text-red-500" *ngIf="studentErrors.name">{{ studentErrors.name }}</p>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]"><span class="text-red-500 mr-1">*</span>Email</label>
+      <input
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors"
+        type="email" [(ngModel)]="studentForm.email" placeholder="Email address"
+        (ngModelChange)="onStudentInputChange()" [class.border-red-500]="studentErrors.email" />
+      <p class="text-xs text-red-500" *ngIf="studentErrors.email">{{ studentErrors.email }}</p>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]">Phone</label>
+      <input
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors"
+        type="text" [(ngModel)]="studentForm.phone" placeholder="Optional phone"
+        (ngModelChange)="onStudentInputChange()" [class.border-red-500]="studentErrors.phone" />
+      <p class="text-xs text-red-500" *ngIf="studentErrors.phone">{{ studentErrors.phone }}</p>
+    </div>
+
+    <div class="flex flex-col gap-1.5" *ngIf="panelMode === 'create-student'">
+      <label class="text-sm font-medium text-[var(--text)]">Group</label>
+      <input
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors mb-2"
+        type="text" placeholder="Filter groups..." [(ngModel)]="groupFilter" />
+      <select
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--card)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors"
+        [(ngModel)]="studentForm.groupId" (ngModelChange)="onStudentInputChange()"
+        [class.border-red-500]="studentErrors.groupId">
         <option *ngFor="let group of filteredGroupsForSelect" [value]="group.id">
           {{ group.name }}{{ group.subject ? ' (' + group.subject + ')' : '' }}
         </option>
       </select>
-      <p class="error-text" *ngIf="studentErrors.groupId">{{ studentErrors.groupId }}</p>
+      <p class="text-xs text-red-500" *ngIf="studentErrors.groupId">{{ studentErrors.groupId }}</p>
     </div>
-    <div class="panel-actions sticky-footer">
-      <button class="btn-primary" type="button" (click)="submitStudent()" [disabled]="processing || !canSubmitStudent">
+
+    <div
+      class="mt-auto pt-4 flex flex-col gap-3 sticky bottom-0 bg-[var(--card)] border-t border-[var(--glass-border)]">
+      <button class="btn-primary w-full py-2.5 rounded-xl font-medium shadow-lg shadow-blue-500/20" type="button"
+        (click)="submitStudent()" [disabled]="processing || !canSubmitStudent">
         {{ panelMode === 'create-student' ? 'Create' : 'Save changes' }}
       </button>
       <button
-        class="btn-danger"
-        type="button"
-        *ngIf="panelMode === 'edit-student'"
-        (click)="deleteStudent()"
-        [disabled]="processing"
-      >
+        class="w-full bg-red-500/10 text-red-500 border border-red-500/20 py-2.5 rounded-xl font-medium hover:bg-red-500/20 transition-colors"
+        type="button" *ngIf="panelMode === 'edit-student'" (click)="deleteStudent()" [disabled]="processing">
         Delete
       </button>
     </div>
   </div>
 
-  <div class="panel-body" *ngIf="panelMode === 'create-parent'">
-    <p class="field-hint">Fields marked with * are required.</p>
-    <div class="field">
-      <label><span class="required">*</span>Name</label>
-      <input class="input-control" type="text" [(ngModel)]="parentForm.name" placeholder="Full name"
-        (ngModelChange)="onParentInputChange()" [class.input-error]="parentErrors.name" />
-      <p class="error-text" *ngIf="parentErrors.name">{{ parentErrors.name }}</p>
-    </div>
-    <div class="field">
-      <label><span class="required">*</span>Email</label>
-      <input class="input-control" type="email" [(ngModel)]="parentForm.email" placeholder="Email address"
-        (ngModelChange)="onParentInputChange()" [class.input-error]="parentErrors.email" />
-      <p class="error-text" *ngIf="parentErrors.email">{{ parentErrors.email }}</p>
-    </div>
-    <div class="field">
-      <label>Phone</label>
-      <input class="input-control" type="text" [(ngModel)]="parentForm.phone" placeholder="Optional phone"
-        (ngModelChange)="onParentInputChange()" [class.input-error]="parentErrors.phone" />
-      <p class="error-text" *ngIf="parentErrors.phone">{{ parentErrors.phone }}</p>
-    </div>
-    <div class="field">
-      <label><span class="required">*</span>Linked student</label>
+  <!-- Create Parent Mode -->
+  <div class="flex flex-col gap-4 overflow-y-auto" *ngIf="panelMode === 'create-parent'">
+    <p class="text-sm text-[var(--muted)]">Fields marked with <span class="text-red-500">*</span> are required.</p>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]"><span class="text-red-500 mr-1">*</span>Name</label>
       <input
-        class="input-control"
-        type="text"
-        placeholder="Filter students..."
-        [(ngModel)]="studentFilter"
-        style="margin-bottom: 0.5rem;"
-      />
-      <select class="input-control" [(ngModel)]="parentForm.studentId" (ngModelChange)="onParentInputChange()"
-        [class.input-error]="parentErrors.studentId">
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors"
+        type="text" [(ngModel)]="parentForm.name" placeholder="Full name" (ngModelChange)="onParentInputChange()"
+        [class.border-red-500]="parentErrors.name" />
+      <p class="text-xs text-red-500" *ngIf="parentErrors.name">{{ parentErrors.name }}</p>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]"><span class="text-red-500 mr-1">*</span>Email</label>
+      <input
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors"
+        type="email" [(ngModel)]="parentForm.email" placeholder="Email address" (ngModelChange)="onParentInputChange()"
+        [class.border-red-500]="parentErrors.email" />
+      <p class="text-xs text-red-500" *ngIf="parentErrors.email">{{ parentErrors.email }}</p>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]">Phone</label>
+      <input
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors"
+        type="text" [(ngModel)]="parentForm.phone" placeholder="Optional phone" (ngModelChange)="onParentInputChange()"
+        [class.border-red-500]="parentErrors.phone" />
+      <p class="text-xs text-red-500" *ngIf="parentErrors.phone">{{ parentErrors.phone }}</p>
+    </div>
+
+    <div class="flex flex-col gap-1.5">
+      <label class="text-sm font-medium text-[var(--text)]"><span class="text-red-500 mr-1">*</span>Linked
+        student</label>
+      <input
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors mb-2"
+        type="text" placeholder="Filter students..." [(ngModel)]="studentFilter" />
+      <select
+        class="px-3 py-2.5 rounded-xl border border-[var(--glass-border)] bg-[var(--card)] text-[var(--text)] focus:outline-none focus:border-[var(--primary)] transition-colors"
+        [(ngModel)]="parentForm.studentId" (ngModelChange)="onParentInputChange()"
+        [class.border-red-500]="parentErrors.studentId">
         <option *ngFor="let student of filteredStudentsForSelect" [value]="student.id">
           {{ student.name }} - {{ student.email }}
         </option>
       </select>
-      <p class="error-text" *ngIf="parentErrors.studentId">{{ parentErrors.studentId }}</p>
+      <p class="text-xs text-red-500" *ngIf="parentErrors.studentId">{{ parentErrors.studentId }}</p>
     </div>
-    <div class="panel-actions sticky-footer">
-      <button class="btn-primary" type="button" (click)="submitParent()" [disabled]="processing || !canSubmitParent">Create</button>
+
+    <div class="mt-auto pt-4 sticky bottom-0 bg-[var(--card)] border-t border-[var(--glass-border)]">
+      <button class="btn-primary w-full py-2.5 rounded-xl font-medium shadow-lg shadow-blue-500/20" type="button"
+        (click)="submitParent()" [disabled]="processing || !canSubmitParent">Create</button>
     </div>
   </div>
 </div>

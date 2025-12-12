@@ -1,18 +1,19 @@
 <section
-  class="w-full max-w-[1400px] p-6 bg-(--card) rounded-2xl border border-(--glass-border) shadow-xl backdrop-blur-xl text-(--text) md:p-4 mx-auto">
+  class="w-full max-w-[1400px] p-6 bg-[var(--card)] rounded-2xl border border-[var(--glass-border)] shadow-xl backdrop-blur-xl text-[var(--text)] md:p-4 mx-auto max-[400px]:p-3">
   <header class="flex flex-col gap-1 mb-6">
     <h2 class="text-2xl font-bold m-0">Groups</h2>
-    <p class="text-(--muted) text-sm">Classes you manage across the center</p>
+    <p class="text-[var(--muted)] text-sm">Classes you manage across the center</p>
   </header>
 
-  <div class="flex justify-between items-center my-3 gap-3 md:flex-col md:items-stretch md:gap-4">
+  <div
+    class="flex justify-between items-center my-3 gap-3 max-[400px]:flex-col max-[400px]:w-full max-[400px]:gap-3">
     <input placeholder="Search groups..."
-      class="px-3 py-2 rounded-lg border border-(--glass-border) w-[260px] bg-(--glass) text-(--text) md:w-full focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
+      class="px-3 py-2 rounded-lg border border-[var(--glass-border)] w-[260px] bg-[var(--glass)] text-[var(--text)] md:w-full focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all"
       [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" />
-    <div class="flex items-center gap-2 md:w-full md:justify-between">
-      <label class="text-(--muted) text-sm">Per page</label>
+    <div class="flex justify-end items-center gap-2 md:w-full max-[400px]:w-full max-[400px]:justify-between">
+      <label class="text-[var(--muted)] text-sm">Per page</label>
       <select
-        class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--glass) text-(--text) focus:outline-none"
+        class="px-3 py-2 rounded-lg border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--text)] focus:outline-none"
         [(ngModel)]="perPage" (ngModelChange)="changePerPage($event)">
         <option [ngValue]="10">10</option>
         <option [ngValue]="15">15</option>
@@ -20,47 +21,47 @@
         <option [ngValue]="50">50</option>
       </select>
     </div>
-    <button
-      class="bg-linear-to-br from-(--primary) to-[#7c3aed] text-white rounded-full px-4 py-2 shadow-lg hover:-translate-y-0.5 hover:brightness-105 transition-all md:w-full font-semibold"
-      type="button" *ngIf="canCreateGroup" (click)="openCreate()">Add group</button>
   </div>
+  <button
+    class="bg-gradient-to-br from-[var(--primary)] to-[#7c3aed] text-white rounded-full px-4 py-2 shadow-lg hover:-translate-y-0.5 hover:brightness-105 transition-all w-full md:w-fit font-semibold justify-center"
+    type="button" *ngIf="canCreateGroup" (click)="openCreate()">Add group</button>
 
-  <div class="flex items-center gap-3 p-3 bg-(--glass) border border-(--glass-border) rounded-xl mb-2"
+  <div class="flex items-center gap-3 p-3 bg-[var(--glass)] border border-[var(--glass-border)] rounded-xl mb-2"
     *ngIf="loading">
-    <div class="w-5 h-5 border-2 border-black/10 border-t-(--primary) rounded-full animate-spin"></div>
+    <div class="w-5 h-5 border-2 border-black/10 border-t-[var(--primary)] rounded-full animate-spin"></div>
     <span>Loading courses...</span>
   </div>
 
   <div class="hidden lg:block">
     <table
-      class="w-full border-collapse mt-2 bg-(--card) border border-(--glass-border) rounded-xl overflow-hidden shadow-lg">
+      class="w-full border-collapse mt-2 bg-[var(--card)] border border-[var(--glass-border)] rounded-xl overflow-hidden shadow-lg">
       <thead>
         <tr>
           <th
-            class="p-3 text-left border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+            class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
             Group</th>
           <th
-            class="p-3 text-left border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+            class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
             Subject</th>
           <th
-            class="p-3 text-left border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+            class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
             Teacher</th>
           <th
-            class="p-3 text-right border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+            class="p-3 text-right border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
             Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let group of filteredGroups">
-          <td class="p-3 text-left border-b border-(--glass-border)">
+          <td class="p-3 text-left border-b border-[var(--glass-border)]">
             <div class="font-semibold">{{ group.title }}</div>
-            <small class="text-(--muted) text-sm">{{ group.schedule }}</small>
+            <small class="text-[var(--muted)] text-sm">{{ group.schedule }}</small>
           </td>
-          <td class="p-3 text-left border-b border-(--glass-border)">{{ group.subject }}</td>
-          <td class="p-3 text-left border-b border-(--glass-border)">{{ group.teacher }}</td>
-          <td class="p-3 text-right border-b border-(--glass-border)">
+          <td class="p-3 text-left border-b border-[var(--glass-border)]">{{ group.subject }}</td>
+          <td class="p-3 text-left border-b border-[var(--glass-border)]">{{ group.teacher }}</td>
+          <td class="p-3 text-right border-b border-[var(--glass-border)]">
             <button
-              class="bg-(--glass) border border-(--glass-border) px-3 py-1.5 rounded-full cursor-pointer text-(--text) hover:bg-slate-400/10 hover:border-[#7c3aed]/35 hover:-translate-y-px transition-all"
+              class="bg-[var(--glass)] border border-[var(--glass-border)] px-3 py-1.5 rounded-full cursor-pointer text-[var(--text)] hover:bg-slate-400/10 hover:border-[#7c3aed]/35 hover:-translate-y-px transition-all"
               (click)="openInfo(group)">Overview</button>
           </td>
         </tr>
@@ -70,78 +71,75 @@
 
   <div class="flex flex-col gap-4 mt-4 lg:hidden">
     <article
-      class="border border-(--glass-border) rounded-2xl bg-(--card) p-4 shadow-md flex flex-col gap-3"
+      class="border border-[var(--glass-border)] rounded-2xl bg-[var(--card)] p-4 shadow-md flex flex-col gap-3 max-[400px]:p-3"
       *ngFor="let group of filteredGroups">
       <div class="flex items-start justify-between gap-3">
         <div>
-          <p class="text-xs uppercase tracking-widest text-(--muted) mb-1">Group</p>
-          <h3 class="text-lg font-semibold text-(--text) m-0">{{ group.title }}</h3>
-          <p class="text-(--muted) text-sm">{{ group.schedule }}</p>
+          <p class="text-xs uppercase tracking-widest text-[var(--muted)] mb-1">Group</p>
+          <h3 class="text-lg font-semibold text-[var(--text)] m-0">{{ group.title }}</h3>
+          <p class="text-[var(--muted)] text-sm">{{ group.schedule }}</p>
         </div>
         <span
-          class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs border border-(--glass-border) bg-(--glass) text-(--muted) capitalize whitespace-nowrap"
+          class="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs border border-[var(--glass-border)] bg-[var(--glass)] text-[var(--muted)] capitalize whitespace-nowrap"
           [class.border-emerald-500/40]="group.status === 'Active'"
-          [class.bg-emerald-500/15]="group.status === 'Active'"
-          [class.text-emerald-600]="group.status === 'Active'">{{ group.status }}</span>
+          [class.bg-emerald-500/15]="group.status === 'Active'" [class.text-emerald-600]="group.status === 'Active'">{{
+          group.status }}</span>
       </div>
 
-      <dl class="grid grid-cols-2 gap-3 text-sm text-(--muted)">
+      <dl class="grid grid-cols-2 gap-3 text-sm text-[var(--muted)]">
         <div>
-          <dt class="font-semibold text-(--text)">Subject</dt>
+          <dt class="font-semibold text-[var(--text)]">Subject</dt>
           <dd class="m-0">{{ group.subject }}</dd>
         </div>
         <div>
-          <dt class="font-semibold text-(--text)">Teacher</dt>
+          <dt class="font-semibold text-[var(--text)]">Teacher</dt>
           <dd class="m-0">{{ group.teacher }}</dd>
         </div>
         <div>
-          <dt class="font-semibold text-(--text)">Center</dt>
+          <dt class="font-semibold text-[var(--text)]">Center</dt>
           <dd class="m-0">{{ group.center }}</dd>
         </div>
         <div>
-          <dt class="font-semibold text-(--text)">Students</dt>
+          <dt class="font-semibold text-[var(--text)]">Students</dt>
           <dd class="m-0">{{ group.studentsCount || '—' }}</dd>
         </div>
       </dl>
 
       <button
-        class="bg-(--glass) border border-(--glass-border) px-4 py-2 rounded-full cursor-pointer text-(--text) font-semibold hover:bg-white/5 hover:border-[#7c3aed]/35 transition-all"
+        class="bg-[var(--glass)] border border-[var(--glass-border)] px-4 py-2 rounded-full cursor-pointer text-[var(--text)] font-semibold hover:bg-white/5 hover:border-[#7c3aed]/35 transition-all justify-center"
         (click)="openInfo(group)">Overview</button>
     </article>
   </div>
-
-  <!-- Pagination -->
-  <div
-    class="max-w-[1100px] mx-auto flex justify-between items-center mt-4 gap-3 bg-(--glass) border border-(--glass-border) p-2.5 rounded-xl max-[450px]:flex-col max-[450px]:items-center"
-    *ngIf="lastPage > 1 || total">
-    <div class="text-(--muted) text-sm">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
-    <div class="inline-flex items-center gap-2.5">
-      <button
-        class="bg-(--glass) border border-(--glass-border) px-3.5 py-1.5 rounded-full cursor-pointer text-(--text) shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
-        [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
-      <span class="font-bold">Page {{ page }} / {{ lastPage }}</span>
-      <button
-        class="bg-(--glass) border border-(--glass-border) px-3.5 py-1.5 rounded-full cursor-pointer text-(--text) shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
-        [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
-    </div>
-  </div>
-
 </section>
-
+<!-- Pagination -->
 <div
-  *ngIf="panelOpen"
+  class="max-w-[1100px] mx-auto flex justify-between items-center mt-4 gap-3 bg-[var(--glass)] border border-[var(--glass-border)] p-2.5 rounded-xl max-[450px]:flex-col max-[450px]:items-center"
+  *ngIf="lastPage > 1 || total">
+  <div class="text-[var(--muted)] text-sm">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
+  <div class="inline-flex items-center gap-2.5">
+    <button
+      class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+      [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
+    <span class="font-bold">Page {{ page }} / {{ lastPage }}</span>
+    <button
+      class="bg-[var(--glass)] border border-[var(--glass-border)] px-3.5 py-1.5 rounded-full cursor-pointer text-[var(--text)] shadow-sm hover:-translate-y-px hover:bg-purple-500/10 hover:border-purple-500/30 hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+      [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
+  </div>
+</div>
+
+<div *ngIf="panelOpen"
   class="fixed inset-0 bg-black/30 opacity-100 pointer-events-auto transition-opacity duration-200 z-60"
   (click)="closeInfo()">
 </div>
 <div
-  class="fixed inset-y-0 right-0 w-full md:w-[min(420px,90vw)] bg-(--card) border-l border-(--glass-border) shadow-2xl transition-transform duration-300 p-5 flex flex-col gap-4 z-70"
+  class="fixed inset-y-0 right-0 w-full md:w-[min(420px,90vw)] bg-[var(--card)] border-l border-[var(--glass-border)] shadow-2xl transition-transform duration-300 p-5 flex flex-col gap-4 z-70"
   [class.translate-x-full]="!panelOpen" [class.translate-x-0]="panelOpen" (click)="$event.stopPropagation()">
   <div class="flex justify-between items-center font-bold">
     <h3 class="text-xl m-0">
       {{ panelMode === 'create' ? 'Create group' : panelMode === 'edit' ? 'Edit group' : 'Course info' }}
     </h3>
     <button
-      class="border-none bg-transparent text-2xl cursor-pointer text-(--text) hover:opacity-70 transition-opacity"
+      class="border-none bg-transparent text-2xl cursor-pointer text-[var(--text)] hover:opacity-70 transition-opacity"
       (click)="closeInfo()">X</button>
   </div>
   <div class="flex flex-col gap-3 flex-1 overflow-y-auto pb-4" *ngIf="panelMode === 'info' && selectedGroup">
@@ -151,11 +149,11 @@
     <p><strong>Teacher:</strong> {{ selectedGroup.teacher }}</p>
     <p><strong>Students:</strong> {{ selectedGroup.studentsCount ?? '—' }}</p>
 
-    <div class="mt-4 flex justify-end gap-2">
-      <a class="bg-linear-to-br from-(--primary) to-[#7c3aed] text-white rounded-full px-4 py-2 shadow-lg hover:-translate-y-0.5 hover:brightness-105 transition-all font-semibold no-underline inline-block"
+    <div class="mt-4 flex justify-end gap-2 max-[400px]:flex-col">
+      <a class="bg-gradient-to-br from-[var(--primary)] to-[#7c3aed] text-white text-center rounded-full px-4 py-2 shadow-lg hover:-translate-y-0.5 hover:brightness-105 transition-all font-semibold no-underline inline-block"
         [routerLink]="['/dashboard/staff/groups', selectedGroup.id]">Go to group</a>
       <button type="button"
-        class="bg-(--glass) text-(--text) rounded-full px-4 py-2 border border-(--glass-border) cursor-pointer font-semibold hover:bg-white/5 hover:border-(--primary) transition-all"
+        class="bg-[var(--glass)] text-[var(--text)] rounded-full px-4 py-2 border border-[var(--glass-border)] cursor-pointer font-semibold hover:bg-white/5 hover:border-[var(--primary)] transition-all"
         *ngIf="canCreateGroup" (click)="openEdit()">Edit</button>
       <button type="button"
         class="bg-red-500/10 text-red-500 rounded-full px-4 py-2 border border-red-500/40 cursor-pointer hover:-translate-y-0.5 hover:bg-red-500/20 hover:border-red-500/60 transition-all"
@@ -167,46 +165,46 @@
 
   <div class="flex flex-col gap-3 flex-1 overflow-y-auto pb-4" *ngIf="panelMode === 'create' || panelMode === 'edit'">
     <div class="mb-2">
-      <p class="text-sm text-(--muted) m-0">
+      <p class="text-sm text-[var(--muted)] m-0">
         All fields with * are required. Update schedule days/time anytime after creating the group.
       </p>
     </div>
 
     <div class="block">
-      <label class="block mb-2 text-sm font-medium text-(--muted)"><span
+      <label class="block mb-2 text-sm font-medium text-[var(--muted)]"><span
           class="text-red-500 mr-1">*</span>Name</label>
       <input
-        class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
-        [class.border-red-500]="groupErrors.name"
-        type="text" [(ngModel)]="groupForm.name" placeholder="Group name" (ngModelChange)="onGroupInputChange('name')" />
+        class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all"
+        [class.border-red-500]="groupErrors.name" type="text" [(ngModel)]="groupForm.name" placeholder="Group name"
+        (ngModelChange)="onGroupInputChange('name')" />
       <p class="text-sm text-red-500 mt-1" *ngIf="groupErrors.name">{{ groupErrors.name }}</p>
     </div>
 
     <div class="block">
-      <label class="block mb-2 text-sm font-medium text-(--muted)"><span
+      <label class="block mb-2 text-sm font-medium text-[var(--muted)]"><span
           class="text-red-500 mr-1">*</span>Subject</label>
       <input
-        class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
-        [class.border-red-500]="groupErrors.subject"
-        type="text" [(ngModel)]="groupForm.subject" placeholder="Subject" (ngModelChange)="onGroupInputChange('subject')" />
+        class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all"
+        [class.border-red-500]="groupErrors.subject" type="text" [(ngModel)]="groupForm.subject" placeholder="Subject"
+        (ngModelChange)="onGroupInputChange('subject')" />
       <p class="text-sm text-red-500 mt-1" *ngIf="groupErrors.subject">{{ groupErrors.subject }}</p>
     </div>
 
     <div class="block">
-      <label class="block mb-2 text-sm font-medium text-(--muted)">Description</label>
+      <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Description</label>
       <textarea
-        class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
-        [class.border-red-500]="groupErrors.description"
-        rows="3" [(ngModel)]="groupForm.description" placeholder="Optional description" (ngModelChange)="onGroupInputChange('description')"></textarea>
+        class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all"
+        [class.border-red-500]="groupErrors.description" rows="3" [(ngModel)]="groupForm.description"
+        placeholder="Optional description" (ngModelChange)="onGroupInputChange('description')"></textarea>
       <p class="text-sm text-red-500 mt-1" *ngIf="groupErrors.description">{{ groupErrors.description }}</p>
     </div>
 
     <div class="block" *ngIf="panelMode === 'create'">
-      <label class="block mb-2 text-sm font-medium text-(--muted)"><span class="text-red-500 mr-1">*</span>Schedule
+      <label class="block mb-2 text-sm font-medium text-[var(--muted)]"><span class="text-red-500 mr-1">*</span>Schedule
         days</label>
       <div class="flex flex-wrap gap-2">
         <label *ngFor="let day of dayOptions"
-          class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-(--glass-border) bg-(--glass) cursor-pointer font-semibold transition-all hover:-translate-y-px"
+          class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-[var(--glass-border)] bg-[var(--glass)] cursor-pointer font-semibold transition-all hover:-translate-y-px"
           [class.border-[#7c3aed]/40]="groupForm.scheduleDays.includes(day)"
           [class.bg-[#7c3aed]/10]="groupForm.scheduleDays.includes(day)"
           [class.shadow-lg]="groupForm.scheduleDays.includes(day)">
@@ -215,30 +213,30 @@
           <span>{{ day }}</span>
         </label>
       </div>
-      <p class="text-sm text-(--muted) mt-1">Selected: {{ groupForm.scheduleDays.length || 0 }}</p>
+      <p class="text-sm text-[var(--muted)] mt-1">Selected: {{ groupForm.scheduleDays.length || 0 }}</p>
       <p class="text-sm text-red-500 mt-1" *ngIf="!groupForm.scheduleDays.length">Pick at least one day.</p>
     </div>
 
     <div class="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3" *ngIf="panelMode === 'create'">
       <div>
-        <label class="block mb-2 text-sm font-medium text-(--muted)">Schedule time</label>
+        <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Schedule time</label>
         <input
-          class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
+          class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all"
           type="time" [(ngModel)]="groupForm.schedule_time" />
       </div>
       <div>
-        <label class="block mb-2 text-sm font-medium text-(--muted)">Sessions count</label>
+        <label class="block mb-2 text-sm font-medium text-[var(--muted)]">Sessions count</label>
         <input
-          class="w-full px-4 py-3 rounded-xl border border-(--glass-border) bg-white/5 text-(--text) shadow-inner focus:outline-none focus:border-(--primary) focus:ring-2 focus:ring-(--primary)/20 transition-all"
+          class="w-full px-4 py-3 rounded-xl border border-[var(--glass-border)] bg-white/5 text-[var(--text)] shadow-inner focus:outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/20 transition-all"
           type="number" min="1" max="100" [(ngModel)]="groupForm.sessions_count" />
       </div>
     </div>
 
     <div
-      class="mt-4 flex justify-end gap-2 sticky bottom-0 pt-4 bg-linear-to-t from-(--card) via-(--card) to-transparent border-t border-(--glass-border)">
+      class="mt-4 flex justify-end gap-2 sticky bottom-0 pt-4 bg-gradient-to-t from-[var(--card)] via-[var(--card)] to-transparent border-t border-[var(--glass-border)]">
       <span class="text-sm text-red-500" *ngIf="saveError">{{ saveError }}</span>
       <button
-        class="bg-linear-to-br from-(--primary) to-[#7c3aed] text-white rounded-full px-4 py-2 shadow-lg hover:-translate-y-0.5 hover:brightness-105 transition-all font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+        class="bg-gradient-to-br from-[var(--primary)] to-[#7c3aed] text-white rounded-full px-4 py-2 shadow-lg hover:-translate-y-0.5 hover:brightness-105 transition-all font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
         type="button" (click)="submitGroup()"
         [disabled]="processing || groupErrors.name || groupErrors.subject || groupErrors.description || !groupForm.name || !groupForm.subject || (panelMode === 'create' && !groupForm.scheduleDays.length)">
         {{ panelMode === 'edit' ? 'Save changes' : 'Create' }}

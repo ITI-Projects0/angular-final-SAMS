@@ -70,7 +70,8 @@ export class LessonDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
-      const gId = params.get('groupId');
+      // The group ID is 'id' in the parent route
+      const gId = params.get('groupId') || this.route.parent?.snapshot.paramMap.get('id');
       const lId = params.get('lessonId');
 
       if (gId && lId) {
@@ -79,6 +80,7 @@ export class LessonDetailComponent implements OnInit {
         this.loadData();
       } else {
         this.errorMessage = 'Invalid parameters';
+        console.error('Missing parameters:', { gId, lId, params: params.keys, parentParams: this.route.parent?.snapshot.paramMap.keys });
       }
     });
   }
