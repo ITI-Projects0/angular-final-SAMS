@@ -10,9 +10,7 @@ const SKIP_LOGOUT_URLS = [
     '/auth/register',
     '/auth/logout',
     '/sanctum/csrf-cookie',
-    '/broadcasting/auth',
-    '/notifications',
-    '/me'
+    '/broadcasting/auth'
 ];
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
@@ -25,9 +23,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                 // Don't logout if it's a skipped request or on auth pages
                 const shouldSkipLogout = SKIP_LOGOUT_URLS.some(url => req.url.includes(url));
                 const isOnAuthPage = router.url.includes('/login') ||
-                                     router.url.includes('/register') ||
-                                     router.url.includes('/forgot-password') ||
-                                     router.url.includes('/reset-password');
+                    router.url.includes('/register') ||
+                    router.url.includes('/forgot-password') ||
+                    router.url.includes('/reset-password');
 
                 if (!shouldSkipLogout && !isOnAuthPage) {
                     // Token is invalid/expired, clear storage and force login

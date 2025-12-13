@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpParams } from '@angular/common/http';
 import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
+import { FeedbackService } from '../../../core/services/feedback.service';
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Component({
   selector: 'app-admin-teachers',
@@ -12,7 +14,13 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './teachers.css',
 })
 export class Teachers implements OnInit {
-  constructor(private api: ApiService, private cdr: ChangeDetectorRef, private zone: NgZone) { }
+  constructor(
+    private api: ApiService,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone,
+    private feedback: FeedbackService,
+    private loadingService: LoadingService
+  ) { }
   teachers: TeacherCard[] = [];
   loading = false;
 
@@ -103,6 +111,42 @@ export class Teachers implements OnInit {
   closeInfo() {
     this.infoOpen = false;
     this.selectedTeacher = null;
+  }
+
+  deleteUser(id: number) {
+    this.feedback.openModal({
+      icon: 'error',
+      title: 'Delete Teacher',
+      message: 'Are you sure you want to delete this teacher? This action cannot be undone.',
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+      onPrimary: () => {
+        this.loadingService.show();
+        this.api.delete(`/users/${id}`).subscribe({
+          next: () => {
+            this.loadingService.hide();
+            this.feedback.showToast({
+              tone: 'success',
+              title: 'Deleted',
+              message: 'Teacher deleted successfully.'
+            });
+            this.closeInfo();
+            this.loadTeachers();
+            this.feedback.closeModal();
+          },
+          error: (err) => {
+            this.loadingService.hide();
+            this.feedback.showToast({
+              tone: 'error',
+              title: 'Error',
+              message: err?.error?.message || 'Failed to delete teacher.'
+            });
+            this.feedback.closeModal();
+          }
+        });
+      },
+      onSecondary: () => this.feedback.closeModal()
+    });
   }
 
   changePage(page: number) {

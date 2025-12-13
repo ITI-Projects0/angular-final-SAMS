@@ -39,8 +39,8 @@
           Email</th>
         <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
           Center</th>
-        <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
-          Status</th>
+        <!-- <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
+          Status</th> -->
         <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
           Courses</th>
         <th class="p-3 text-left border-b border-[var(--glass-border)] bg-[var(--glass)] font-bold text-[var(--muted)]">
@@ -68,14 +68,14 @@
             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[var(--glass)] border border-[var(--glass-border)] text-sm truncate max-w-[220px] max-[1200px]:max-w-full"
             title="{{ s.center || '-' }}">{{ s.center || '-' }}</span>
         </td>
-        <td
+        <!-- <td
           class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
           data-label="Status">
           <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm"
             [ngClass]="s.status === 'active' ? 'bg-[#ecfdf3] text-[#15803d] border-[#bbf7d0]' : 'bg-[#f3f4f6] text-[#4b5563] border-transparent'">
             {{ s.status }}
           </span>
-        </td>
+        </td> -->
         <td
           class="p-3 border-b border-[var(--glass-border)] align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-[var(--muted)] max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
           data-label="Courses">
@@ -147,6 +147,14 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="mt-4 pt-4 border-t border-[var(--glass-border)]">
+      <button
+        class="w-full bg-red-500/10 border border-red-500/30 text-red-500 px-4 py-2 rounded-xl font-bold hover:bg-red-500/20 transition-colors cursor-pointer"
+        (click)="deleteUser(selectedStudent.id)">
+        Delete Student
+      </button>
     </div>
   </div>
 </div>

@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
-import { NgZone } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy, signal, NgZone } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
 import { HttpParams } from '@angular/common/http';
 import { FeedbackService } from '../../../core/services/feedback.service';
 import { LoadingService } from '../../../core/services/loading.service';
+import { interval, Subscription } from 'rxjs';
 
 interface Center {
   id: number;
@@ -37,7 +37,7 @@ interface PendingCenter {
   templateUrl: './centers.html',
   styleUrl: './centers.css',
 })
-export class Centers implements OnInit {
+export class Centers implements OnInit, OnDestroy {
   constructor(
     private api: ApiService,
     private cdr: ChangeDetectorRef,
@@ -84,9 +84,26 @@ export class Centers implements OnInit {
   rejectingCenter: PendingCenter | null = null;
   rejectReason = '';
 
+  private pollingSub: Subscription | null = null;
+
   ngOnInit(): void {
     this.loadCenters();
     this.loadPendingCenters();
+
+    // Poll every 3 seconds to keep pending centers updated
+    this.zone.runOutsideAngular(() => {
+      this.pollingSub = interval(3000).subscribe(() => {
+        this.zone.run(() => {
+          this.loadPendingCenters(this.pendingPage, true);
+        });
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.pollingSub) {
+      this.pollingSub.unsubscribe();
+    }
   }
 
   switchTab(tab: 'approved' | 'pending') {
@@ -270,18 +287,22 @@ export class Centers implements OnInit {
   }
 
   // ==================== PENDING CENTERS ====================
-  loadPendingCenters(page = this.pendingPage) {
-    this.loadingPending.set(true);
+  loadPendingCenters(page = this.pendingPage, background = false) {
+    if (!background) this.loadingPending.set(true);
+
     const params = new HttpParams()
       .set('page', page)
       .set('per_page', this.pendingPerPage)
-      .set('search', this.pendingSearchTerm.trim());
+      .set('search', this.pendingSearchTerm.trim())
+      .set('_t', Date.now().toString()); // Cache buster
 
     this.api.get<any>('/admin/pending-centers', params).subscribe({
       next: (res) => {
         this.zone.run(() => {
           const payload = res?.data ?? res;
           const items = payload?.data ?? payload ?? [];
+
+          // Update data
           this.pendingCenters.set(items.map((item: any) => ({
             id: item.id,
             centerName: item.center?.name || item.center_name || item.centerName || item.name || '',
@@ -298,12 +319,18 @@ export class Centers implements OnInit {
           this.pendingTotal = meta.total ?? this.pendingCenters().length;
           this.pendingLastPage = meta.last_page ?? Math.max(Math.ceil(this.pendingTotal / this.pendingPerPage) || 1, 1);
 
-          this.loadingPending.set(false);
+          if (!background) this.loadingPending.set(false);
           this.cdr.detectChanges();
         });
       },
-      error: () => { this.loadingPending.set(false); this.cdr.detectChanges(); },
-      complete: () => { this.loadingPending.set(false); this.cdr.detectChanges(); }
+      error: () => {
+        if (!background) this.loadingPending.set(false);
+        this.cdr.detectChanges();
+      },
+      complete: () => {
+        if (!background) this.loadingPending.set(false);
+        this.cdr.detectChanges();
+      }
     });
   }
 

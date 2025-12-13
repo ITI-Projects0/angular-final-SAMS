@@ -3,6 +3,8 @@ import { HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
+import { FeedbackService } from '../../../core/services/feedback.service';
+import { LoadingService } from '../../../core/services/loading.service';
 
 @Component({
   selector: 'app-admin-parents',
@@ -12,7 +14,13 @@ import { ApiService } from '../../../core/services/api.service';
   styleUrl: './parents.css',
 })
 export class Parents implements OnInit {
-  constructor(private api: ApiService, private cdr: ChangeDetectorRef, private zone: NgZone) {}
+  constructor(
+    private api: ApiService,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone,
+    private feedback: FeedbackService,
+    private loadingService: LoadingService
+  ) { }
 
   parents: any[] = [];
   loading = false;
@@ -111,6 +119,42 @@ export class Parents implements OnInit {
   closeInfo() {
     this.infoOpen = false;
     this.selectedParent = null;
+  }
+
+  deleteUser(id: number) {
+    this.feedback.openModal({
+      icon: 'error',
+      title: 'Delete Parent',
+      message: 'Are you sure you want to delete this parent? This action cannot be undone.',
+      primaryText: 'Delete',
+      secondaryText: 'Cancel',
+      onPrimary: () => {
+        this.loadingService.show();
+        this.api.delete(`/users/${id}`).subscribe({
+          next: () => {
+            this.loadingService.hide();
+            this.feedback.showToast({
+              tone: 'success',
+              title: 'Deleted',
+              message: 'Parent deleted successfully.'
+            });
+            this.closeInfo();
+            this.loadParents();
+            this.feedback.closeModal();
+          },
+          error: (err) => {
+            this.loadingService.hide();
+            this.feedback.showToast({
+              tone: 'error',
+              title: 'Error',
+              message: err?.error?.message || 'Failed to delete parent.'
+            });
+            this.feedback.closeModal();
+          }
+        });
+      },
+      onSecondary: () => this.feedback.closeModal()
+    });
   }
 
   changePage(page: number) {
