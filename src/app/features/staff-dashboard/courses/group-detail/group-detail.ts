@@ -360,7 +360,8 @@ export class StaffGroupDetail implements OnInit, OnDestroy {
             name: student.name,
             email: student.email,
             status: student.pivot?.status ?? 'approved',
-            joined_at: student.pivot?.joined_at
+            joined_at: student.pivot?.joined_at,
+            parents: student.parents || []
           }));
         } else {
           this.students = [];

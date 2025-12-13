@@ -271,6 +271,19 @@
           : '—' }}</span>
       </div>
     </div>
+    
+    <div class="p-4 rounded-xl bg-[var(--glass)] border border-[var(--glass-border)] flex flex-col gap-3" *ngIf="selectedStudent.parents && selectedStudent.parents.length > 0">
+      <h4 class="text-sm font-semibold text-[var(--muted)] uppercase tracking-wider m-0">Parent / Guardian</h4>
+      <div *ngFor="let parent of selectedStudent.parents" class="flex flex-col gap-1 pb-2 border-b border-[var(--glass-border)] last:border-0 last:pb-0">
+        <span class="text-[var(--text)] font-semibold">{{ parent.name }}</span>
+        <span class="text-[var(--muted)] text-sm">{{ parent.email }}</span>
+        <span class="text-[var(--muted)] text-sm" *ngIf="parent.phone">{{ parent.phone }}</span>
+      </div>
+    </div>
+    <div class="p-4 rounded-xl bg-[var(--glass)] border border-[var(--glass-border)]" *ngIf="!selectedStudent.parents || selectedStudent.parents.length === 0">
+       <h4 class="text-sm font-semibold text-[var(--muted)] uppercase tracking-wider m-0 mb-1">Parent / Guardian</h4>
+       <span class="text-[var(--muted)] italic text-sm">No parent linked</span>
+    </div>
 
     <div
       class="mt-auto sticky bottom-0 pt-4 bg-gradient-to-t from-[var(--card)] via-[var(--card)] to-transparent border-t border-[var(--glass-border)] flex flex-col gap-3"
