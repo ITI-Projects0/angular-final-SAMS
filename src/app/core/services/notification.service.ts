@@ -22,7 +22,7 @@ export interface Notification {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationService {
   private apiService = inject(ApiService);
@@ -46,7 +46,7 @@ export class NotificationService {
 
   private pollingSubscription: any = null;
 
-  constructor() { }
+  constructor() {}
 
   initialize(): void {
     const user = this.tokenStorage.getUser();
@@ -92,7 +92,8 @@ export class NotificationService {
   private subscribeToUserChannel(userId: number): void {
     if (!this.echo) return;
 
-    this.echo.private(`user.${userId}`)
+    this.echo
+      .private(`user.${userId}`)
       .listen('.notification.created', (data: any) => {
         console.log('New notification received:', data);
         this.handleNewNotification(data);
@@ -133,7 +134,7 @@ export class NotificationService {
       },
       error: (error) => {
         console.error('Error loading notifications:', error);
-      }
+      },
     });
   }
 
@@ -145,7 +146,7 @@ export class NotificationService {
       },
       error: (error) => {
         console.error('Error loading unread count:', error);
-      }
+      },
     });
   }
 
@@ -185,12 +186,12 @@ export class NotificationService {
           .then(() => {
             const body = new URLSearchParams({
               socket_id: socketId,
-              channel_name: channel.name
+              channel_name: channel.name,
             }).toString();
 
             const headers: Record<string, string> = {
               'Content-Type': 'application/x-www-form-urlencoded',
-              'Accept': 'application/json'
+              Accept: 'application/json',
             };
 
             const xsrfToken = this.getXsrfToken();
@@ -204,7 +205,7 @@ export class NotificationService {
               method: 'POST',
               headers,
               credentials: 'include',
-              body
+              body,
             });
           })
           .then(async (response) => {
@@ -232,13 +233,15 @@ export class NotificationService {
             console.error('Echo auth fetch error', error);
             callback(error, null);
           });
-      }
+      },
     });
   }
 
   private ensureCsrfCookie(): Promise<void> {
     const csrfUrl = 'https://classsphere.app.mrbotusa.com/sanctum/csrf-cookie';
-    return fetch(csrfUrl, { credentials: 'include' }).then(() => undefined).catch(() => undefined);
+    return fetch(csrfUrl, { credentials: 'include' })
+      .then(() => undefined)
+      .catch(() => undefined);
   }
 
   private getXsrfToken(): string | null {
