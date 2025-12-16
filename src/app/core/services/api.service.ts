@@ -7,7 +7,7 @@ import { finalize, shareReplay } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ApiService {
-  private baseOrigin = 'http://localhost:8000';
+  private baseOrigin = 'https://classsphere.app.mrbotusa.com';
   private baseUrl = `${this.baseOrigin}/api`;
   private inflight = new Map<string, Observable<any>>();
 

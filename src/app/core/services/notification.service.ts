@@ -177,7 +177,7 @@ export class NotificationService {
   }
 
   private createAuthorizer(token?: string | null) {
-    const authUrl = 'http://localhost:8000/broadcasting/auth';
+    const authUrl = 'https://classsphere.app.mrbotusa.com/broadcasting/auth';
 
     return (channel: any, options: any) => ({
       authorize: (socketId: string, callback: (error: Error | null, data: any) => void) => {
@@ -237,7 +237,7 @@ export class NotificationService {
   }
 
   private ensureCsrfCookie(): Promise<void> {
-    const csrfUrl = 'http://localhost:8000/sanctum/csrf-cookie';
+    const csrfUrl = 'https://classsphere.app.mrbotusa.com/sanctum/csrf-cookie';
     return fetch(csrfUrl, { credentials: 'include' }).then(() => undefined).catch(() => undefined);
   }
 
