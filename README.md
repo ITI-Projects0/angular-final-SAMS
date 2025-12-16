@@ -87,7 +87,7 @@ This is the modern, responsive frontend for the **Student Attendance Management 
    ```typescript
    export const environment = {
      production: false,
-     apiUrl: 'http://localhost:8000/api'
+     apiUrl: 'https://classsphere.app.mrbotusa.com/api'
    };
    ```
 

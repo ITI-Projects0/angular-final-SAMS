@@ -106,7 +106,7 @@ export class Login implements OnInit {
   }
 
   onGoogleLogin() {
-    window.location.href = 'http://localhost:8000/auth/google';
+    window.location.href = 'https://classsphere.app.mrbotusa.com/auth/google';
   }
 
   togglePasswordVisibility() {

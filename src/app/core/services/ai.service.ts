@@ -11,7 +11,7 @@ type CenterScope = { class_id?: number; group_id?: number };
 export class AiService {
   private http = inject(HttpClient);
   // Match the same API base used elsewhere (see ApiService)
-  private baseUrl = 'http://localhost:8000/api/ai';
+  private baseUrl = 'https://classsphere.app.mrbotusa.com/api/ai';
 
   private withCredentialsOptions(params?: HttpParams) {
     return { params, withCredentials: true as const };
