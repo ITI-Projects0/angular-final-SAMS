@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"
+  publish = "dist/final-angular-SAMS/browser"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
