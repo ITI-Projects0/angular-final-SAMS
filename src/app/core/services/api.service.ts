@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { finalize, shareReplay } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private baseOrigin = 'https://classsphere.app.mrbotusa.com';
+  private baseOrigin = environment.apiOrigin;
   private baseUrl = `${this.baseOrigin}/api`;
   private inflight = new Map<string, Observable<any>>();
 

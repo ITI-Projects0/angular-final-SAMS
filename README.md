@@ -1,129 +1,107 @@
-# 💻 SAMS - Frontend (Angular)
+# 💻 ClassSphere / SAMS – Angular Frontend
 
-![Angular](https://img.shields.io/badge/Angular-18%2B-DD0031?style=for-the-badge&logo=angular&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Angular](https://img.shields.io/badge/Angular-21-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![RxJS](https://img.shields.io/badge/RxJS-7.8-B7178C?style=for-the-badge&logo=reactivex&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-4.5-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
+![Pusher](https://img.shields.io/badge/Realtime-Pusher%20%2F%20Laravel%20Echo-4B32C3?style=for-the-badge&logo=pusher&logoColor=white)
 
-## 🌟 Overview
-
-This is the modern, responsive frontend for the **Student Attendance Management System (SAMS)**. Built with **Angular 18+**, it delivers a seamless Single Page Application (SPA) experience with dynamic dashboards, real-time updates, and an intuitive design system.
-
----
-
-## 🚀 Key Features
-
-### 🔐 Authentication & Security
-- **JWT Authentication**: Secure HTTP interceptors automatically handle token attachment and refresh.
-- **Secure Google Login**: Implements a secure exchange token flow to prevent token leakage.
-- **Role-Based Routing**:
-  - `AuthGuard`: Protects private routes.
-  - `RoleGuard`: Ensures users only access dashboards authorized for their role (Admin, Staff, Student, Parent).
-- **Auto-Logout**: Session management handles token expiration gracefully.
-
-### 🎨 UI/UX & Design
-- **Modern Architecture**: Fully **Standalone Components** (No NgModules).
-- **Responsive Design**: Mobile-first layout using **Tailwind CSS**.
-- **Dark Mode**: System-aware dark mode with manual toggle and persistence.
-- **Glassmorphism**: Premium UI aesthetic with glass-effect cards and panels.
-- **Interactive Feedback**: Toast notifications (`ngx-toastr`) and skeleton loaders.
-
-### 📊 Dynamic Dashboards
-
-#### 👨‍💼 Admin Dashboard
-- **Center Approvals**: Review and approve pending center applications.
-- **System Stats**: Visual analytics of system-wide usage.
-- **User Management**: Full CRUD for system users.
-
-#### 🏫 Staff Dashboard (Center Admin/Teacher)
-- **Class Management**: Create groups, schedule lessons, and manage resources.
-- **Attendance**: Interactive lesson-based attendance taking.
-- **Student Management**: Add students to groups, view profiles, and contact parents.
-
-#### 🎓 Student Dashboard
-- **My Learning**: View enrolled courses, upcoming lessons, and assignments.
-- **AI Lab**: Access AI quiz generator and study planner.
-- **Grades**: Track assessment scores and feedback.
-
-#### 👨‍👩‍👧 Parent Dashboard
-- **Child Overview**: Monitor attendance rates and academic progress.
-- **AI Summaries**: View weekly AI-generated performance reports.
-- **Notifications**: Real-time alerts for absence or low grades.
-
-### 🤖 AI Integration
-- **Chat Widget**: Floating AI assistant available across the platform.
-- **Insights Components**: Visual AI analytics cards.
+### Live & Backend Links
+- Frontend (Netlify): https://classsphere-sams.netlify.app  
+- API Base: http://localhost:8000/api  
+- Backend Repo (Laravel): https://github.com/ITI-Projects0/laravel-final-SAMS  
 
 ---
 
-## 🛠️ Tech Stack
+## Overview
+ClassSphere is a full SPA for the **Student Attendance Management System (SAMS)**. It ships role-specific dashboards (Admin, Center Admin/Teacher, Student, Parent), real-time notifications, AI copilots, and a modern Tailwind-powered UI built entirely with Angular standalone components.
 
+---
+
+## Features
+- **Authentication & Access**: Email/password, token exchange (e.g., Google flow), email verification, password reset, approval gates, guest/auth/role guards, and HTTP interceptors for auth/error/loading.
+- **Dashboards**:
+  - *Admin*: Centers approval, courses, staff/students/parents directories, payments, contacts, settings.
+  - *Staff (center_admin/teacher/assistant)*: Groups, lessons/assessments, attendance taking, students & staff management, unified dashboard shell.
+  - *Student*: Classes, attendance, assignments, video viewer, profile.
+  - *Parent*: Children overview, attendance/grade insights, child class details, profile.
+- **AI Assistants**: AI chat widget, student AI lab (quiz/study plan/summaries), parent/center AI insights and forecasts, powered by `/api/ai` endpoints.
+- **Real-Time & Notifications**: Pusher + Laravel Echo private channels, polling fallback, toast notifications via `ngx-toastr`, unread counters.
+- **UI/UX**: Tailwind CSS + Flowbite components, glassmorphism cards, responsive layouts, charts with Chart.js, global loader with minimum display time, modal/toast hosts.
+
+---
+
+## Tech Stack
 | Category | Technology |
 |----------|------------|
-| **Framework** | Angular 18+ |
-| **Language** | TypeScript |
-| **Styling** | Tailwind CSS, Flowbite, FontAwesome |
-| **State Management** | RxJS (Observables & Signals) |
-| **Real-Time** | Pusher JS, Laravel Echo |
-| **Charts** | Chart.js |
-| **Build Tool** | Angular CLI (Vite-based) |
+| Framework | Angular 21 (standalone components) |
+| Language | TypeScript 5.9 |
+| Styling | Tailwind CSS 4.1, Flowbite, FontAwesome |
+| State/Signals | RxJS 7.8, Angular signals |
+| Real-Time | Laravel Echo, Pusher JS |
+| Charts | Chart.js 4.5 |
+| Tooling | Angular CLI, npm 10 |
 
 ---
 
-## ⚙️ Setup & Installation
+## Project Structure (key paths)
+- `src/app/core`: auth services/guards (`auth.guard.ts`, `role.guard.ts`, `approval.guard.ts`), interceptors (`auth.interceptor.ts`, `error.interceptor.ts`, `loader.interceptor.ts`), models, utilities, API/AI/notification services.
+- `src/app/layouts`: public, auth, unified-dashboard (admin/staff), student dashboard shells.
+- `src/app/features`: public pages, auth flows, admin pages, staff dashboard, student pages, parent pages, AI widgets/panels, 404.
+- `src/app/shared`: reusable UI (cards, tables, modals, loaders, toasts, outlet router host).
+- `netlify.toml`: build command and SPA redirects; publishes `dist/final-angular-SAMS/browser`.
 
-1. **Navigate to the directory**
-   ```bash
-   cd angular-final-SAMS
-   ```
+---
 
-2. **Install Dependencies**
+## Configuration
+- **API base URL**: Update `baseOrigin` in `src/app/core/services/api.service.ts` if the backend host changes. All REST calls use `${baseOrigin}/api`.
+- **AI endpoints**: `src/app/core/services/ai.service.ts` targets `http://localhost:8000/api/ai`; point this to your AI gateway if different.
+- **Real-time**: `src/app/core/services/notification.service.ts` sets the Pusher key (`f3a80187efd8663a3273`) and auth endpoints. Align these with your Laravel broadcasting config.
+- **Branding**: `src/app/core/config/app.config.ts` and `src/app/core/config/brand.ts` centralize product name/tagline/colors.
+- **Styling**: Tailwind/Flowbite scan `src/**/*.{html,ts}` via `tailwind.config.js`; global styles live in `src/styles.css` and component-level styles in standalone components.
+
+---
+
+## Getting Started
+1. **Prerequisites**: Node 18+ (Node 20 recommended), npm 10.x.
+2. **Install dependencies**
    ```bash
+   cd final-angular-SAMS
    npm install
    ```
-
-3. **Configuration**
-   Ensure the backend API URL is correctly set in `src/environments/environment.ts`:
-   ```typescript
-   export const environment = {
-     production: false,
-     apiUrl: 'https://classsphere.app.mrbotusa.com/api'
-   };
-   ```
-
-4. **Run Development Server**
+3. **Run locally**
    ```bash
    npm start
+   # serves at http://localhost:4200
    ```
-   The app will run on `http://localhost:4200`.
+4. **Build for production**
+   ```bash
+   npm run build
+   # output: dist/final-angular-SAMS/browser
+   ```
+5. **Tests** (if present)
+   ```bash
+   npm test
+   ```
 
 ---
 
-## 📂 Project Structure
-
-```
-src/app/
-├── core/               # Singleton services, guards, interceptors, models
-│   ├── auth/           # Auth logic (Service, Guards, TokenStorage)
-│   ├── interceptors/   # HTTP Interceptors (Token, Error handling)
-│   ├── models/         # TypeScript Interfaces (User, Group, Lesson)
-│   └── services/       # Global services (Api, Theme, Notification)
-├── features/           # Feature modules (Lazy Loaded Pages)
-│   ├── admin/          # Super Admin Dashboard
-│   ├── auth/           # Login, Register, Reset Password
-│   ├── staff-dashboard/# Center Admin & Teacher Interface
-│   ├── student-pages/  # Student Interface
-│   ├── parent-pages/   # Parent Interface
-│   └── public/         # Landing pages
-├── layouts/            # Layout components (Auth, Main, Public)
-└── shared/             # Reusable UI components (Cards, Tables, Modals)
-```
+## Deployment
+- Netlify uses the provided `netlify.toml` (`npm run build`, publish `dist/final-angular-SAMS/browser`, SPA redirect `/* -> /index.html`).
+- Ensure the deployed frontend points to the correct backend host and broadcasting credentials (API/AI services + Pusher config above).
 
 ---
 
-## 🔗 Backend Integration
-This frontend is designed to consume the **Laravel SAMS API**.
-- **CORS**: Ensure the Laravel backend allows requests from `http://localhost:4200`.
+## Backend Pairing
+- Laravel API: http://localhost:8000/api  
+- Source: https://github.com/ITI-Projects0/laravel-final-SAMS  
+Ensure CORS/broadcasting settings in the backend allow the frontend origin used in development and production.
+
+---
+
+## License
+
 - **Real-Time**: Configure Pusher credentials in `src/environments/environment.ts` to match the backend.
 
 ---
