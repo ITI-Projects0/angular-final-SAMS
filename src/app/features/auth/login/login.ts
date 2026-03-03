@@ -58,7 +58,7 @@ export class Login implements OnInit {
     // Check if this is a new user registration (pending flag from URL)
     const isPending = this.route.snapshot.queryParamMap.get('pending') === '1';
 
-    this.authService.exchangeToken(token, true).subscribe({
+    this.authService.exchangeToken(token, true, true).subscribe({
       next: (response) => {
         this.loadingService.hide();
 
