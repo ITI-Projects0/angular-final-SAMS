@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 import { LoaderService } from '../../core/services/loader.service';
 
 @Component({
@@ -66,7 +67,18 @@ export class LoaderComponent {
       </div>
     }
   `,
-  styleUrl: './global-loader.css'
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('180ms ease-out', style({ opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('140ms ease-in', style({ opacity: 0 })),
+      ]),
+    ]),
+  ],
+  styleUrl: './global-loader.css',
 })
 export class GlobalLoaderComponent {
   loaderService = inject(LoaderService);

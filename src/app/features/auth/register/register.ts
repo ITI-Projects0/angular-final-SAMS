@@ -7,6 +7,7 @@ import { LoadingService } from '../../../core/services/loading.service';
 import { FeedbackService } from '../../../core/services/feedback.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { ThemeToggleComponent } from '../../../shared/ui/theme-toggle/theme-toggle';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-register',
@@ -64,7 +65,7 @@ export class Register implements OnInit {
   }
 
   onGoogleLogin() {
-    window.location.href = 'https://classsphere.app.mrbotusa.com/auth/google';
+    window.location.href = `${environment.apiOrigin}/auth/google`;
   }
 
   togglePasswordVisibility(field: 'password' | 'confirm') {

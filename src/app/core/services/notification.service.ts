@@ -5,6 +5,7 @@ import Echo from 'laravel-echo';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from './api.service';
 import { TokenStorageService } from '../auth/token-storage.service';
+import { environment } from '../../../environments/environment';
 
 export interface Notification {
   id: string;
@@ -45,6 +46,7 @@ export class NotificationService {
   }
 
   private pollingSubscription: any = null;
+  private apiOrigin = environment.apiOrigin;
 
   constructor() {}
 
@@ -178,7 +180,7 @@ export class NotificationService {
   }
 
   private createAuthorizer(token?: string | null) {
-    const authUrl = 'https://classsphere.app.mrbotusa.com/broadcasting/auth';
+    const authUrl = `${this.apiOrigin}/broadcasting/auth`;
 
     return (channel: any, options: any) => ({
       authorize: (socketId: string, callback: (error: Error | null, data: any) => void) => {
@@ -238,7 +240,7 @@ export class NotificationService {
   }
 
   private ensureCsrfCookie(): Promise<void> {
-    const csrfUrl = 'https://classsphere.app.mrbotusa.com/sanctum/csrf-cookie';
+    const csrfUrl = `${this.apiOrigin}/sanctum/csrf-cookie`;
     return fetch(csrfUrl, { credentials: 'include' })
       .then(() => undefined)
       .catch(() => undefined);

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { catchError, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 type ChatPayload = { role: 'teacher' | 'parent'; message: string; user_id?: number };
 type InsightsParams = { class_id?: number; from?: string; to?: string };
@@ -10,8 +11,7 @@ type CenterScope = { class_id?: number; group_id?: number };
 @Injectable({ providedIn: 'root' })
 export class AiService {
   private http = inject(HttpClient);
-  // Match the same API base used elsewhere (see ApiService)
-  private baseUrl = 'https://classsphere.app.mrbotusa.com/api/ai';
+  private baseUrl = `${environment.apiOrigin}/api/ai`;
 
   private withCredentialsOptions(params?: HttpParams) {
     return { params, withCredentials: true as const };
