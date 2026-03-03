@@ -12,6 +12,7 @@ import { Students } from './students/students';
 import { Parents } from './parents/parents';
 import { Contacts } from './contacts/contacts';
 import { Payments } from './payments/payments';
+import { Users } from './users/users';
 
 export const AdminRoutes: Routes = [
   {
@@ -30,6 +31,7 @@ export const AdminRoutes: Routes = [
       { path: 'parents', component: Parents, data: { breadcrumb: 'Parents' } },
       { path: 'contacts', component: Contacts, data: { breadcrumb: 'Contacts' } },
       { path: 'payments', component: Payments, data: { breadcrumb: 'Payments' } },
+      { path: 'users', component: Users, data: { breadcrumb: 'Users' } },
     ]
   }
 ];

@@ -39,6 +39,7 @@ export class DashboardSidebar {
 
   private adminMenuItems: MenuItem[] = [
     { label: 'Dashboard', route: '/dashboard/admin', icon: 'dashboard', exact: true },
+    { label: 'Users', route: '/dashboard/admin/users', icon: 'users', exact: true },
     { label: 'Students', route: '/dashboard/admin/students', icon: 'students', exact: true },
     { label: 'Parents', route: '/dashboard/admin/parents', icon: 'parents', exact: true },
     { label: 'Centers', route: '/dashboard/admin/centers', icon: 'centers', exact: true },
