@@ -1,0 +1,200 @@
+<section
+  class="max-w-[1100px] mx-auto my-6 p-5 max-[400px]:p-3 bg-(--card) rounded-2xl border border-(--glass-border) shadow-[0_18px_40px_rgba(0,0,0,0.08)] backdrop-blur-xl text-(--text)">
+  <header class="mb-4">
+    <h2 class="text-2xl font-bold">Users</h2>
+    <p class="text-(--muted) text-sm">Admin users management (create, edit role, and delete)</p>
+  </header>
+
+  <div class="flex justify-between items-center my-3 gap-3 max-[500px]:flex-col max-[500px]:items-stretch">
+    <input placeholder="Search users..."
+      class="px-3 py-2 rounded-lg border border-(--glass-border) w-[280px] bg-(--glass) text-(--text) max-[500px]:w-full focus:outline-none focus:border-(--primary) transition-colors"
+      [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" />
+    <div class="inline-flex items-center max-[500px]:justify-between gap-2">
+      <label class="text-(--muted) text-sm">Per page</label>
+      <select
+        class="px-2.5 py-1.5 rounded-lg border border-(--glass-border) bg-(--glass) text-(--text) focus:outline-none"
+        [(ngModel)]="perPage" (ngModelChange)="changePerPage(perPage)">
+        <option [ngValue]="10">10</option>
+        <option [ngValue]="15">15</option>
+        <option [ngValue]="25">25</option>
+        <option [ngValue]="50">50</option>
+      </select>
+      <button
+        class="bg-(--primary) text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+        (click)="toggleCreate()">
+        {{ createOpen ? 'Cancel' : 'New User' }}
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="createOpen"
+    class="mb-4 p-4 rounded-xl border border-(--glass-border) bg-(--glass) grid grid-cols-1 md:grid-cols-3 gap-3">
+    <input
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--card) text-(--text) focus:outline-none focus:border-(--primary)"
+      placeholder="Full name" [(ngModel)]="createForm.name" />
+    <input
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--card) text-(--text) focus:outline-none focus:border-(--primary)"
+      placeholder="Email" type="email" [(ngModel)]="createForm.email" />
+    <input
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--card) text-(--text) focus:outline-none focus:border-(--primary)"
+      placeholder="Phone" [(ngModel)]="createForm.phone" />
+    <input
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--card) text-(--text) focus:outline-none focus:border-(--primary)"
+      placeholder="Password (min 8 chars)" type="password" [(ngModel)]="createForm.password" />
+    <select
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--card) text-(--text) focus:outline-none"
+      [(ngModel)]="createForm.role">
+      <option *ngFor="let option of roleOptions" [ngValue]="option.value">{{ option.label }}</option>
+    </select>
+    <select
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--card) text-(--text) focus:outline-none"
+      [(ngModel)]="createForm.status">
+      <option value="active">active</option>
+      <option value="inactive">inactive</option>
+    </select>
+    <div class="md:col-span-3 flex justify-end">
+      <button
+        class="bg-(--primary) text-white px-4 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+        [disabled]="creating" (click)="submitCreate()">
+        {{ creating ? 'Creating...' : 'Create User' }}
+      </button>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2.5 p-3 bg-(--glass) border border-(--glass-border) rounded-xl mb-2"
+    *ngIf="loading">
+    <div class="w-[18px] h-[18px] border-[3px] border-black/10 border-t-(--primary) rounded-full animate-spin">
+    </div>
+    <span>Loading users...</span>
+  </div>
+
+  <table
+    class="w-full border-collapse mt-2.5 bg-(--card) border border-(--glass-border) rounded-xl overflow-hidden shadow-sm max-[1200px]:block max-[1200px]:bg-transparent max-[1200px]:border-none max-[1200px]:shadow-none">
+    <thead class="max-[1200px]:hidden">
+      <tr>
+        <th class="p-3 text-left border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+          Name</th>
+        <th class="p-3 text-left border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+          Email</th>
+        <th class="p-3 text-left border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+          Phone</th>
+        <th class="p-3 text-left border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+          Role</th>
+        <th class="p-3 text-left border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+          Status</th>
+        <th class="p-3 text-left border-b border-(--glass-border) bg-(--glass) font-bold text-(--muted)">
+          Actions</th>
+      </tr>
+    </thead>
+    <tbody
+      class="max-[1200px]:grid max-[1200px]:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] max-[1200px]:gap-4 max-[1200px]:w-full">
+      <tr *ngFor="let user of users"
+        class="max-[1200px]:flex max-[1200px]:flex-col max-[1200px]:bg-(--card) max-[1200px]:border max-[1200px]:border-(--glass-border) max-[1200px]:rounded-2xl max-[1200px]:p-4 max-[400px]:p-3 max-[1200px]:shadow-sm max-[1200px]:h-full">
+        <td
+          class="p-3 border-b border-(--glass-border) align-middle font-bold text-(--text) max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-(--muted) max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Name">
+          <span class="font-bold text-(--text)">{{ user.name }}</span>
+        </td>
+        <td
+          class="p-3 border-b border-(--glass-border) align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-(--muted) max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Email">
+          <span class="text-(--text) text-sm break-all">{{ user.email }}</span>
+        </td>
+        <td
+          class="p-3 border-b border-(--glass-border) align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-(--muted) max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Phone">
+          <span class="text-(--text) text-sm">{{ user.phone || '-' }}</span>
+        </td>
+        <td
+          class="p-3 border-b border-(--glass-border) align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-(--muted) max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Role">
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#eff6ff] text-[#1e40af] border border-[#bfdbfe] text-sm">
+            {{ user.role || '-' }}
+          </span>
+        </td>
+        <td
+          class="p-3 border-b border-(--glass-border) align-middle max-[1200px]:flex max-[1200px]:justify-between max-[1200px]:items-center max-[1200px]:gap-4 max-[1200px]:w-full max-[1200px]:py-3 max-[1200px]:px-0 max-[1200px]:text-right max-[1200px]:before:content-[attr(data-label)] max-[1200px]:before:font-semibold max-[1200px]:before:text-(--muted) max-[1200px]:before:mr-auto max-[1200px]:before:text-left"
+          data-label="Status">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm"
+            [ngClass]="user.status === 'active' ? 'bg-[#ecfdf3] text-[#15803d] border-[#bbf7d0]' : 'bg-[#f3f4f6] text-[#4b5563] border-transparent'">
+            {{ user.status }}
+          </span>
+        </td>
+        <td
+          class="p-3 border-b border-(--glass-border) align-middle max-[1200px]:flex max-[1200px]:justify-center max-[1200px]:items-center max-[1200px]:w-full max-[1200px]:pt-4 max-[1200px]:pb-0 max-[1200px]:mt-auto max-[1200px]:border-none"
+          data-label="Actions">
+          <div class="inline-flex items-center gap-2">
+            <button
+              class="bg-(--glass) border border-(--glass-border) px-3.5 py-1.5 rounded-full cursor-pointer text-(--text) shadow-sm hover:-translate-y-px hover:shadow-md transition-all duration-200"
+              (click)="openEdit(user)">Edit</button>
+            <button
+              class="bg-red-500/10 border border-red-500/30 px-3.5 py-1.5 rounded-full cursor-pointer text-red-500 shadow-sm hover:-translate-y-px hover:shadow-md transition-all duration-200"
+              [disabled]="deleting" (click)="deleteUser(user)">Delete</button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="!loading && users.length === 0">
+        <td colspan="6" class="p-8 text-center text-(--muted)">No users found.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div
+  class="max-w-[1100px] mx-auto flex justify-between items-center mt-4 gap-3 bg-(--glass) border border-(--glass-border) p-2.5 rounded-xl max-[450px]:flex-col max-[450px]:items-center"
+  *ngIf="lastPage > 1 || total">
+  <div class="text-(--muted) text-sm">Showing {{ rangeStart }} - {{ rangeEnd }} of {{ total }}</div>
+  <div class="inline-flex items-center gap-2.5">
+    <button
+      class="bg-(--glass) border border-(--glass-border) px-3.5 py-1.5 rounded-full cursor-pointer text-(--text) shadow-sm hover:-translate-y-px hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+      [disabled]="page === 1" (click)="changePage(page - 1)">Prev</button>
+    <span class="font-bold">Page {{ page }} / {{ lastPage }}</span>
+    <button
+      class="bg-(--glass) border border-(--glass-border) px-3.5 py-1.5 rounded-full cursor-pointer text-(--text) shadow-sm hover:-translate-y-px hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:transform-none"
+      [disabled]="page === lastPage" (click)="changePage(page + 1)">Next</button>
+  </div>
+</div>
+
+<div class="fixed inset-0 bg-black/20 opacity-0 pointer-events-none transition-opacity duration-250"
+  [class.opacity-100]="editOpen" [class.pointer-events-auto]="editOpen" (click)="closeEdit()"></div>
+<div
+  class="fixed inset-y-0 right-0 w-[min(420px,90vw)] max-[640px]:w-full bg-(--card) border-l border-(--glass-border) shadow-[-8px_0_24px_rgba(0,0,0,0.18)] transition-transform duration-300 p-5 flex flex-col gap-3.5 z-999"
+  [ngClass]="editOpen ? 'translate-x-0' : 'translate-x-full'" (click)="$event.stopPropagation()">
+  <div class="flex justify-between items-center font-bold">
+    <h3>Edit User</h3>
+    <button class="border-none bg-transparent text-2xl cursor-pointer text-(--text)"
+      (click)="closeEdit()">X</button>
+  </div>
+
+  <div class="flex flex-col gap-3">
+    <input
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--glass) text-(--text) focus:outline-none focus:border-(--primary)"
+      placeholder="Full name" [(ngModel)]="editForm.name" />
+    <input
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--glass) text-(--text) focus:outline-none focus:border-(--primary)"
+      placeholder="Email" type="email" [(ngModel)]="editForm.email" />
+    <input
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--glass) text-(--text) focus:outline-none focus:border-(--primary)"
+      placeholder="Phone" [(ngModel)]="editForm.phone" />
+    <input
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--glass) text-(--text) focus:outline-none focus:border-(--primary)"
+      placeholder="New password (optional)" type="password" [(ngModel)]="editForm.password" />
+    <select
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--glass) text-(--text) focus:outline-none"
+      [(ngModel)]="editForm.role">
+      <option *ngFor="let option of roleOptions" [ngValue]="option.value">{{ option.label }}</option>
+    </select>
+    <select
+      class="px-3 py-2 rounded-lg border border-(--glass-border) bg-(--glass) text-(--text) focus:outline-none"
+      [(ngModel)]="editForm.status">
+      <option value="active">active</option>
+      <option value="inactive">inactive</option>
+    </select>
+    <button
+      class="mt-2 bg-(--primary) text-white px-4 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-60"
+      [disabled]="updating" (click)="submitEdit()">
+      {{ updating ? 'Saving...' : 'Save Changes' }}
+    </button>
+  </div>
+</div>
